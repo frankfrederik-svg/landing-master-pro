@@ -89,7 +89,7 @@ function CampaignsTab() {
   useEffect(() => { load(); }, [load]);
 
   function newCampaign() {
-    setEditing({ id: "", slug: "", name: "", hero_title: "Realize o sonho do seu apê", hero_subtitle: "Condições especiais com entrada facilitada", cta_text: "Quero aproveitar agora", primary_color: "#16a34a", accent_color: "#f97316", banner_url: null, whatsapp_number: null, whatsapp_message: "Olá! Tenho interesse.", active: true });
+    setEditing({ id: "", slug: "", name: "", hero_title: "Realize o sonho do seu apê", hero_subtitle: "Condições especiais com entrada facilitada", cta_text: "Quero aproveitar agora", primary_color: "#16a34a", accent_color: "#f97316", banner_url: null, whatsapp_number: null, whatsapp_message: "Olá! Tenho interesse.", active: true, popup_enabled: true, popup_delay_mobile: 5, popup_delay_desktop: 7, popup_frequency_hours: 24, popup_title: "Quer receber fotos e vídeos dos apartamentos disponíveis?", popup_subtitle: "Te envio agora no WhatsApp as melhores opções com entrada parcelada.", popup_button_text: "Quero receber agora", popup_whatsapp_message: "Olá, quero receber fotos e vídeos dos apartamentos com entrada parcelada" });
     setOpen(true);
   }
 
