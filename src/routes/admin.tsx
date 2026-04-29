@@ -166,6 +166,31 @@ function CampaignsTab() {
                 <div><Label>WhatsApp (com DDD)</Label><Input value={editing.whatsapp_number ?? ""} onChange={(e) => setEditing({ ...editing, whatsapp_number: e.target.value || null })} placeholder="5511900000000" /></div>
                 <div><Label>Mensagem WhatsApp</Label><Input value={editing.whatsapp_message ?? ""} onChange={(e) => setEditing({ ...editing, whatsapp_message: e.target.value || null })} /></div>
               </div>
+
+              <div className="rounded-2xl border border-dashed bg-muted/30 p-4 space-y-3">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h4 className="font-semibold">Pop-up de captura</h4>
+                    <p className="text-xs text-muted-foreground">Aparece para quem está prestes a sair sem preencher.</p>
+                  </div>
+                  <Switch checked={editing.popup_enabled} onCheckedChange={(v) => setEditing({ ...editing, popup_enabled: v })} />
+                </div>
+                {editing.popup_enabled && (
+                  <>
+                    <div className="grid gap-3 md:grid-cols-3">
+                      <div><Label>Delay mobile (s)</Label><Input type="number" min={1} value={editing.popup_delay_mobile} onChange={(e) => setEditing({ ...editing, popup_delay_mobile: parseInt(e.target.value || "5", 10) })} /></div>
+                      <div><Label>Delay desktop (s)</Label><Input type="number" min={1} value={editing.popup_delay_desktop} onChange={(e) => setEditing({ ...editing, popup_delay_desktop: parseInt(e.target.value || "7", 10) })} /></div>
+                      <div><Label>Frequência (horas)</Label><Input type="number" min={1} value={editing.popup_frequency_hours} onChange={(e) => setEditing({ ...editing, popup_frequency_hours: parseInt(e.target.value || "24", 10) })} /></div>
+                    </div>
+                    <div><Label>Título do pop-up</Label><Input value={editing.popup_title} onChange={(e) => setEditing({ ...editing, popup_title: e.target.value })} /></div>
+                    <div><Label>Subtítulo</Label><Textarea value={editing.popup_subtitle} onChange={(e) => setEditing({ ...editing, popup_subtitle: e.target.value })} /></div>
+                    <div className="grid gap-3 md:grid-cols-2">
+                      <div><Label>Texto do botão</Label><Input value={editing.popup_button_text} onChange={(e) => setEditing({ ...editing, popup_button_text: e.target.value })} /></div>
+                      <div><Label>Mensagem WhatsApp (pop-up)</Label><Input value={editing.popup_whatsapp_message} onChange={(e) => setEditing({ ...editing, popup_whatsapp_message: e.target.value })} /></div>
+                    </div>
+                  </>
+                )}
+              </div>
             </div>
           )}
           <DialogFooter><Button variant="hero" onClick={save}>Salvar</Button></DialogFooter>
