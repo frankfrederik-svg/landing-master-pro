@@ -170,6 +170,19 @@ function HotsitePage() {
           </div>
         </div>
       </footer>
+
+      <LeadPopup
+        campaignId={campaign.id}
+        enabled={campaign.popup_enabled}
+        delayMobile={campaign.popup_delay_mobile}
+        delayDesktop={campaign.popup_delay_desktop}
+        frequencyHours={campaign.popup_frequency_hours}
+        title={campaign.popup_title}
+        subtitle={campaign.popup_subtitle}
+        buttonText={campaign.popup_button_text}
+        whatsappNumber={campaign.whatsapp_number}
+        whatsappMessage={campaign.popup_whatsapp_message}
+      />
     </div>
   );
 }
