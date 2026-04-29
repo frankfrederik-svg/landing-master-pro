@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { HotsiteForm } from "@/components/HotsiteForm";
+import { LeadPopup } from "@/components/LeadPopup";
 import heroBuilding from "@/assets/hero-building.jpg";
 import { formatCurrencyBRL, resolveImage } from "@/lib/faixa";
 import { Building2, CheckCircle2, MapPin, Percent, Sparkles, TrendingDown, Wallet } from "lucide-react";
