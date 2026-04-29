@@ -14,16 +14,236 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      campaigns: {
+        Row: {
+          accent_color: string
+          active: boolean
+          banner_url: string | null
+          created_at: string
+          cta_text: string
+          hero_subtitle: string
+          hero_title: string
+          id: string
+          name: string
+          primary_color: string
+          slug: string
+          updated_at: string
+          whatsapp_message: string | null
+          whatsapp_number: string | null
+        }
+        Insert: {
+          accent_color?: string
+          active?: boolean
+          banner_url?: string | null
+          created_at?: string
+          cta_text?: string
+          hero_subtitle?: string
+          hero_title?: string
+          id?: string
+          name: string
+          primary_color?: string
+          slug: string
+          updated_at?: string
+          whatsapp_message?: string | null
+          whatsapp_number?: string | null
+        }
+        Update: {
+          accent_color?: string
+          active?: boolean
+          banner_url?: string | null
+          created_at?: string
+          cta_text?: string
+          hero_subtitle?: string
+          hero_title?: string
+          id?: string
+          name?: string
+          primary_color?: string
+          slug?: string
+          updated_at?: string
+          whatsapp_message?: string | null
+          whatsapp_number?: string | null
+        }
+        Relationships: []
+      }
+      leads: {
+        Row: {
+          birth_date: string | null
+          campaign_id: string | null
+          clean_name: boolean | null
+          created_at: string
+          entry_value: number | null
+          has_fgts: boolean | null
+          id: string
+          income_range: string
+          income_type: string | null
+          joins_income: boolean | null
+          mcmv_faixa: number | null
+          name: string
+          property_id: string | null
+          uses_entry_value: boolean | null
+          whatsapp: string
+        }
+        Insert: {
+          birth_date?: string | null
+          campaign_id?: string | null
+          clean_name?: boolean | null
+          created_at?: string
+          entry_value?: number | null
+          has_fgts?: boolean | null
+          id?: string
+          income_range: string
+          income_type?: string | null
+          joins_income?: boolean | null
+          mcmv_faixa?: number | null
+          name: string
+          property_id?: string | null
+          uses_entry_value?: boolean | null
+          whatsapp: string
+        }
+        Update: {
+          birth_date?: string | null
+          campaign_id?: string | null
+          clean_name?: boolean | null
+          created_at?: string
+          entry_value?: number | null
+          has_fgts?: boolean | null
+          id?: string
+          income_range?: string
+          income_type?: string | null
+          joins_income?: boolean | null
+          mcmv_faixa?: number | null
+          name?: string
+          property_id?: string | null
+          uses_entry_value?: boolean | null
+          whatsapp?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "leads_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "campaigns"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "leads_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      properties: {
+        Row: {
+          active: boolean
+          campaign_id: string
+          created_at: string
+          description: string | null
+          display_order: number
+          entry_value: number | null
+          id: string
+          image_url: string | null
+          location: string
+          name: string
+          tag: string | null
+        }
+        Insert: {
+          active?: boolean
+          campaign_id: string
+          created_at?: string
+          description?: string | null
+          display_order?: number
+          entry_value?: number | null
+          id?: string
+          image_url?: string | null
+          location: string
+          name: string
+          tag?: string | null
+        }
+        Update: {
+          active?: boolean
+          campaign_id?: string
+          created_at?: string
+          description?: string | null
+          display_order?: number
+          entry_value?: number | null
+          id?: string
+          image_url?: string | null
+          location?: string
+          name?: string
+          tag?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "properties_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      settings: {
+        Row: {
+          default_message: string | null
+          default_whatsapp: string | null
+          id: number
+          updated_at: string
+          webhook_url: string | null
+        }
+        Insert: {
+          default_message?: string | null
+          default_whatsapp?: string | null
+          id?: number
+          updated_at?: string
+          webhook_url?: string | null
+        }
+        Update: {
+          default_message?: string | null
+          default_whatsapp?: string | null
+          id?: number
+          updated_at?: string
+          webhook_url?: string | null
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +370,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "user"],
+    },
   },
 } as const
