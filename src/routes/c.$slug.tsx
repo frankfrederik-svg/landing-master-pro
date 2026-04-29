@@ -43,7 +43,7 @@ function HotsitePage() {
     (async () => {
       const { data: c } = await supabase
         .from("campaigns")
-        .select("id,slug,name,hero_title,hero_subtitle,cta_text,banner_url,whatsapp_number,whatsapp_message")
+        .select("id,slug,name,hero_title,hero_subtitle,cta_text,banner_url,whatsapp_number,whatsapp_message,popup_enabled,popup_delay_mobile,popup_delay_desktop,popup_frequency_hours,popup_title,popup_subtitle,popup_button_text,popup_whatsapp_message")
         .eq("slug", slug).eq("active", true).maybeSingle();
       if (!c) { setNotFoundFlag(true); setLoading(false); return; }
       setCampaign(c as Campaign);
