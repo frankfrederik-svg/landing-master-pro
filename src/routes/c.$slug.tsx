@@ -18,6 +18,14 @@ type Campaign = {
   hero_title: string; hero_subtitle: string; cta_text: string;
   banner_url: string | null;
   whatsapp_number: string | null; whatsapp_message: string | null;
+  popup_enabled: boolean;
+  popup_delay_mobile: number;
+  popup_delay_desktop: number;
+  popup_frequency_hours: number;
+  popup_title: string;
+  popup_subtitle: string;
+  popup_button_text: string;
+  popup_whatsapp_message: string;
 };
 type Property = {
   id: string; name: string; location: string; image_url: string | null;
