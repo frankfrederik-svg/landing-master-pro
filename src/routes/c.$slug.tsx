@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { HotsiteForm } from "@/components/HotsiteForm";
+import { LeadPopup } from "@/components/LeadPopup";
 import heroBuilding from "@/assets/hero-building.jpg";
 import { formatCurrencyBRL, resolveImage } from "@/lib/faixa";
 import { Building2, CheckCircle2, MapPin, Percent, Sparkles, TrendingDown, Wallet } from "lucide-react";
@@ -17,6 +18,14 @@ type Campaign = {
   hero_title: string; hero_subtitle: string; cta_text: string;
   banner_url: string | null;
   whatsapp_number: string | null; whatsapp_message: string | null;
+  popup_enabled: boolean;
+  popup_delay_mobile: number;
+  popup_delay_desktop: number;
+  popup_frequency_hours: number;
+  popup_title: string;
+  popup_subtitle: string;
+  popup_button_text: string;
+  popup_whatsapp_message: string;
 };
 type Property = {
   id: string; name: string; location: string; image_url: string | null;
@@ -34,7 +43,7 @@ function HotsitePage() {
     (async () => {
       const { data: c } = await supabase
         .from("campaigns")
-        .select("id,slug,name,hero_title,hero_subtitle,cta_text,banner_url,whatsapp_number,whatsapp_message")
+        .select("id,slug,name,hero_title,hero_subtitle,cta_text,banner_url,whatsapp_number,whatsapp_message,popup_enabled,popup_delay_mobile,popup_delay_desktop,popup_frequency_hours,popup_title,popup_subtitle,popup_button_text,popup_whatsapp_message")
         .eq("slug", slug).eq("active", true).maybeSingle();
       if (!c) { setNotFoundFlag(true); setLoading(false); return; }
       setCampaign(c as Campaign);
@@ -161,6 +170,19 @@ function HotsitePage() {
           </div>
         </div>
       </footer>
+
+      <LeadPopup
+        campaignId={campaign.id}
+        enabled={campaign.popup_enabled}
+        delayMobile={campaign.popup_delay_mobile}
+        delayDesktop={campaign.popup_delay_desktop}
+        frequencyHours={campaign.popup_frequency_hours}
+        title={campaign.popup_title}
+        subtitle={campaign.popup_subtitle}
+        buttonText={campaign.popup_button_text}
+        whatsappNumber={campaign.whatsapp_number}
+        whatsappMessage={campaign.popup_whatsapp_message}
+      />
     </div>
   );
 }

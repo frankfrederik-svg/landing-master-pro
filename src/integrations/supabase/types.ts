@@ -25,6 +25,14 @@ export type Database = {
           hero_title: string
           id: string
           name: string
+          popup_button_text: string
+          popup_delay_desktop: number
+          popup_delay_mobile: number
+          popup_enabled: boolean
+          popup_frequency_hours: number
+          popup_subtitle: string
+          popup_title: string
+          popup_whatsapp_message: string
           primary_color: string
           slug: string
           updated_at: string
@@ -41,6 +49,14 @@ export type Database = {
           hero_title?: string
           id?: string
           name: string
+          popup_button_text?: string
+          popup_delay_desktop?: number
+          popup_delay_mobile?: number
+          popup_enabled?: boolean
+          popup_frequency_hours?: number
+          popup_subtitle?: string
+          popup_title?: string
+          popup_whatsapp_message?: string
           primary_color?: string
           slug: string
           updated_at?: string
@@ -57,6 +73,14 @@ export type Database = {
           hero_title?: string
           id?: string
           name?: string
+          popup_button_text?: string
+          popup_delay_desktop?: number
+          popup_delay_mobile?: number
+          popup_enabled?: boolean
+          popup_frequency_hours?: number
+          popup_subtitle?: string
+          popup_title?: string
+          popup_whatsapp_message?: string
           primary_color?: string
           slug?: string
           updated_at?: string

@@ -19,7 +19,7 @@ export const Route = createFileRoute("/admin")({
   component: AdminPage,
 });
 
-type Campaign = { id: string; slug: string; name: string; hero_title: string; hero_subtitle: string; cta_text: string; primary_color: string; accent_color: string; banner_url: string | null; whatsapp_number: string | null; whatsapp_message: string | null; active: boolean };
+type Campaign = { id: string; slug: string; name: string; hero_title: string; hero_subtitle: string; cta_text: string; primary_color: string; accent_color: string; banner_url: string | null; whatsapp_number: string | null; whatsapp_message: string | null; active: boolean; popup_enabled: boolean; popup_delay_mobile: number; popup_delay_desktop: number; popup_frequency_hours: number; popup_title: string; popup_subtitle: string; popup_button_text: string; popup_whatsapp_message: string };
 type Property = { id: string; campaign_id: string; name: string; location: string; image_url: string | null; entry_value: number | null; description: string | null; tag: string | null; active: boolean };
 type Lead = { id: string; campaign_id: string | null; name: string; whatsapp: string; income_range: string; mcmv_faixa: number | null; created_at: string };
 type Settings = { id: number; default_whatsapp: string | null; default_message: string | null; webhook_url: string | null };
@@ -89,7 +89,7 @@ function CampaignsTab() {
   useEffect(() => { load(); }, [load]);
 
   function newCampaign() {
-    setEditing({ id: "", slug: "", name: "", hero_title: "Realize o sonho do seu apê", hero_subtitle: "Condições especiais com entrada facilitada", cta_text: "Quero aproveitar agora", primary_color: "#16a34a", accent_color: "#f97316", banner_url: null, whatsapp_number: null, whatsapp_message: "Olá! Tenho interesse.", active: true });
+    setEditing({ id: "", slug: "", name: "", hero_title: "Realize o sonho do seu apê", hero_subtitle: "Condições especiais com entrada facilitada", cta_text: "Quero aproveitar agora", primary_color: "#16a34a", accent_color: "#f97316", banner_url: null, whatsapp_number: null, whatsapp_message: "Olá! Tenho interesse.", active: true, popup_enabled: true, popup_delay_mobile: 5, popup_delay_desktop: 7, popup_frequency_hours: 24, popup_title: "Quer receber fotos e vídeos dos apartamentos disponíveis?", popup_subtitle: "Te envio agora no WhatsApp as melhores opções com entrada parcelada.", popup_button_text: "Quero receber agora", popup_whatsapp_message: "Olá, quero receber fotos e vídeos dos apartamentos com entrada parcelada" });
     setOpen(true);
   }
 
@@ -165,6 +165,31 @@ function CampaignsTab() {
               <div className="grid gap-3 md:grid-cols-2">
                 <div><Label>WhatsApp (com DDD)</Label><Input value={editing.whatsapp_number ?? ""} onChange={(e) => setEditing({ ...editing, whatsapp_number: e.target.value || null })} placeholder="5511900000000" /></div>
                 <div><Label>Mensagem WhatsApp</Label><Input value={editing.whatsapp_message ?? ""} onChange={(e) => setEditing({ ...editing, whatsapp_message: e.target.value || null })} /></div>
+              </div>
+
+              <div className="rounded-2xl border border-dashed bg-muted/30 p-4 space-y-3">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h4 className="font-semibold">Pop-up de captura</h4>
+                    <p className="text-xs text-muted-foreground">Aparece para quem está prestes a sair sem preencher.</p>
+                  </div>
+                  <Switch checked={editing.popup_enabled} onCheckedChange={(v) => setEditing({ ...editing, popup_enabled: v })} />
+                </div>
+                {editing.popup_enabled && (
+                  <>
+                    <div className="grid gap-3 md:grid-cols-3">
+                      <div><Label>Delay mobile (s)</Label><Input type="number" min={1} value={editing.popup_delay_mobile} onChange={(e) => setEditing({ ...editing, popup_delay_mobile: parseInt(e.target.value || "5", 10) })} /></div>
+                      <div><Label>Delay desktop (s)</Label><Input type="number" min={1} value={editing.popup_delay_desktop} onChange={(e) => setEditing({ ...editing, popup_delay_desktop: parseInt(e.target.value || "7", 10) })} /></div>
+                      <div><Label>Frequência (horas)</Label><Input type="number" min={1} value={editing.popup_frequency_hours} onChange={(e) => setEditing({ ...editing, popup_frequency_hours: parseInt(e.target.value || "24", 10) })} /></div>
+                    </div>
+                    <div><Label>Título do pop-up</Label><Input value={editing.popup_title} onChange={(e) => setEditing({ ...editing, popup_title: e.target.value })} /></div>
+                    <div><Label>Subtítulo</Label><Textarea value={editing.popup_subtitle} onChange={(e) => setEditing({ ...editing, popup_subtitle: e.target.value })} /></div>
+                    <div className="grid gap-3 md:grid-cols-2">
+                      <div><Label>Texto do botão</Label><Input value={editing.popup_button_text} onChange={(e) => setEditing({ ...editing, popup_button_text: e.target.value })} /></div>
+                      <div><Label>Mensagem WhatsApp (pop-up)</Label><Input value={editing.popup_whatsapp_message} onChange={(e) => setEditing({ ...editing, popup_whatsapp_message: e.target.value })} /></div>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           )}
