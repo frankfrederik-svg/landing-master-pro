@@ -19,7 +19,7 @@ export const Route = createFileRoute("/admin")({
   component: AdminPage,
 });
 
-type Campaign = { id: string; slug: string; name: string; hero_title: string; hero_subtitle: string; cta_text: string; primary_color: string; accent_color: string; banner_url: string | null; whatsapp_number: string | null; whatsapp_message: string | null; active: boolean };
+type Campaign = { id: string; slug: string; name: string; hero_title: string; hero_subtitle: string; cta_text: string; primary_color: string; accent_color: string; banner_url: string | null; whatsapp_number: string | null; whatsapp_message: string | null; active: boolean; popup_enabled: boolean; popup_delay_mobile: number; popup_delay_desktop: number; popup_frequency_hours: number; popup_title: string; popup_subtitle: string; popup_button_text: string; popup_whatsapp_message: string };
 type Property = { id: string; campaign_id: string; name: string; location: string; image_url: string | null; entry_value: number | null; description: string | null; tag: string | null; active: boolean };
 type Lead = { id: string; campaign_id: string | null; name: string; whatsapp: string; income_range: string; mcmv_faixa: number | null; created_at: string };
 type Settings = { id: number; default_whatsapp: string | null; default_message: string | null; webhook_url: string | null };
