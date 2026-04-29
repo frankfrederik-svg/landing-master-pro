@@ -1,0 +1,359 @@
+import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
+import { useEffect, useState, useCallback } from "react";
+import { useAuth } from "@/lib/auth-context";
+import { supabase } from "@/integrations/supabase/client";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Switch } from "@/components/ui/switch";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
+import { Building2, Copy, Download, ExternalLink, LogOut, Pencil, Plus, Trash2 } from "lucide-react";
+import { toast } from "sonner";
+import { formatCurrencyBRL } from "@/lib/faixa";
+
+export const Route = createFileRoute("/admin")({
+  component: AdminPage,
+});
+
+type Campaign = { id: string; slug: string; name: string; hero_title: string; hero_subtitle: string; cta_text: string; primary_color: string; accent_color: string; banner_url: string | null; whatsapp_number: string | null; whatsapp_message: string | null; active: boolean };
+type Property = { id: string; campaign_id: string; name: string; location: string; image_url: string | null; entry_value: number | null; description: string | null; tag: string | null; active: boolean };
+type Lead = { id: string; campaign_id: string | null; name: string; whatsapp: string; income_range: string; mcmv_faixa: number | null; created_at: string };
+type Settings = { id: number; default_whatsapp: string | null; default_message: string | null; webhook_url: string | null };
+
+function AdminPage() {
+  const { session, isAdmin, loading, signOut } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!loading && !session) navigate({ to: "/login" });
+  }, [loading, session, navigate]);
+
+  if (loading || !session) return <div className="flex min-h-screen items-center justify-center text-muted-foreground">Carregando...</div>;
+  if (!isAdmin) return (
+    <div className="flex min-h-screen items-center justify-center p-4">
+      <div className="max-w-md rounded-2xl bg-card p-8 text-center shadow-elegant">
+        <h1 className="text-xl font-bold">Acesso restrito</h1>
+        <p className="mt-2 text-sm text-muted-foreground">Sua conta não tem permissão de admin.</p>
+        <Button className="mt-4" onClick={signOut}>Sair</Button>
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="min-h-screen bg-gradient-soft">
+      <header className="border-b bg-card">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
+          <div className="flex items-center gap-2">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-primary text-primary-foreground"><Building2 className="h-5 w-5" /></div>
+            <span className="font-bold">Apê Fácil — Admin</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <Link to="/"><Button variant="outline" size="sm">Ver site</Button></Link>
+            <Button size="sm" variant="ghost" onClick={signOut}><LogOut className="mr-1.5 h-4 w-4" />Sair</Button>
+          </div>
+        </div>
+      </header>
+
+      <main className="mx-auto max-w-7xl px-4 py-8">
+        <Tabs defaultValue="campaigns">
+          <TabsList>
+            <TabsTrigger value="campaigns">Campanhas</TabsTrigger>
+            <TabsTrigger value="properties">Empreendimentos</TabsTrigger>
+            <TabsTrigger value="leads">Leads</TabsTrigger>
+            <TabsTrigger value="settings">Configurações</TabsTrigger>
+          </TabsList>
+          <TabsContent value="campaigns" className="mt-6"><CampaignsTab /></TabsContent>
+          <TabsContent value="properties" className="mt-6"><PropertiesTab /></TabsContent>
+          <TabsContent value="leads" className="mt-6"><LeadsTab /></TabsContent>
+          <TabsContent value="settings" className="mt-6"><SettingsTab /></TabsContent>
+        </Tabs>
+      </main>
+    </div>
+  );
+}
+
+/* -------- CAMPANHAS -------- */
+function CampaignsTab() {
+  const [items, setItems] = useState<Campaign[]>([]);
+  const [editing, setEditing] = useState<Campaign | null>(null);
+  const [open, setOpen] = useState(false);
+
+  const load = useCallback(async () => {
+    const { data } = await supabase.from("campaigns").select("*").order("created_at", { ascending: false });
+    setItems((data ?? []) as Campaign[]);
+  }, []);
+  useEffect(() => { load(); }, [load]);
+
+  function newCampaign() {
+    setEditing({ id: "", slug: "", name: "", hero_title: "Realize o sonho do seu apê", hero_subtitle: "Condições especiais com entrada facilitada", cta_text: "Quero aproveitar agora", primary_color: "#16a34a", accent_color: "#f97316", banner_url: null, whatsapp_number: null, whatsapp_message: "Olá! Tenho interesse.", active: true });
+    setOpen(true);
+  }
+
+  async function save() {
+    if (!editing) return;
+    if (!editing.slug.trim() || !editing.name.trim()) { toast.error("Slug e nome são obrigatórios"); return; }
+    const slug = editing.slug.toLowerCase().replace(/[^a-z0-9-]/g, "-");
+    const payload = { ...editing, slug };
+    const { id, ...data } = payload;
+    const res = id ? await supabase.from("campaigns").update(data).eq("id", id) : await supabase.from("campaigns").insert(data);
+    if (res.error) { toast.error(res.error.message); return; }
+    toast.success("Campanha salva");
+    setOpen(false); load();
+  }
+
+  async function duplicate(c: Campaign) {
+    const { id, slug, ...rest } = c;
+    const newSlug = `${slug}-copia-${Date.now().toString(36).slice(-4)}`;
+    const { error } = await supabase.from("campaigns").insert({ ...rest, slug: newSlug, name: `${c.name} (cópia)` });
+    if (error) toast.error(error.message); else { toast.success("Duplicada"); load(); }
+  }
+  async function del(id: string) {
+    if (!confirm("Excluir esta campanha?")) return;
+    const { error } = await supabase.from("campaigns").delete().eq("id", id);
+    if (error) toast.error(error.message); else { toast.success("Excluída"); load(); }
+  }
+  async function toggle(c: Campaign) {
+    const { error } = await supabase.from("campaigns").update({ active: !c.active }).eq("id", c.id);
+    if (error) toast.error(error.message); else load();
+  }
+
+  return (
+    <div>
+      <div className="mb-4 flex justify-between">
+        <h2 className="text-xl font-bold">Campanhas</h2>
+        <Button variant="hero" onClick={newCampaign}><Plus className="mr-1.5 h-4 w-4" />Nova campanha</Button>
+      </div>
+      <div className="grid gap-3">
+        {items.map((c) => (
+          <div key={c.id} className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border bg-card p-4 shadow-sm">
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center gap-2">
+                <h3 className="font-semibold">{c.name}</h3>
+                {c.active ? <Badge className="bg-success text-success-foreground">Ativa</Badge> : <Badge variant="secondary">Inativa</Badge>}
+              </div>
+              <p className="truncate text-sm text-muted-foreground">/c/{c.slug}</p>
+            </div>
+            <div className="flex flex-wrap items-center gap-2">
+              <Switch checked={c.active} onCheckedChange={() => toggle(c)} />
+              <Link to="/c/$slug" params={{ slug: c.slug }} target="_blank"><Button size="sm" variant="outline"><ExternalLink className="h-4 w-4" /></Button></Link>
+              <Button size="sm" variant="outline" onClick={() => { setEditing(c); setOpen(true); }}><Pencil className="h-4 w-4" /></Button>
+              <Button size="sm" variant="outline" onClick={() => duplicate(c)}><Copy className="h-4 w-4" /></Button>
+              <Button size="sm" variant="outline" onClick={() => del(c.id)}><Trash2 className="h-4 w-4" /></Button>
+            </div>
+          </div>
+        ))}
+        {items.length === 0 && <div className="rounded-2xl border-2 border-dashed p-10 text-center text-muted-foreground">Nenhuma campanha. Crie a primeira!</div>}
+      </div>
+
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent className="max-h-[90vh] overflow-y-auto">
+          <DialogHeader><DialogTitle>{editing?.id ? "Editar campanha" : "Nova campanha"}</DialogTitle></DialogHeader>
+          {editing && (
+            <div className="space-y-3">
+              <div className="grid gap-3 md:grid-cols-2">
+                <div><Label>Nome</Label><Input value={editing.name} onChange={(e) => setEditing({ ...editing, name: e.target.value })} /></div>
+                <div><Label>Slug (URL)</Label><Input value={editing.slug} onChange={(e) => setEditing({ ...editing, slug: e.target.value })} placeholder="feirao-mrv" /></div>
+              </div>
+              <div><Label>Título do hero</Label><Input value={editing.hero_title} onChange={(e) => setEditing({ ...editing, hero_title: e.target.value })} /></div>
+              <div><Label>Subtítulo</Label><Textarea value={editing.hero_subtitle} onChange={(e) => setEditing({ ...editing, hero_subtitle: e.target.value })} /></div>
+              <div><Label>Texto do botão CTA</Label><Input value={editing.cta_text} onChange={(e) => setEditing({ ...editing, cta_text: e.target.value })} /></div>
+              <div><Label>URL do banner (opcional)</Label><Input value={editing.banner_url ?? ""} onChange={(e) => setEditing({ ...editing, banner_url: e.target.value || null })} placeholder="https://..." /></div>
+              <div className="grid gap-3 md:grid-cols-2">
+                <div><Label>WhatsApp (com DDD)</Label><Input value={editing.whatsapp_number ?? ""} onChange={(e) => setEditing({ ...editing, whatsapp_number: e.target.value || null })} placeholder="5511900000000" /></div>
+                <div><Label>Mensagem WhatsApp</Label><Input value={editing.whatsapp_message ?? ""} onChange={(e) => setEditing({ ...editing, whatsapp_message: e.target.value || null })} /></div>
+              </div>
+            </div>
+          )}
+          <DialogFooter><Button variant="hero" onClick={save}>Salvar</Button></DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}
+
+/* -------- EMPREENDIMENTOS -------- */
+function PropertiesTab() {
+  const [items, setItems] = useState<Property[]>([]);
+  const [campaigns, setCampaigns] = useState<Campaign[]>([]);
+  const [editing, setEditing] = useState<Property | null>(null);
+  const [open, setOpen] = useState(false);
+
+  const load = useCallback(async () => {
+    const [p, c] = await Promise.all([
+      supabase.from("properties").select("*").order("display_order", { ascending: true }),
+      supabase.from("campaigns").select("*").order("name"),
+    ]);
+    setItems((p.data ?? []) as Property[]);
+    setCampaigns((c.data ?? []) as Campaign[]);
+  }, []);
+  useEffect(() => { load(); }, [load]);
+
+  function novo() {
+    if (campaigns.length === 0) { toast.error("Crie uma campanha primeiro"); return; }
+    setEditing({ id: "", campaign_id: campaigns[0].id, name: "", location: "", image_url: null, entry_value: null, description: null, tag: null, active: true });
+    setOpen(true);
+  }
+  async function save() {
+    if (!editing) return;
+    const { id, ...data } = editing;
+    const res = id ? await supabase.from("properties").update(data).eq("id", id) : await supabase.from("properties").insert(data);
+    if (res.error) toast.error(res.error.message); else { toast.success("Salvo"); setOpen(false); load(); }
+  }
+  async function del(id: string) {
+    if (!confirm("Excluir?")) return;
+    const { error } = await supabase.from("properties").delete().eq("id", id);
+    if (error) toast.error(error.message); else load();
+  }
+
+  return (
+    <div>
+      <div className="mb-4 flex justify-between">
+        <h2 className="text-xl font-bold">Empreendimentos</h2>
+        <Button variant="hero" onClick={novo}><Plus className="mr-1.5 h-4 w-4" />Novo</Button>
+      </div>
+      <div className="grid gap-3">
+        {items.map((p) => {
+          const camp = campaigns.find((c) => c.id === p.campaign_id);
+          return (
+            <div key={p.id} className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border bg-card p-4 shadow-sm">
+              <div className="min-w-0 flex-1">
+                <h3 className="font-semibold">{p.name}</h3>
+                <p className="text-sm text-muted-foreground">{p.location} · {camp?.name ?? "—"} · Entrada {formatCurrencyBRL(p.entry_value)}</p>
+              </div>
+              <div className="flex gap-2">
+                <Button size="sm" variant="outline" onClick={() => { setEditing(p); setOpen(true); }}><Pencil className="h-4 w-4" /></Button>
+                <Button size="sm" variant="outline" onClick={() => del(p.id)}><Trash2 className="h-4 w-4" /></Button>
+              </div>
+            </div>
+          );
+        })}
+        {items.length === 0 && <div className="rounded-2xl border-2 border-dashed p-10 text-center text-muted-foreground">Nenhum empreendimento.</div>}
+      </div>
+
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent className="max-h-[90vh] overflow-y-auto">
+          <DialogHeader><DialogTitle>{editing?.id ? "Editar" : "Novo empreendimento"}</DialogTitle></DialogHeader>
+          {editing && (
+            <div className="space-y-3">
+              <div><Label>Campanha</Label>
+                <Select value={editing.campaign_id} onValueChange={(v) => setEditing({ ...editing, campaign_id: v })}>
+                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectContent>{campaigns.map((c) => <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>)}</SelectContent>
+                </Select>
+              </div>
+              <div><Label>Nome</Label><Input value={editing.name} onChange={(e) => setEditing({ ...editing, name: e.target.value })} /></div>
+              <div><Label>Localização</Label><Input value={editing.location} onChange={(e) => setEditing({ ...editing, location: e.target.value })} /></div>
+              <div><Label>URL da imagem</Label><Input value={editing.image_url ?? ""} onChange={(e) => setEditing({ ...editing, image_url: e.target.value || null })} placeholder="https://..." /></div>
+              <div className="grid gap-3 md:grid-cols-2">
+                <div><Label>Valor da entrada</Label><Input type="number" step="0.01" value={editing.entry_value ?? ""} onChange={(e) => setEditing({ ...editing, entry_value: e.target.value ? parseFloat(e.target.value) : null })} /></div>
+                <div><Label>Tag (LANÇAMENTO, etc)</Label><Input value={editing.tag ?? ""} onChange={(e) => setEditing({ ...editing, tag: e.target.value || null })} /></div>
+              </div>
+              <div><Label>Descrição</Label><Textarea value={editing.description ?? ""} onChange={(e) => setEditing({ ...editing, description: e.target.value || null })} /></div>
+            </div>
+          )}
+          <DialogFooter><Button variant="hero" onClick={save}>Salvar</Button></DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}
+
+/* -------- LEADS -------- */
+function LeadsTab() {
+  const [items, setItems] = useState<Lead[]>([]);
+  const [campaigns, setCampaigns] = useState<Campaign[]>([]);
+  const [filter, setFilter] = useState<string>("all");
+
+  useEffect(() => {
+    supabase.from("campaigns").select("*").order("name").then(({ data }) => setCampaigns((data ?? []) as Campaign[]));
+  }, []);
+  useEffect(() => {
+    let q = supabase.from("leads").select("*").order("created_at", { ascending: false });
+    if (filter !== "all") q = q.eq("campaign_id", filter);
+    q.then(({ data }) => setItems((data ?? []) as Lead[]));
+  }, [filter]);
+
+  function exportCSV() {
+    const header = ["Data", "Nome", "WhatsApp", "Renda", "Faixa", "Campanha"];
+    const rows = items.map((l) => [
+      new Date(l.created_at).toLocaleString("pt-BR"),
+      l.name, l.whatsapp, l.income_range,
+      l.mcmv_faixa ?? "", campaigns.find((c) => c.id === l.campaign_id)?.name ?? "",
+    ]);
+    const csv = [header, ...rows].map((r) => r.map((v) => `"${String(v).replace(/"/g, '""')}"`).join(",")).join("\n");
+    const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a"); a.href = url; a.download = `leads-${Date.now()}.csv`; a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  return (
+    <div>
+      <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+        <h2 className="text-xl font-bold">Leads <span className="text-sm font-normal text-muted-foreground">({items.length})</span></h2>
+        <div className="flex gap-2">
+          <Select value={filter} onValueChange={setFilter}>
+            <SelectTrigger className="w-[200px]"><SelectValue /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Todas as campanhas</SelectItem>
+              {campaigns.map((c) => <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>)}
+            </SelectContent>
+          </Select>
+          <Button variant="outline" onClick={exportCSV}><Download className="mr-1.5 h-4 w-4" />CSV</Button>
+        </div>
+      </div>
+      <div className="overflow-x-auto rounded-2xl border bg-card">
+        <table className="w-full text-sm">
+          <thead className="bg-muted/50 text-left">
+            <tr><th className="p-3">Data</th><th className="p-3">Nome</th><th className="p-3">WhatsApp</th><th className="p-3">Renda</th><th className="p-3">Faixa</th><th className="p-3">Campanha</th></tr>
+          </thead>
+          <tbody>
+            {items.map((l) => (
+              <tr key={l.id} className="border-t">
+                <td className="p-3 text-muted-foreground">{new Date(l.created_at).toLocaleDateString("pt-BR")}</td>
+                <td className="p-3 font-medium">{l.name}</td>
+                <td className="p-3">{l.whatsapp}</td>
+                <td className="p-3">{l.income_range}</td>
+                <td className="p-3">{l.mcmv_faixa ? <Badge>{`Faixa ${l.mcmv_faixa}`}</Badge> : "—"}</td>
+                <td className="p-3 text-muted-foreground">{campaigns.find((c) => c.id === l.campaign_id)?.name ?? "—"}</td>
+              </tr>
+            ))}
+            {items.length === 0 && <tr><td colSpan={6} className="p-10 text-center text-muted-foreground">Nenhum lead ainda.</td></tr>}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
+/* -------- SETTINGS -------- */
+function SettingsTab() {
+  const [s, setS] = useState<Settings | null>(null);
+  useEffect(() => {
+    supabase.from("settings").select("*").eq("id", 1).maybeSingle().then(({ data }) => setS(data as Settings));
+  }, []);
+
+  async function save() {
+    if (!s) return;
+    const { error } = await supabase.from("settings").update({
+      default_whatsapp: s.default_whatsapp, default_message: s.default_message, webhook_url: s.webhook_url,
+    }).eq("id", 1);
+    if (error) toast.error(error.message); else toast.success("Configurações salvas");
+  }
+
+  if (!s) return <p className="text-muted-foreground">Carregando...</p>;
+
+  return (
+    <div className="max-w-2xl space-y-4 rounded-2xl border bg-card p-6 shadow-sm">
+      <h2 className="text-xl font-bold">Configurações globais</h2>
+      <div><Label>WhatsApp padrão (com DDI)</Label><Input value={s.default_whatsapp ?? ""} onChange={(e) => setS({ ...s, default_whatsapp: e.target.value })} placeholder="5511900000000" /></div>
+      <div><Label>Mensagem padrão</Label><Textarea value={s.default_message ?? ""} onChange={(e) => setS({ ...s, default_message: e.target.value })} /></div>
+      <div><Label>Webhook URL (CRM)</Label><Input value={s.webhook_url ?? ""} onChange={(e) => setS({ ...s, webhook_url: e.target.value })} placeholder="https://seu-crm.com/webhook" /><p className="mt-1 text-xs text-muted-foreground">Recebe POST com {`{ event, lead }`} a cada novo lead.</p></div>
+      <Button variant="hero" onClick={save}>Salvar</Button>
+    </div>
+  );
+}
