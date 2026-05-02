@@ -11,7 +11,8 @@ import { Switch } from "@/components/ui/switch";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { Building2, Copy, Download, ExternalLink, LogOut, Pencil, Plus, Trash2 } from "lucide-react";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Building2, Copy, Download, ExternalLink, KeyRound, LogOut, Pencil, Plus, Trash2, UserPlus, User as UserIcon } from "lucide-react";
 import { toast } from "sonner";
 import { formatCurrencyBRL } from "@/lib/faixa";
 
