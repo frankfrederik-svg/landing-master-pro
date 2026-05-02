@@ -26,8 +26,10 @@ type Lead = { id: string; campaign_id: string | null; name: string; whatsapp: st
 type Settings = { id: number; default_whatsapp: string | null; default_message: string | null; webhook_url: string | null };
 
 function AdminPage() {
-  const { session, isAdmin, loading, signOut } = useAuth();
+  const { session, isAdmin, loading, signOut, user } = useAuth();
   const navigate = useNavigate();
+  const [pwOpen, setPwOpen] = useState(false);
+  const [userOpen, setUserOpen] = useState(false);
 
   useEffect(() => {
     if (!loading && !session) navigate({ to: "/login" });
@@ -54,10 +56,35 @@ function AdminPage() {
           </div>
           <div className="flex items-center gap-2">
             <Link to="/"><Button variant="outline" size="sm">Ver site</Button></Link>
-            <Button size="sm" variant="ghost" onClick={signOut}><LogOut className="mr-1.5 h-4 w-4" />Sair</Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button size="sm" variant="ghost" className="gap-1.5">
+                  <UserIcon className="h-4 w-4" />
+                  <span className="hidden sm:inline max-w-[160px] truncate">{user?.email}</span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuLabel className="truncate">{user?.email}</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => setPwOpen(true)}>
+                  <KeyRound className="mr-2 h-4 w-4" /> Alterar senha
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setUserOpen(true)}>
+                  <UserPlus className="mr-2 h-4 w-4" /> Criar novo usuário
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={signOut}>
+                  <LogOut className="mr-2 h-4 w-4" /> Sair
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
       </header>
+
+      <ChangePasswordDialog open={pwOpen} onOpenChange={setPwOpen} />
+      <CreateUserDialog open={userOpen} onOpenChange={setUserOpen} />
+
 
       <main className="mx-auto max-w-7xl px-4 py-8">
         <Tabs defaultValue="campaigns">
