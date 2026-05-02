@@ -11,7 +11,8 @@ import { Switch } from "@/components/ui/switch";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { Building2, Copy, Download, ExternalLink, LogOut, Pencil, Plus, Trash2 } from "lucide-react";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Building2, Copy, Download, ExternalLink, KeyRound, LogOut, Pencil, Plus, Trash2, UserPlus, User as UserIcon } from "lucide-react";
 import { toast } from "sonner";
 import { formatCurrencyBRL } from "@/lib/faixa";
 
@@ -25,8 +26,10 @@ type Lead = { id: string; campaign_id: string | null; name: string; whatsapp: st
 type Settings = { id: number; default_whatsapp: string | null; default_message: string | null; webhook_url: string | null };
 
 function AdminPage() {
-  const { session, isAdmin, loading, signOut } = useAuth();
+  const { session, isAdmin, loading, signOut, user } = useAuth();
   const navigate = useNavigate();
+  const [pwOpen, setPwOpen] = useState(false);
+  const [userOpen, setUserOpen] = useState(false);
 
   useEffect(() => {
     if (!loading && !session) navigate({ to: "/login" });
@@ -53,10 +56,35 @@ function AdminPage() {
           </div>
           <div className="flex items-center gap-2">
             <Link to="/"><Button variant="outline" size="sm">Ver site</Button></Link>
-            <Button size="sm" variant="ghost" onClick={signOut}><LogOut className="mr-1.5 h-4 w-4" />Sair</Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button size="sm" variant="ghost" className="gap-1.5">
+                  <UserIcon className="h-4 w-4" />
+                  <span className="hidden sm:inline max-w-[160px] truncate">{user?.email}</span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuLabel className="truncate">{user?.email}</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => setPwOpen(true)}>
+                  <KeyRound className="mr-2 h-4 w-4" /> Alterar senha
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setUserOpen(true)}>
+                  <UserPlus className="mr-2 h-4 w-4" /> Criar novo usuário
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={signOut}>
+                  <LogOut className="mr-2 h-4 w-4" /> Sair
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
       </header>
+
+      <ChangePasswordDialog open={pwOpen} onOpenChange={setPwOpen} />
+      <CreateUserDialog open={userOpen} onOpenChange={setUserOpen} />
+
 
       <main className="mx-auto max-w-7xl px-4 py-8">
         <Tabs defaultValue="campaigns">
@@ -382,3 +410,84 @@ function SettingsTab() {
     </div>
   );
 }
+
+/* -------- DIALOGS DE PERFIL -------- */
+function ChangePasswordDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (v: boolean) => void }) {
+  const [password, setPassword] = useState("");
+  const [confirm, setConfirm] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+
+  async function submit(e: React.FormEvent) {
+    e.preventDefault();
+    if (password.length < 6) { toast.error("Senha deve ter ao menos 6 caracteres"); return; }
+    if (password !== confirm) { toast.error("As senhas não coincidem"); return; }
+    setSubmitting(true);
+    const { error } = await supabase.auth.updateUser({ password });
+    setSubmitting(false);
+    if (error) { toast.error(error.message); return; }
+    toast.success("Senha alterada com sucesso");
+    setPassword(""); setConfirm("");
+    onOpenChange(false);
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent>
+        <DialogHeader><DialogTitle>Alterar minha senha</DialogTitle></DialogHeader>
+        <form onSubmit={submit} className="space-y-4">
+          <div><Label>Nova senha</Label><Input type="password" minLength={6} required value={password} onChange={(e) => setPassword(e.target.value)} /></div>
+          <div><Label>Confirmar nova senha</Label><Input type="password" minLength={6} required value={confirm} onChange={(e) => setConfirm(e.target.value)} /></div>
+          <DialogFooter><Button type="submit" variant="hero" disabled={submitting}>{submitting ? "Salvando..." : "Salvar nova senha"}</Button></DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+function CreateUserDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (v: boolean) => void }) {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [role, setRole] = useState<"admin" | "user">("admin");
+  const [submitting, setSubmitting] = useState(false);
+
+  async function submit(e: React.FormEvent) {
+    e.preventDefault();
+    setSubmitting(true);
+    const { data, error } = await supabase.functions.invoke("admin-create-user", {
+      body: { email, password, role },
+    });
+    setSubmitting(false);
+    if (error || (data && (data as { error?: string }).error)) {
+      toast.error(((data as { error?: string })?.error) ?? error?.message ?? "Falha ao criar usuário");
+      return;
+    }
+    toast.success(`Usuário criado: ${email}`);
+    setEmail(""); setPassword(""); setRole("admin");
+    onOpenChange(false);
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent>
+        <DialogHeader><DialogTitle>Criar novo usuário</DialogTitle></DialogHeader>
+        <form onSubmit={submit} className="space-y-4">
+          <div><Label>E-mail</Label><Input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="socialmedia@empresa.com" /></div>
+          <div><Label>Senha provisória (mín. 6)</Label><Input type="password" minLength={6} required value={password} onChange={(e) => setPassword(e.target.value)} /></div>
+          <div>
+            <Label>Permissão</Label>
+            <Select value={role} onValueChange={(v) => setRole(v as "admin" | "user")}>
+              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="admin">Admin (acesso total)</SelectItem>
+                <SelectItem value="user">Usuário comum</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <p className="text-xs text-muted-foreground">A conta será criada já confirmada. Compartilhe o e-mail e a senha com a pessoa.</p>
+          <DialogFooter><Button type="submit" variant="hero" disabled={submitting}>{submitting ? "Criando..." : "Criar usuário"}</Button></DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
