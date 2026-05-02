@@ -121,19 +121,30 @@ function HotsitePage() {
                   {img ? (
                     <div className="relative aspect-[4/3] overflow-hidden">
                       <img src={img} alt={p.name} loading="lazy" width={1024} height={768} className="h-full w-full object-cover transition-base group-hover:scale-105" />
-                      {p.tag && <Badge className="absolute left-3 top-3 bg-gradient-accent text-accent-foreground">{p.tag}</Badge>}
+                      {p.tag && (
+                        <Badge className="absolute left-3 top-3 border-0 bg-gradient-accent px-3 py-1.5 text-xs font-extrabold uppercase tracking-wider text-accent-foreground shadow-cta ring-2 ring-white/40 animate-pulse">
+                          🔥 {p.tag}
+                        </Badge>
+                      )}
                     </div>
                   ) : (
-                    <div className="flex aspect-[4/3] items-center justify-center bg-muted"><Building2 className="h-12 w-12 text-muted-foreground" /></div>
+                    <div className="relative flex aspect-[4/3] items-center justify-center bg-muted">
+                      <Building2 className="h-12 w-12 text-muted-foreground" />
+                      {p.tag && (
+                        <Badge className="absolute left-3 top-3 border-0 bg-gradient-accent px-3 py-1.5 text-xs font-extrabold uppercase tracking-wider text-accent-foreground shadow-cta ring-2 ring-white/40 animate-pulse">
+                          🔥 {p.tag}
+                        </Badge>
+                      )}
+                    </div>
                   )}
                   <div className="space-y-3 p-5">
                     <h3 className="text-lg font-semibold">{p.name}</h3>
                     <div className="flex items-center gap-1.5 text-sm text-muted-foreground"><MapPin className="h-4 w-4" />{p.location}</div>
                     {p.description && <p className="line-clamp-2 text-sm text-muted-foreground">{p.description}</p>}
                     {p.entry_value != null && (
-                      <div className="rounded-xl bg-primary/5 p-3">
-                        <span className="text-xs font-medium text-muted-foreground">Entrada a partir de</span>
-                        <p className="text-xl font-bold text-primary">{formatCurrencyBRL(p.entry_value)}</p>
+                      <div className="rounded-xl border-2 border-primary/30 bg-gradient-to-br from-primary/10 to-accent/10 p-4 shadow-sm">
+                        <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Renda ideal a partir de</span>
+                        <p className="mt-1 text-3xl font-extrabold text-primary leading-tight">{formatCurrencyBRL(p.entry_value)}<span className="ml-1 text-sm font-medium text-muted-foreground">/mês</span></p>
                       </div>
                     )}
                     <Button onClick={scrollToForm} variant="hero" className="w-full">Tenho interesse</Button>
