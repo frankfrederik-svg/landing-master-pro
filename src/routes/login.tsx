@@ -71,6 +71,13 @@ function LoginPage() {
               <div className="space-y-2"><Label>E-mail</Label><Input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} /></div>
               <div className="space-y-2"><Label>Senha</Label><Input type="password" required value={password} onChange={(e) => setPassword(e.target.value)} /></div>
               <Button type="submit" variant="hero" className="w-full" disabled={submitting}>{submitting ? "Entrando..." : "Entrar"}</Button>
+              <button
+                type="button"
+                onClick={() => { setForgotEmail(email); setForgotOpen(true); }}
+                className="block w-full text-center text-sm text-primary hover:underline"
+              >
+                Esqueci minha senha
+              </button>
             </form>
           </TabsContent>
           <TabsContent value="up">
