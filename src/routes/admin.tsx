@@ -410,3 +410,84 @@ function SettingsTab() {
     </div>
   );
 }
+
+/* -------- DIALOGS DE PERFIL -------- */
+function ChangePasswordDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (v: boolean) => void }) {
+  const [password, setPassword] = useState("");
+  const [confirm, setConfirm] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+
+  async function submit(e: React.FormEvent) {
+    e.preventDefault();
+    if (password.length < 6) { toast.error("Senha deve ter ao menos 6 caracteres"); return; }
+    if (password !== confirm) { toast.error("As senhas não coincidem"); return; }
+    setSubmitting(true);
+    const { error } = await supabase.auth.updateUser({ password });
+    setSubmitting(false);
+    if (error) { toast.error(error.message); return; }
+    toast.success("Senha alterada com sucesso");
+    setPassword(""); setConfirm("");
+    onOpenChange(false);
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent>
+        <DialogHeader><DialogTitle>Alterar minha senha</DialogTitle></DialogHeader>
+        <form onSubmit={submit} className="space-y-4">
+          <div><Label>Nova senha</Label><Input type="password" minLength={6} required value={password} onChange={(e) => setPassword(e.target.value)} /></div>
+          <div><Label>Confirmar nova senha</Label><Input type="password" minLength={6} required value={confirm} onChange={(e) => setConfirm(e.target.value)} /></div>
+          <DialogFooter><Button type="submit" variant="hero" disabled={submitting}>{submitting ? "Salvando..." : "Salvar nova senha"}</Button></DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+function CreateUserDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (v: boolean) => void }) {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [role, setRole] = useState<"admin" | "user">("admin");
+  const [submitting, setSubmitting] = useState(false);
+
+  async function submit(e: React.FormEvent) {
+    e.preventDefault();
+    setSubmitting(true);
+    const { data, error } = await supabase.functions.invoke("admin-create-user", {
+      body: { email, password, role },
+    });
+    setSubmitting(false);
+    if (error || (data && (data as { error?: string }).error)) {
+      toast.error(((data as { error?: string })?.error) ?? error?.message ?? "Falha ao criar usuário");
+      return;
+    }
+    toast.success(`Usuário criado: ${email}`);
+    setEmail(""); setPassword(""); setRole("admin");
+    onOpenChange(false);
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent>
+        <DialogHeader><DialogTitle>Criar novo usuário</DialogTitle></DialogHeader>
+        <form onSubmit={submit} className="space-y-4">
+          <div><Label>E-mail</Label><Input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="socialmedia@empresa.com" /></div>
+          <div><Label>Senha provisória (mín. 6)</Label><Input type="password" minLength={6} required value={password} onChange={(e) => setPassword(e.target.value)} /></div>
+          <div>
+            <Label>Permissão</Label>
+            <Select value={role} onValueChange={(v) => setRole(v as "admin" | "user")}>
+              <SelectTrigger><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="admin">Admin (acesso total)</SelectItem>
+                <SelectItem value="user">Usuário comum</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          <p className="text-xs text-muted-foreground">A conta será criada já confirmada. Compartilhe o e-mail e a senha com a pessoa.</p>
+          <DialogFooter><Button type="submit" variant="hero" disabled={submitting}>{submitting ? "Criando..." : "Criar usuário"}</Button></DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
