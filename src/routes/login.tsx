@@ -1,10 +1,12 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/lib/auth-context";
+import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Building2 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -18,6 +20,9 @@ function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [forgotOpen, setForgotOpen] = useState(false);
+  const [forgotEmail, setForgotEmail] = useState("");
+  const [forgotSubmitting, setForgotSubmitting] = useState(false);
 
   useEffect(() => {
     if (!loading && session) navigate({ to: "/admin" });
@@ -31,6 +36,19 @@ function LoginPage() {
     if (error) { toast.error(error); return; }
     if (action === "up") toast.success("Conta criada! Verifique seu e-mail se necessário.");
     else navigate({ to: "/admin" });
+  }
+
+  async function handleForgot(e: React.FormEvent) {
+    e.preventDefault();
+    if (!forgotEmail) return;
+    setForgotSubmitting(true);
+    const { error } = await supabase.auth.resetPasswordForEmail(forgotEmail, {
+      redirectTo: `${window.location.origin}/reset-password`,
+    });
+    setForgotSubmitting(false);
+    if (error) { toast.error(error.message); return; }
+    toast.success("Enviamos um link de recuperação para seu e-mail.");
+    setForgotOpen(false);
   }
 
   return (
@@ -53,6 +71,13 @@ function LoginPage() {
               <div className="space-y-2"><Label>E-mail</Label><Input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} /></div>
               <div className="space-y-2"><Label>Senha</Label><Input type="password" required value={password} onChange={(e) => setPassword(e.target.value)} /></div>
               <Button type="submit" variant="hero" className="w-full" disabled={submitting}>{submitting ? "Entrando..." : "Entrar"}</Button>
+              <button
+                type="button"
+                onClick={() => { setForgotEmail(email); setForgotOpen(true); }}
+                className="block w-full text-center text-sm text-primary hover:underline"
+              >
+                Esqueci minha senha
+              </button>
             </form>
           </TabsContent>
           <TabsContent value="up">
@@ -65,6 +90,26 @@ function LoginPage() {
           </TabsContent>
         </Tabs>
       </div>
+
+      <Dialog open={forgotOpen} onOpenChange={setForgotOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Recuperar senha</DialogTitle>
+            <DialogDescription>
+              Informe seu e-mail e enviaremos um link para redefinir sua senha.
+            </DialogDescription>
+          </DialogHeader>
+          <form onSubmit={handleForgot} className="space-y-4">
+            <div className="space-y-2">
+              <Label>E-mail</Label>
+              <Input type="email" required value={forgotEmail} onChange={(e) => setForgotEmail(e.target.value)} />
+            </div>
+            <Button type="submit" variant="hero" className="w-full" disabled={forgotSubmitting}>
+              {forgotSubmitting ? "Enviando..." : "Enviar link de recuperação"}
+            </Button>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
