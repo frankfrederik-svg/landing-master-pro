@@ -90,6 +90,26 @@ function LoginPage() {
           </TabsContent>
         </Tabs>
       </div>
+
+      <Dialog open={forgotOpen} onOpenChange={setForgotOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Recuperar senha</DialogTitle>
+            <DialogDescription>
+              Informe seu e-mail e enviaremos um link para redefinir sua senha.
+            </DialogDescription>
+          </DialogHeader>
+          <form onSubmit={handleForgot} className="space-y-4">
+            <div className="space-y-2">
+              <Label>E-mail</Label>
+              <Input type="email" required value={forgotEmail} onChange={(e) => setForgotEmail(e.target.value)} />
+            </div>
+            <Button type="submit" variant="hero" className="w-full" disabled={forgotSubmitting}>
+              {forgotSubmitting ? "Enviando..." : "Enviar link de recuperação"}
+            </Button>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
