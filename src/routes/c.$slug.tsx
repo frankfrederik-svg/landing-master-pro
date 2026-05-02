@@ -77,15 +77,27 @@ function HotsitePage() {
           </h1>
           <p className="mt-4 max-w-2xl text-lg text-primary-foreground/90 md:text-xl">{campaign.hero_subtitle}</p>
 
-          <div className="mt-8 grid gap-3 sm:grid-cols-3">
+          <div className="mt-10 grid gap-4 sm:grid-cols-3">
             {[
-              { icon: TrendingDown, t: "Menor taxa de juros" },
-              { icon: Wallet, t: "Entrada facilitada" },
-              { icon: Percent, t: "Em até 72x" },
+              { icon: TrendingDown, t: "Menor taxa de juros", s: "do mercado" },
+              { icon: Wallet, t: "Entrada facilitada", s: "parcelada em até 60x" },
+              { icon: Percent, t: "Financie em 72x", s: "direto com o banco" },
             ].map((b) => (
-              <div key={b.t} className="flex items-center gap-3 rounded-xl bg-white/10 px-4 py-3 backdrop-blur">
-                <b.icon className="h-5 w-5 text-primary-foreground" />
-                <span className="font-medium text-primary-foreground">{b.t}</span>
+              <div
+                key={b.t}
+                className="flex items-center gap-4 rounded-2xl border border-white/30 bg-white/15 px-5 py-4 shadow-elegant backdrop-blur-md transition-base hover:bg-white/25 hover:scale-[1.02]"
+              >
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-accent shadow-cta">
+                  <b.icon className="h-6 w-6 text-accent-foreground" />
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-base font-bold leading-tight text-primary-foreground md:text-lg">
+                    {b.t}
+                  </span>
+                  <span className="text-xs font-medium text-primary-foreground/80 md:text-sm">
+                    {b.s}
+                  </span>
+                </div>
               </div>
             ))}
           </div>
