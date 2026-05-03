@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { COUNTRY_CODES } from "@/lib/countries";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -37,6 +38,7 @@ function maskWhatsapp(raw: string) {
 
 export function HotsiteForm({ campaignId, whatsappNumber, whatsappMessage }: Props) {
   const [name, setName] = useState("");
+  const [countryCode, setCountryCode] = useState("+55");
   const [whatsapp, setWhatsapp] = useState("");
   const [income, setIncome] = useState<IncomeRange | "">("");
   const [usesEntry, setUsesEntry] = useState<"sim" | "nao">("nao");
@@ -62,7 +64,7 @@ export function HotsiteForm({ campaignId, whatsappNumber, whatsappMessage }: Pro
         campaign_id: campaignId,
         property_id: null,
         name: name.trim(),
-        whatsapp: whatsapp.trim(),
+        whatsapp: `${countryCode} ${whatsapp.trim()}`,
         income_range: INCOME_OPTIONS.find((o) => o.value === income)?.label ?? income,
         mcmv_faixa: faixa?.faixa ?? null,
         uses_entry_value: usesEntry === "sim",
@@ -100,7 +102,34 @@ export function HotsiteForm({ campaignId, whatsappNumber, whatsappMessage }: Pro
 
       <div className="space-y-2">
         <Label htmlFor="wpp">WhatsApp</Label>
-        <Input id="wpp" required value={whatsapp} onChange={(e) => setWhatsapp(maskWhatsapp(e.target.value))} placeholder="(11) 90000-0000" />
+        <div className="flex gap-2">
+          <Select value={countryCode} onValueChange={setCountryCode}>
+            <SelectTrigger className="w-[120px] shrink-0">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {COUNTRY_CODES.map((c) => (
+                <SelectItem key={c.code} value={c.code}>
+                  {c.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Input 
+            id="wpp" 
+            required 
+            className="flex-1"
+            value={whatsapp} 
+            onChange={(e) => {
+              if (countryCode === "+55") {
+                setWhatsapp(maskWhatsapp(e.target.value));
+              } else {
+                setWhatsapp(e.target.value.replace(/[^\d\s()-]/g, ""));
+              }
+            }} 
+            placeholder={countryCode === "+55" ? "(11) 90000-0000" : "Número"} 
+          />
+        </div>
       </div>
 
       <div className="space-y-2">

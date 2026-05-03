@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState } from "react";
+import { COUNTRY_CODES } from "@/lib/countries";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -41,6 +43,7 @@ export function LeadPopup({
 }: Props) {
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
+  const [countryCode, setCountryCode] = useState("+55");
   const [whatsapp, setWhatsapp] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const shownRef = useRef(false);
@@ -127,7 +130,7 @@ export function LeadPopup({
         campaign_id: campaignId,
         property_id: null,
         name: name.trim(),
-        whatsapp: whatsapp.trim(),
+        whatsapp: `${countryCode} ${whatsapp.trim()}`,
         income_range: "Pop-up (não informado)",
         mcmv_faixa: null,
         uses_entry_value: false,
@@ -174,7 +177,35 @@ export function LeadPopup({
           </div>
           <div className="space-y-2">
             <Label htmlFor="popup-wpp">WhatsApp</Label>
-            <Input id="popup-wpp" required value={whatsapp} onChange={(e) => setWhatsapp(maskWhatsapp(e.target.value))} placeholder="(11) 90000-0000" inputMode="tel" />
+            <div className="flex gap-2">
+              <Select value={countryCode} onValueChange={setCountryCode}>
+                <SelectTrigger className="w-[110px] shrink-0">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {COUNTRY_CODES.map((c) => (
+                    <SelectItem key={c.code} value={c.code}>
+                      {c.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Input 
+                id="popup-wpp" 
+                required 
+                className="flex-1"
+                value={whatsapp} 
+                onChange={(e) => {
+                  if (countryCode === "+55") {
+                    setWhatsapp(maskWhatsapp(e.target.value));
+                  } else {
+                    setWhatsapp(e.target.value.replace(/[^\d\s()-]/g, ""));
+                  }
+                }} 
+                placeholder={countryCode === "+55" ? "(11) 90000-0000" : "Número"} 
+                inputMode="tel" 
+              />
+            </div>
           </div>
           <Button type="submit" variant="cta" size="xl" className="w-full" disabled={submitting}>
             {submitting ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : <MessageCircle className="mr-2 h-5 w-5" />}

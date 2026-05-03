@@ -492,7 +492,7 @@ function LeadsTab() {
                   <td className="p-3 font-medium text-primary">
                     <div className="flex items-center gap-2">
                       <span>{l.whatsapp}</span>
-                      <a href={`https://wa.me/${l.whatsapp.replace(/\D/g, '')}?text=${encodeURIComponent(`Olá, ${l.name}! Recebi seu contato através da campanha ${campaigns.find((c) => c.id === l.campaign_id)?.name ?? "do site"}. Como posso te ajudar?`)}`} target="_blank" rel="noopener">
+                      <a href={`https://wa.me/${l.whatsapp.replace(/\D/g, '').length <= 11 ? '55' + l.whatsapp.replace(/\D/g, '') : l.whatsapp.replace(/\D/g, '')}?text=${encodeURIComponent(`Olá, ${l.name}! Recebi seu contato através da campanha ${campaigns.find((c) => c.id === l.campaign_id)?.name ?? "do site"}. Como posso te ajudar?`)}`} target="_blank" rel="noopener">
                         <Button size="icon" variant="outline" className="h-7 w-7 rounded-full text-green-600 border-green-600/30 hover:bg-green-50" title="Falar no WhatsApp">
                           <MessageCircle className="h-4 w-4" />
                         </Button>
@@ -547,7 +547,7 @@ function LeadsTab() {
                   <td className="p-3 font-medium text-primary">
                     <div className="flex items-center gap-2">
                       <span>{l.whatsapp}</span>
-                      <a href={`https://wa.me/${l.whatsapp.replace(/\D/g, '')}?text=${encodeURIComponent(`Olá, ${l.name}! Recebi seu contato através da campanha ${campaigns.find((c) => c.id === l.campaign_id)?.name ?? "do site"}. Como posso te ajudar?`)}`} target="_blank" rel="noopener">
+                      <a href={`https://wa.me/${l.whatsapp.replace(/\D/g, '').length <= 11 ? '55' + l.whatsapp.replace(/\D/g, '') : l.whatsapp.replace(/\D/g, '')}?text=${encodeURIComponent(`Olá, ${l.name}! Recebi seu contato através da campanha ${campaigns.find((c) => c.id === l.campaign_id)?.name ?? "do site"}. Como posso te ajudar?`)}`} target="_blank" rel="noopener">
                         <Button size="icon" variant="outline" className="h-7 w-7 rounded-full text-green-600 border-green-600/30 hover:bg-green-50" title="Falar no WhatsApp">
                           <MessageCircle className="h-4 w-4" />
                         </Button>
