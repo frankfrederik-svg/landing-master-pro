@@ -368,7 +368,7 @@ function PropertiesTab() {
                 <div><Label>Localização</Label><Input value={editing.location} onChange={(e) => setEditing({ ...editing, location: e.target.value })} /></div>
               </div>
               <div className="grid gap-3 md:grid-cols-2">
-                <div><Label>Valor da entrada</Label><Input type="number" step="0.01" value={editing.entry_value ?? ""} onChange={(e) => setEditing({ ...editing, entry_value: e.target.value ? parseFloat(e.target.value) : null })} /></div>
+                <div><Label>Valor da Renda Ideal (mínima)</Label><Input type="number" step="0.01" value={editing.entry_value ?? ""} onChange={(e) => setEditing({ ...editing, entry_value: e.target.value ? parseFloat(e.target.value) : null })} /></div>
                 <div>
                   <Label>Tag (Fase da Obra)</Label>
                   <Select value={editing.tag ?? "none"} onValueChange={(v) => setEditing({ ...editing, tag: v === "none" ? null : v })}>
