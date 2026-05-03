@@ -25,10 +25,10 @@ function HomePage() {
     {
       id: "topville",
       title: "Topville Catu",
-      description: "Condomínio clube com lotes residenciais. Acesse o hotsite exclusivo.",
+      description: "TopVille Catu é a combinação perfeita entre lazer, conforto e alto potencial de valorização em Aquiraz, a poucos minutos do Beach Park.",
       image: "/src/assets/hero-building-topville.jpg",
       // Se quiser trocar a foto, cole a URL entre aspas, ex: "https://site.com/foto.jpg"
-      link: "/topville",
+      link: "topville-catu/",
       buttonText: "Acessar portal"
     }
   ];
