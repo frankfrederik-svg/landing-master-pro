@@ -265,6 +265,11 @@ function PropertiesTab() {
     if (error) toast.error(error.message); else load();
   }
 
+  async function toggle(p: Property) {
+    const { error } = await supabase.from("feirao_properties").update({ active: !p.active }).eq("id", p.id);
+    if (error) toast.error(error.message); else load();
+  }
+
   async function handleUpload(e: React.ChangeEvent<HTMLInputElement>) {
     if (!e.target.files || e.target.files.length === 0 || !editing) return;
     setUploading(true);
@@ -339,10 +344,14 @@ function PropertiesTab() {
           return (
             <div key={p.id} className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border bg-card p-4 shadow-sm">
               <div className="min-w-0 flex-1">
-                <h3 className="font-semibold">{p.name}</h3>
+                <div className="flex items-center gap-2">
+                  <h3 className="font-semibold">{p.name}</h3>
+                  {p.active ? <Badge className="bg-success text-success-foreground">Ativo</Badge> : <Badge variant="secondary">Inativo</Badge>}
+                </div>
                 <p className="text-sm text-muted-foreground">{p.location} · {camp?.name ?? "—"} · Entrada {formatCurrencyBRL(p.entry_value)} · {gallery.length} fotos</p>
               </div>
-              <div className="flex gap-2">
+              <div className="flex items-center gap-2">
+                <Switch checked={p.active} onCheckedChange={() => toggle(p)} />
                 <Button size="sm" variant="outline" onClick={() => { setEditing(p); setOpen(true); }}><Pencil className="h-4 w-4" /></Button>
                 <Button size="sm" variant="outline" onClick={() => del(p.id)}><Trash2 className="h-4 w-4" /></Button>
               </div>
