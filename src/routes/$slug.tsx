@@ -9,7 +9,7 @@ import heroBuilding from "@/assets/hero-building.jpg";
 import { formatCurrencyBRL, resolveImage } from "@/lib/faixa";
 import { Building2, CheckCircle2, MapPin, Percent, Sparkles, TrendingDown, Wallet } from "lucide-react";
 
-export const Route = createFileRoute("/c/$slug")({
+export const Route = createFileRoute("/$slug")({
   component: HotsitePage,
 });
 
@@ -246,7 +246,7 @@ function HotsitePage() {
       {/* FOOTER */}
       <footer className="border-t bg-card">
         <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-4 py-6 text-sm text-muted-foreground md:flex-row">
-          <span>© {new Date().getFullYear()} Meu Apê Agora — Todos os direitos reservados</span>
+          <span>© {new Date().getFullYear()} Apê Fácil — Todos os direitos reservados</span>
           <div className="flex gap-4">
             <Link to="/" className="hover:text-foreground">Início</Link>
             {campaign.whatsapp_number && (

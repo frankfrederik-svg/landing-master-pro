@@ -22,7 +22,7 @@ export const submitLead = createServerFn({ method: "POST" })
   .inputValidator((input: unknown) => LeadSchema.parse(input))
   .handler(async ({ data }) => {
     const { error, data: inserted } = await supabaseAdmin
-      .from("leads")
+      .from("feirao_leads")
       .insert(data)
       .select()
       .single();
@@ -35,7 +35,7 @@ export const submitLead = createServerFn({ method: "POST" })
     // Webhook opcional
     try {
       const { data: settings } = await supabaseAdmin
-        .from("settings").select("webhook_url").eq("id", 1).maybeSingle();
+        .from("feirao_settings").select("webhook_url").eq("id", 1).maybeSingle();
       if (settings?.webhook_url) {
         await fetch(settings.webhook_url, {
           method: "POST",

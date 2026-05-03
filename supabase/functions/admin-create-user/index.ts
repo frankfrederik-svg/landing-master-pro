@@ -26,7 +26,7 @@ Deno.serve(async (req) => {
 
     const admin = createClient(SUPABASE_URL, SERVICE_KEY);
     const { data: roleRow } = await admin
-      .from("user_roles")
+      .from("feirao_user_roles")
       .select("role")
       .eq("user_id", userData.user.id)
       .eq("role", "admin")
@@ -47,7 +47,7 @@ Deno.serve(async (req) => {
     if (createErr || !created.user) return json({ error: createErr?.message ?? "Falha ao criar" }, 400);
 
     const { error: roleErr } = await admin
-      .from("user_roles")
+      .from("feirao_user_roles")
       .insert({ user_id: created.user.id, role: desiredRole });
     if (roleErr) return json({ error: roleErr.message }, 400);
 

@@ -23,7 +23,7 @@ export const Route = createRootRoute({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Apê Fácil — Realize o sonho do imóvel próprio" },
+      { title: "Meu Apê Agora — Realize o sonho do imóvel próprio" },
       { name: "description", content: "Plataforma de hotsites para campanhas imobiliárias com classificação automática de faixa MCMV." },
     ],
     links: [{ rel: "stylesheet", href: appCss }],

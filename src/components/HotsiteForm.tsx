@@ -6,7 +6,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { CheckCircle2, Loader2, MessageCircle } from "lucide-react";
 import { classifyFaixa, INCOME_OPTIONS, IncomeRange } from "@/lib/faixa";
-import { submitLead } from "@/server/leads.functions";
+import { submitLead } from "@/functions/leads.functions";
 import { toast } from "sonner";
 
 type Props = {

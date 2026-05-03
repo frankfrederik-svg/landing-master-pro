@@ -24,7 +24,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setSession(s);
       if (s?.user) {
         setTimeout(() => {
-          supabase.from("user_roles").select("role").eq("user_id", s.user.id).eq("role", "admin").maybeSingle()
+          supabase.from("feirao_user_roles").select("role").eq("user_id", s.user.id).eq("role", "admin").maybeSingle()
             .then(({ data }) => setIsAdmin(!!data));
         }, 0);
       } else {
@@ -34,7 +34,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       if (session?.user) {
-        supabase.from("user_roles").select("role").eq("user_id", session.user.id).eq("role", "admin").maybeSingle()
+        supabase.from("feirao_user_roles").select("role").eq("user_id", session.user.id).eq("role", "admin").maybeSingle()
           .then(({ data }) => setIsAdmin(!!data));
       }
       setLoading(false);

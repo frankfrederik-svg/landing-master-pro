@@ -1,17 +1,17 @@
 -- Roles enum + tabela
-CREATE TYPE public.app_role AS ENUM ('admin', 'user');
+CREATE TYPE public.feirao_app_role AS ENUM ('admin', 'user');
 
-CREATE TABLE public.user_roles (
+CREATE TABLE public.feirao_user_roles (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
-  role app_role NOT NULL DEFAULT 'admin',
+  role feirao_app_role NOT NULL DEFAULT 'admin',
   created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
   UNIQUE (user_id, role)
 );
 
-ALTER TABLE public.user_roles ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.feirao_user_roles ENABLE ROW LEVEL SECURITY;
 
-CREATE OR REPLACE FUNCTION public.has_role(_user_id UUID, _role app_role)
+CREATE OR REPLACE FUNCTION public.feirao_has_role(_user_id UUID, _role feirao_app_role)
 RETURNS BOOLEAN
 LANGUAGE SQL
 STABLE
@@ -19,35 +19,35 @@ SECURITY DEFINER
 SET search_path = public
 AS $$
   SELECT EXISTS (
-    SELECT 1 FROM public.user_roles
+    SELECT 1 FROM public.feirao_user_roles
     WHERE user_id = _user_id AND role = _role
   );
 $$;
 
 -- Trigger: primeiro usuário cadastrado vira admin automaticamente
-CREATE OR REPLACE FUNCTION public.assign_first_admin()
+CREATE OR REPLACE FUNCTION public.feirao_assign_first_admin()
 RETURNS TRIGGER
 LANGUAGE plpgsql
 SECURITY DEFINER
 SET search_path = public
 AS $$
 BEGIN
-  IF NOT EXISTS (SELECT 1 FROM public.user_roles WHERE role = 'admin') THEN
-    INSERT INTO public.user_roles (user_id, role) VALUES (NEW.id, 'admin');
+  IF NOT EXISTS (SELECT 1 FROM public.feirao_user_roles WHERE role = 'admin') THEN
+    INSERT INTO public.feirao_user_roles (user_id, role) VALUES (NEW.id, 'admin');
   END IF;
   RETURN NEW;
 END;
 $$;
 
-CREATE TRIGGER on_auth_user_created_assign_admin
+CREATE TRIGGER feirao_on_auth_user_created_assign_admin
 AFTER INSERT ON auth.users
-FOR EACH ROW EXECUTE FUNCTION public.assign_first_admin();
+FOR EACH ROW EXECUTE FUNCTION public.feirao_assign_first_admin();
 
-CREATE POLICY "Users can view own roles" ON public.user_roles FOR SELECT TO authenticated USING (auth.uid() = user_id);
-CREATE POLICY "Admins manage roles" ON public.user_roles FOR ALL TO authenticated USING (public.has_role(auth.uid(),'admin')) WITH CHECK (public.has_role(auth.uid(),'admin'));
+CREATE POLICY "Users can view own roles" ON public.feirao_user_roles FOR SELECT TO authenticated USING (auth.uid() = user_id);
+CREATE POLICY "Admins manage roles" ON public.feirao_user_roles FOR ALL TO authenticated USING (public.feirao_has_role(auth.uid(),'admin')) WITH CHECK (public.feirao_has_role(auth.uid(),'admin'));
 
 -- Campanhas (hotsites)
-CREATE TABLE public.campaigns (
+CREATE TABLE public.feirao_campaigns (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   slug TEXT NOT NULL UNIQUE,
   name TEXT NOT NULL,
@@ -64,16 +64,16 @@ CREATE TABLE public.campaigns (
   updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
-ALTER TABLE public.campaigns ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.feirao_campaigns ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Public can view active campaigns" ON public.campaigns FOR SELECT USING (active = true);
-CREATE POLICY "Admins view all campaigns" ON public.campaigns FOR SELECT TO authenticated USING (public.has_role(auth.uid(),'admin'));
-CREATE POLICY "Admins manage campaigns" ON public.campaigns FOR ALL TO authenticated USING (public.has_role(auth.uid(),'admin')) WITH CHECK (public.has_role(auth.uid(),'admin'));
+CREATE POLICY "Public can view active campaigns" ON public.feirao_campaigns FOR SELECT USING (active = true);
+CREATE POLICY "Admins view all campaigns" ON public.feirao_campaigns FOR SELECT TO authenticated USING (public.feirao_has_role(auth.uid(),'admin'));
+CREATE POLICY "Admins manage campaigns" ON public.feirao_campaigns FOR ALL TO authenticated USING (public.feirao_has_role(auth.uid(),'admin')) WITH CHECK (public.feirao_has_role(auth.uid(),'admin'));
 
 -- Empreendimentos
-CREATE TABLE public.properties (
+CREATE TABLE public.feirao_properties (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  campaign_id UUID NOT NULL REFERENCES public.campaigns(id) ON DELETE CASCADE,
+  campaign_id UUID NOT NULL REFERENCES public.feirao_campaigns(id) ON DELETE CASCADE,
   name TEXT NOT NULL,
   location TEXT NOT NULL,
   image_url TEXT,
@@ -85,16 +85,16 @@ CREATE TABLE public.properties (
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
-ALTER TABLE public.properties ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.feirao_properties ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Public view active properties" ON public.properties FOR SELECT USING (active = true);
-CREATE POLICY "Admins manage properties" ON public.properties FOR ALL TO authenticated USING (public.has_role(auth.uid(),'admin')) WITH CHECK (public.has_role(auth.uid(),'admin'));
+CREATE POLICY "Public view active properties" ON public.feirao_properties FOR SELECT USING (active = true);
+CREATE POLICY "Admins manage properties" ON public.feirao_properties FOR ALL TO authenticated USING (public.feirao_has_role(auth.uid(),'admin')) WITH CHECK (public.feirao_has_role(auth.uid(),'admin'));
 
 -- Leads
-CREATE TABLE public.leads (
+CREATE TABLE public.feirao_leads (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  campaign_id UUID REFERENCES public.campaigns(id) ON DELETE SET NULL,
-  property_id UUID REFERENCES public.properties(id) ON DELETE SET NULL,
+  campaign_id UUID REFERENCES public.feirao_campaigns(id) ON DELETE SET NULL,
+  property_id UUID REFERENCES public.feirao_properties(id) ON DELETE SET NULL,
   name TEXT NOT NULL,
   whatsapp TEXT NOT NULL,
   income_range TEXT NOT NULL,
@@ -109,14 +109,14 @@ CREATE TABLE public.leads (
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
-ALTER TABLE public.leads ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.feirao_leads ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Public can insert leads" ON public.leads FOR INSERT WITH CHECK (true);
-CREATE POLICY "Admins view leads" ON public.leads FOR SELECT TO authenticated USING (public.has_role(auth.uid(),'admin'));
-CREATE POLICY "Admins manage leads" ON public.leads FOR ALL TO authenticated USING (public.has_role(auth.uid(),'admin')) WITH CHECK (public.has_role(auth.uid(),'admin'));
+CREATE POLICY "Public can insert leads" ON public.feirao_leads FOR INSERT WITH CHECK (true);
+CREATE POLICY "Admins view leads" ON public.feirao_leads FOR SELECT TO authenticated USING (public.feirao_has_role(auth.uid(),'admin'));
+CREATE POLICY "Admins manage leads" ON public.feirao_leads FOR ALL TO authenticated USING (public.feirao_has_role(auth.uid(),'admin')) WITH CHECK (public.feirao_has_role(auth.uid(),'admin'));
 
 -- Settings (singleton)
-CREATE TABLE public.settings (
+CREATE TABLE public.feirao_settings (
   id INT PRIMARY KEY DEFAULT 1 CHECK (id = 1),
   default_whatsapp TEXT,
   default_message TEXT,
@@ -124,22 +124,22 @@ CREATE TABLE public.settings (
   updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
-INSERT INTO public.settings (id) VALUES (1);
+INSERT INTO public.feirao_settings (id) VALUES (1);
 
-ALTER TABLE public.settings ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.feirao_settings ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Admins read settings" ON public.settings FOR SELECT TO authenticated USING (public.has_role(auth.uid(),'admin'));
-CREATE POLICY "Admins update settings" ON public.settings FOR UPDATE TO authenticated USING (public.has_role(auth.uid(),'admin')) WITH CHECK (public.has_role(auth.uid(),'admin'));
+CREATE POLICY "Admins read settings" ON public.feirao_settings FOR SELECT TO authenticated USING (public.feirao_has_role(auth.uid(),'admin'));
+CREATE POLICY "Admins update settings" ON public.feirao_settings FOR UPDATE TO authenticated USING (public.feirao_has_role(auth.uid(),'admin')) WITH CHECK (public.feirao_has_role(auth.uid(),'admin'));
 
 -- updated_at triggers
-CREATE OR REPLACE FUNCTION public.set_updated_at()
+CREATE OR REPLACE FUNCTION public.feirao_set_updated_at()
 RETURNS TRIGGER LANGUAGE plpgsql AS $$
 BEGIN NEW.updated_at = now(); RETURN NEW; END;
 $$;
 
-CREATE TRIGGER trg_campaigns_updated BEFORE UPDATE ON public.campaigns FOR EACH ROW EXECUTE FUNCTION public.set_updated_at();
-CREATE TRIGGER trg_settings_updated BEFORE UPDATE ON public.settings FOR EACH ROW EXECUTE FUNCTION public.set_updated_at();
+CREATE TRIGGER feirao_trg_campaigns_updated BEFORE UPDATE ON public.feirao_campaigns FOR EACH ROW EXECUTE FUNCTION public.feirao_set_updated_at();
+CREATE TRIGGER feirao_trg_settings_updated BEFORE UPDATE ON public.feirao_settings FOR EACH ROW EXECUTE FUNCTION public.feirao_set_updated_at();
 
 -- Campanha demo
-INSERT INTO public.campaigns (slug, name, hero_title, hero_subtitle)
+INSERT INTO public.feirao_campaigns (slug, name, hero_title, hero_subtitle)
 VALUES ('feirao-mrv', 'Feirão MRV', 'Feirão MRV: seu apê com entrada facilitada', 'Aproveite o feirão e saia do aluguel com as menores taxas do mercado.');

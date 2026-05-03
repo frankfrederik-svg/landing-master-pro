@@ -1,70 +1,147 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { Button } from "@/components/ui/button";
-import { ArrowRight, Building2, Sparkles } from "lucide-react";
+import { Building2, ArrowRight, ExternalLink } from "lucide-react";
+import heroBuilding from "@/assets/hero-building.jpg";
 
 export const Route = createFileRoute("/")({
-  component: Index,
+  component: HomePage,
 });
 
-type Campaign = { id: string; slug: string; name: string; hero_subtitle: string };
+type Campaign = {
+  id: string;
+  slug: string;
+  name: string;
+  hero_title: string;
+  banner_url: string | null;
+};
 
-function Index() {
+function HomePage() {
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const [loading, setLoading] = useState(true);
 
+  // Aqui você pode editar os textos e imagens dos projetos externos (que não estão no Supabase)
+  const externalProjects = [
+    {
+      id: "topville",
+      title: "Topville Catu",
+      description: "Condomínio clube com lotes residenciais. Acesse o hotsite exclusivo.",
+      image: "/src/assets/hero-building-topville.jpg",
+      // Se quiser trocar a foto, cole a URL entre aspas, ex: "https://site.com/foto.jpg"
+      link: "/topville",
+      buttonText: "Acessar portal"
+    }
+  ];
+
   useEffect(() => {
-    supabase.from("campaigns").select("id,slug,name,hero_subtitle").eq("active", true).order("created_at", { ascending: false })
-      .then(({ data }) => { setCampaigns(data ?? []); setLoading(false); });
+    (async () => {
+      const { data, error } = await supabase
+        .from("feirao_campaigns")
+        .select("id,slug,name,hero_title,banner_url")
+        .eq("active", true)
+        .order("created_at", { ascending: false });
+
+      if (error) console.error(error);
+      setCampaigns(data || []);
+      setLoading(false);
+    })();
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-soft">
-      <header className="border-b bg-card/70 backdrop-blur">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
-          <div className="flex items-center gap-2">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-primary text-primary-foreground"><Building2 className="h-5 w-5" /></div>
-            <span className="text-lg font-bold">Apê Fácil</span>
+    <div className="flex min-h-screen flex-col bg-background">
+      {/* HEADER SIMPLES */}
+      <header className="border-b bg-card py-4 shadow-sm">
+        <div className="mx-auto flex max-w-6xl items-center px-4">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-primary text-primary-foreground shadow-sm">
+            <Building2 className="h-6 w-6" />
           </div>
-          <Link to="/admin"><Button variant="outline" size="sm">Painel admin</Button></Link>
+          <span className="ml-3 text-xl font-bold tracking-tight text-foreground">Meu Apê Agora</span>
         </div>
       </header>
 
-      <section className="mx-auto max-w-6xl px-4 py-16 text-center">
-        <div className="mx-auto inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-1.5 text-sm font-medium text-primary">
-          <Sparkles className="h-4 w-4" /> Plataforma de hotsites imobiliários
+      <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-16">
+        <div className="mb-12 text-center">
+          <h1 className="text-4xl font-black tracking-tight md:text-5xl">
+            Encontre o <span className="text-primary">imóvel dos seus sonhos</span>
+          </h1>
+          <p className="mt-4 text-lg text-muted-foreground">
+            Explore feirões de apartamentos e oportunidades em loteamentos com condições especiais, ideais tanto para morar quanto para investir.
+          </p>
         </div>
-        <h1 className="mt-6 text-4xl font-bold tracking-tight md:text-6xl">
-          Campanhas que <span className="bg-gradient-primary bg-clip-text text-transparent">convertem mais</span>
-        </h1>
-        <p className="mx-auto mt-4 max-w-2xl text-lg text-muted-foreground">
-          Cada campanha tem sua landing page otimizada com classificação automática por faixa do Minha Casa Minha Vida.
-        </p>
-      </section>
 
-      <section className="mx-auto max-w-6xl px-4 pb-20">
-        <h2 className="mb-6 text-2xl font-bold">Campanhas ativas</h2>
         {loading ? (
-          <p className="text-muted-foreground">Carregando...</p>
-        ) : campaigns.length === 0 ? (
-          <div className="rounded-2xl border-2 border-dashed p-10 text-center text-muted-foreground">
-            Nenhuma campanha ativa. Acesse o painel admin para criar.
-          </div>
+          <div className="flex justify-center py-20 text-muted-foreground">Carregando...</div>
         ) : (
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {campaigns.map((c) => (
-              <Link key={c.id} to="/c/$slug" params={{ slug: c.slug }} className="group rounded-2xl border bg-card p-6 shadow-sm transition-base hover:shadow-elegant">
-                <h3 className="text-lg font-semibold">{c.name}</h3>
-                <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">{c.hero_subtitle}</p>
-                <div className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-primary">
-                  Ver hotsite <ArrowRight className="h-4 w-4 transition-base group-hover:translate-x-1" />
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+
+            {/* PROJETOS EXTERNOS (ex: Topville) */}
+            {externalProjects.map((proj) => (
+              <a
+                key={proj.id}
+                href={proj.link}
+                className="group flex flex-col overflow-hidden rounded-2xl border bg-card shadow-sm transition-all hover:-translate-y-1 hover:shadow-elegant"
+              >
+                <div className="relative aspect-[16/9] overflow-hidden bg-muted">
+                  <img
+                    src={proj.image}
+                    alt={proj.title}
+                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                  <div className="absolute bottom-4 left-4 right-4">
+                    <h3 className="text-xl font-bold text-white drop-shadow-md">{proj.title}</h3>
+                  </div>
+                </div>
+                <div className="flex flex-1 flex-col justify-between p-5">
+                  <p className="text-sm text-muted-foreground">
+                    {proj.description}
+                  </p>
+                  <div className="mt-6 flex items-center justify-between text-sm font-semibold text-primary">
+                    <span>{proj.buttonText}</span>
+                    <ExternalLink className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                  </div>
+                </div>
+              </a>
+            ))}
+
+            {/* CAMPANHAS DO SISTEMA */}
+            {campaigns.map((camp) => (
+              <Link
+                key={camp.id}
+                to="/$slug"
+                params={{ slug: camp.slug }}
+                className="group flex flex-col overflow-hidden rounded-2xl border bg-card shadow-sm transition-all hover:-translate-y-1 hover:shadow-elegant"
+              >
+                <div className="relative aspect-[16/9] overflow-hidden bg-muted">
+                  <img
+                    src={camp.banner_url || heroBuilding}
+                    alt={camp.name}
+                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                  <div className="absolute bottom-4 left-4 right-4">
+                    <h3 className="text-xl font-bold text-white drop-shadow-md">{camp.name}</h3>
+                  </div>
+                </div>
+                <div className="flex flex-1 flex-col justify-between p-5">
+                  <p className="line-clamp-2 text-sm text-muted-foreground">
+                    {camp.hero_title}
+                  </p>
+                  <div className="mt-6 flex items-center justify-between text-sm font-semibold text-primary">
+                    <span>Ver campanha</span>
+                    <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                  </div>
                 </div>
               </Link>
             ))}
+
           </div>
         )}
-      </section>
+      </main>
+
+      <footer className="border-t py-8 text-center text-sm text-muted-foreground">
+        © {new Date().getFullYear()} Meu Apê Agora. Todos os direitos reservados.
+      </footer>
     </div>
   );
 }

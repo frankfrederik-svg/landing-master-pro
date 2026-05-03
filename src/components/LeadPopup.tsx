@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Loader2, MessageCircle, Sparkles } from "lucide-react";
-import { submitLead } from "@/server/leads.functions";
+import { submitLead } from "@/functions/leads.functions";
 import { toast } from "sonner";
 
 type Props = {

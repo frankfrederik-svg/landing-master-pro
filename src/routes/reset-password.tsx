@@ -48,7 +48,7 @@ function ResetPasswordPage() {
       <div className="w-full max-w-md rounded-3xl bg-card p-8 shadow-elegant">
         <Link to="/" className="mb-6 flex items-center gap-2">
           <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-primary text-primary-foreground"><Building2 className="h-5 w-5" /></div>
-          <span className="font-bold">Apê Fácil</span>
+          <span className="font-bold">Meu Apê Agora</span>
         </Link>
         <h1 className="text-2xl font-bold">Definir nova senha</h1>
         <p className="mt-1 text-sm text-muted-foreground">
