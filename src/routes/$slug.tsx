@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { HotsiteForm } from "@/components/HotsiteForm";
 import { LeadPopup } from "@/components/LeadPopup";
+import { VilleDeLisboaTemplate } from "@/components/VilleDeLisboaTemplate";
 import heroBuilding from "@/assets/hero-building.jpg";
 import { formatCurrencyBRL, resolveImage } from "@/lib/faixa";
 import { Building2, CheckCircle2, MapPin, Percent, Sparkles, TrendingDown, Wallet } from "lucide-react";
@@ -26,6 +27,8 @@ type Campaign = {
   popup_subtitle: string;
   popup_button_text: string;
   popup_whatsapp_message: string;
+  layout?: string;
+  layout_data?: any;
 };
 type Property = {
   id: string; name: string; location: string; image_url: string | null;
@@ -111,7 +114,7 @@ function HotsitePage() {
     (async () => {
       const { data: c, error: cErr } = await supabase
         .from("feirao_campaigns")
-        .select("id,slug,name,hero_title,hero_subtitle,cta_text,banner_url,whatsapp_number,whatsapp_message,popup_enabled,popup_delay_mobile,popup_delay_desktop,popup_frequency_hours,popup_title,popup_subtitle,popup_button_text,popup_whatsapp_message")
+        .select("id,slug,name,hero_title,hero_subtitle,cta_text,banner_url,whatsapp_number,whatsapp_message,popup_enabled,popup_delay_mobile,popup_delay_desktop,popup_frequency_hours,popup_title,popup_subtitle,popup_button_text,popup_whatsapp_message,layout,layout_data")
         .eq("slug", slug).eq("active", true).maybeSingle();
       if (cErr) console.error("Erro ao buscar campanha:", cErr);
       if (!c) { setNotFoundFlag(true); setLoading(false); return; }
@@ -140,6 +143,26 @@ function HotsitePage() {
 
   const hero = campaign.banner_url || heroBuilding;
   const scrollToForm = () => document.getElementById("formulario")?.scrollIntoView({ behavior: "smooth" });
+
+  if (campaign.layout === "ville_de_lisboa") {
+    return (
+      <>
+        <VilleDeLisboaTemplate campaign={campaign as any} properties={properties} />
+        <LeadPopup
+          campaignId={campaign.id}
+          enabled={campaign.popup_enabled}
+          delayMobile={campaign.popup_delay_mobile}
+          delayDesktop={campaign.popup_delay_desktop}
+          frequencyHours={campaign.popup_frequency_hours}
+          title={campaign.popup_title}
+          subtitle={campaign.popup_subtitle}
+          buttonText={campaign.popup_button_text}
+          whatsappNumber={campaign.whatsapp_number}
+          whatsappMessage={campaign.popup_whatsapp_message}
+        />
+      </>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">

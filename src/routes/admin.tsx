@@ -15,12 +15,13 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 import { Building2, Copy, Download, ExternalLink, KeyRound, LogOut, MessageCircle, Pencil, Plus, Trash2, UserPlus, User as UserIcon } from "lucide-react";
 import { toast } from "sonner";
 import { formatCurrencyBRL } from "@/lib/faixa";
+import { ImageUpload } from "@/components/ImageUpload";
 
 export const Route = createFileRoute("/admin")({
   component: AdminPage,
 });
 
-type Campaign = { id: string; slug: string; name: string; hero_title: string; hero_subtitle: string; cta_text: string; primary_color: string; accent_color: string; banner_url: string | null; whatsapp_number: string | null; whatsapp_message: string | null; active: boolean; popup_enabled: boolean; popup_delay_mobile: number; popup_delay_desktop: number; popup_frequency_hours: number; popup_title: string; popup_subtitle: string; popup_button_text: string; popup_whatsapp_message: string };
+type Campaign = { id: string; slug: string; name: string; hero_title: string; hero_subtitle: string; cta_text: string; primary_color: string; accent_color: string; banner_url: string | null; whatsapp_number: string | null; whatsapp_message: string | null; active: boolean; popup_enabled: boolean; popup_delay_mobile: number; popup_delay_desktop: number; popup_frequency_hours: number; popup_title: string; popup_subtitle: string; popup_button_text: string; popup_whatsapp_message: string; layout?: string | null; layout_data?: any | null; };
 type Property = { id: string; campaign_id: string; name: string; location: string; image_url: string | null; entry_value: number | null; description: string | null; tag: string | null; active: boolean };
 type Lead = { id: string; campaign_id: string | null; name: string; whatsapp: string; income_range: string; mcmv_faixa: number | null; uses_entry_value: boolean; entry_value: number | null; joins_income: boolean; birth_date: string | null; income_type: string | null; has_fgts: boolean; clean_name: boolean; created_at: string };
 type Settings = { id: number; default_whatsapp: string | null; default_message: string | null; webhook_url: string | null };
@@ -117,7 +118,7 @@ function CampaignsTab() {
   useEffect(() => { load(); }, [load]);
 
   function newCampaign() {
-    setEditing({ id: "", slug: "", name: "", hero_title: "Realize o sonho do seu apê", hero_subtitle: "Condições especiais com entrada facilitada", cta_text: "Quero aproveitar agora", primary_color: "#16a34a", accent_color: "#f97316", banner_url: null, whatsapp_number: null, whatsapp_message: "Olá! Tenho interesse.", active: true, popup_enabled: true, popup_delay_mobile: 5, popup_delay_desktop: 7, popup_frequency_hours: 24, popup_title: "Quer receber fotos e vídeos dos apartamentos disponíveis?", popup_subtitle: "Te envio agora no WhatsApp as melhores opções com entrada parcelada.", popup_button_text: "Quero receber agora", popup_whatsapp_message: "Olá, quero receber fotos e vídeos dos apartamentos com entrada parcelada" });
+    setEditing({ id: "", slug: "", name: "", hero_title: "Realize o sonho do seu apê", hero_subtitle: "Condições especiais com entrada facilitada", cta_text: "Quero aproveitar agora", primary_color: "#16a34a", accent_color: "#f97316", banner_url: null, whatsapp_number: null, whatsapp_message: "Olá! Tenho interesse.", active: true, popup_enabled: true, popup_delay_mobile: 5, popup_delay_desktop: 7, popup_frequency_hours: 24, popup_title: "Quer receber fotos e vídeos dos apartamentos disponíveis?", popup_subtitle: "Te envio agora no WhatsApp as melhores opções com entrada parcelada.", popup_button_text: "Quero receber agora", popup_whatsapp_message: "Olá, quero receber fotos e vídeos dos apartamentos com entrada parcelada", layout: "default", layout_data: {} });
     setOpen(true);
   }
 
@@ -186,10 +187,42 @@ function CampaignsTab() {
                 <div><Label>Nome</Label><Input value={editing.name} onChange={(e) => setEditing({ ...editing, name: e.target.value })} /></div>
                 <div><Label>Slug (URL)</Label><Input value={editing.slug} onChange={(e) => setEditing({ ...editing, slug: e.target.value })} placeholder="feirao-mrv" /></div>
               </div>
+              <div className="grid gap-3 md:grid-cols-2">
+                <div>
+                  <Label>Template (Layout)</Label>
+                  <Select value={editing.layout || "default"} onValueChange={(v) => setEditing({ ...editing, layout: v })}>
+                    <SelectTrigger><SelectValue placeholder="Padrão" /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="default">Padrão Meu Apê Agora</SelectItem>
+                      <SelectItem value="ville_de_lisboa">Ville de Lisboa</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div><Label>Banner Hero</Label><ImageUpload value={editing.banner_url} onChange={(url) => setEditing({ ...editing, banner_url: url })} label="Upload Banner" /></div>
+              </div>
+
+              {editing.layout === "ville_de_lisboa" && (
+                <div className="rounded-2xl border border-dashed bg-muted/30 p-4 space-y-3">
+                  <h4 className="font-semibold text-sm">Logomarca do Empreendimento</h4>
+                  <div><ImageUpload value={editing.layout_data?.logo || null} onChange={(url) => setEditing({ ...editing, layout_data: { ...(editing.layout_data || {}), logo: url } })} /></div>
+                  <h4 className="font-semibold text-sm mt-4">Imagens do Layout (Ville de Lisboa)</h4>
+                  <div className="grid gap-3 md:grid-cols-2">
+                    <div><Label>Imagem Sobre 1 (Principal)</Label><ImageUpload value={editing.layout_data?.sobre1 || null} onChange={(url) => setEditing({ ...editing, layout_data: { ...(editing.layout_data || {}), sobre1: url } })} /></div>
+                    <div><Label>Imagem Sobre 2 (Pequena)</Label><ImageUpload value={editing.layout_data?.sobre2 || null} onChange={(url) => setEditing({ ...editing, layout_data: { ...(editing.layout_data || {}), sobre2: url } })} /></div>
+                  </div>
+                  <h4 className="font-semibold text-sm mt-4">Diferenciais</h4>
+                  <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4">
+                    <div><Label>Gourmet</Label><ImageUpload value={editing.layout_data?.dif1 || null} onChange={(url) => setEditing({ ...editing, layout_data: { ...(editing.layout_data || {}), dif1: url } })} /></div>
+                    <div><Label>Academia</Label><ImageUpload value={editing.layout_data?.dif2 || null} onChange={(url) => setEditing({ ...editing, layout_data: { ...(editing.layout_data || {}), dif2: url } })} /></div>
+                    <div><Label>Pista</Label><ImageUpload value={editing.layout_data?.dif3 || null} onChange={(url) => setEditing({ ...editing, layout_data: { ...(editing.layout_data || {}), dif3: url } })} /></div>
+                    <div><Label>Lobby</Label><ImageUpload value={editing.layout_data?.dif4 || null} onChange={(url) => setEditing({ ...editing, layout_data: { ...(editing.layout_data || {}), dif4: url } })} /></div>
+                  </div>
+                </div>
+              )}
+
               <div><Label>Título do hero</Label><Input value={editing.hero_title} onChange={(e) => setEditing({ ...editing, hero_title: e.target.value })} /></div>
               <div><Label>Subtítulo</Label><Textarea value={editing.hero_subtitle} onChange={(e) => setEditing({ ...editing, hero_subtitle: e.target.value })} /></div>
               <div><Label>Texto do botão CTA</Label><Input value={editing.cta_text} onChange={(e) => setEditing({ ...editing, cta_text: e.target.value })} /></div>
-              <div><Label>URL do banner (opcional)</Label><Input value={editing.banner_url ?? ""} onChange={(e) => setEditing({ ...editing, banner_url: e.target.value || null })} placeholder="https://..." /></div>
               <div className="grid gap-3 md:grid-cols-2">
                 <div><Label>WhatsApp (com DDD)</Label><Input value={editing.whatsapp_number ?? ""} onChange={(e) => setEditing({ ...editing, whatsapp_number: e.target.value || null })} placeholder="5511900000000" /></div>
                 <div><Label>Mensagem WhatsApp</Label><Input value={editing.whatsapp_message ?? ""} onChange={(e) => setEditing({ ...editing, whatsapp_message: e.target.value || null })} /></div>
