@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { HotsiteForm } from "./HotsiteForm";
 import { resolveImage } from "@/lib/faixa";
+import { Wallet, Handshake, Landmark, TrendingDown, MessageCircle, ChevronLeft, ChevronRight } from "lucide-react";
 
 type Campaign = {
   id: string; slug: string; name: string;
@@ -23,21 +24,59 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
   // Gallery
   const [galleryIndex, setGalleryIndex] = useState(0);
 
-  // Prova Social Counter
+  // Prova Social Counter (Atualiza 1 por hora)
+  const [baseCount, setBaseCount] = useState(62);
   const [reservasCount, setReservasCount] = useState(1);
+
   useEffect(() => {
-    let current = 1;
-    const interval = setInterval(() => {
-      if (current < 62) {
-        current += Math.floor(Math.random() * 5) + 2;
-        if (current > 62) current = 62;
-        setReservasCount(current);
+    const stored = localStorage.getItem('ville_reservations');
+    const lastUpdate = localStorage.getItem('ville_last_update');
+    const now = Date.now();
+    let currentBase = 62;
+    
+    if (stored && lastUpdate) {
+      const hoursPassed = Math.floor((now - parseInt(lastUpdate)) / (1000 * 60 * 60));
+      if (hoursPassed > 0) {
+        currentBase = parseInt(stored) + hoursPassed;
+        localStorage.setItem('ville_reservations', currentBase.toString());
+        localStorage.setItem('ville_last_update', now.toString());
       } else {
-        clearInterval(interval);
+        currentBase = parseInt(stored);
       }
+    } else {
+      localStorage.setItem('ville_reservations', '62');
+      localStorage.setItem('ville_last_update', now.toString());
+    }
+    
+    setBaseCount(currentBase);
+
+    const hourInterval = setInterval(() => {
+      setBaseCount(prev => {
+        const next = prev + 1;
+        localStorage.setItem('ville_reservations', next.toString());
+        localStorage.setItem('ville_last_update', Date.now().toString());
+        return next;
+      });
+    }, 1000 * 60 * 60);
+
+    return () => clearInterval(hourInterval);
+  }, []);
+
+  // Animação inicial
+  useEffect(() => {
+    let current = reservasCount === 1 ? 1 : reservasCount;
+    const interval = setInterval(() => {
+      setReservasCount(prev => {
+        if (prev < baseCount) {
+          const next = prev + Math.floor(Math.random() * 5) + 2;
+          return next > baseCount ? baseCount : next;
+        }
+        clearInterval(interval);
+        return prev;
+      });
     }, 40);
     return () => clearInterval(interval);
-  }, []);
+  }, [baseCount]);
 
   // Extrai imagens dos empreendimentos para a galeria ou usa imagens padrão
   const propertyImages = properties.flatMap(p => {
@@ -56,6 +95,30 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
     "https://lh3.googleusercontent.com/aida-public/AB6AXuAyTveLNCkexo8X-DzC53w_UE4bXdVvnggsMi3SBcMn69p2N2DWg4Jg9Bp7_PoZWuz319QeG-P1zkNxv6-DP5KI7vRSZuVctkSFMFhXtFwVovt6I6ib-SzoaFDDDHB_pMzRnIe_oCweBbwBeTMhQf6FFG2eZLgHKp5PN6ZrObIzlTjScBe0f4H-5xeyCeNZkvLaKndq_JSaqIW3kql6oohkSdxrvq4Qpel-OHqBlmYb3tGVAtFetDp0ZNNWdAZoLOk-QRccn3hR6Ug"
   ];
 
+  // Swipe e Navegação da Galeria
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  }
+
+  const onTouchMove = (e: React.TouchEvent) => setTouchEnd(e.targetTouches[0].clientX);
+
+  const onTouchEndAction = () => {
+    if (!touchStart || !touchEnd) return;
+    const distance = touchStart - touchEnd;
+    if (distance > 50) {
+      setGalleryIndex(i => (i + 1) % galleryImages.length);
+    } else if (distance < -50) {
+      setGalleryIndex(i => (i - 1 + galleryImages.length) % galleryImages.length);
+    }
+  }
+
+  const prevSlide = () => setGalleryIndex(i => (i - 1 + galleryImages.length) % galleryImages.length);
+  const nextSlide = () => setGalleryIndex(i => (i + 1) % galleryImages.length);
+
   useEffect(() => {
     const timer = setInterval(() => {
       setGalleryIndex(i => (i + 1) % galleryImages.length);
@@ -66,12 +129,12 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
   return (
     <div className="bg-[#f9f9ff] text-[#121c2c] font-sans overflow-x-hidden">
       {/* TopNavBar */}
-      <nav className="fixed top-0 w-full z-50 bg-[#f9f9ff]/95 backdrop-blur-md shadow-sm h-16 md:h-20 transition-all">
+      <nav className="fixed top-0 w-full z-50 bg-[#f9f9ff]/95 backdrop-blur-md shadow-sm h-14 md:h-20 transition-all">
         <div className="flex justify-between items-center max-w-[1200px] mx-auto px-4 md:px-6 h-full gap-3">
           {campaign.layout_data?.logo ? (
-            <img src={campaign.layout_data.logo} alt={campaign.name} className="h-10 md:h-14 w-auto object-contain max-w-[130px] md:max-w-none" />
+            <img src={campaign.layout_data.logo} alt={campaign.name} className="h-8 md:h-14 w-auto object-contain max-w-[110px] md:max-w-none" />
           ) : (
-            <span className="text-xl md:text-2xl font-bold text-[#794098] truncate">{campaign.name}</span>
+            <span className="text-lg md:text-2xl font-bold text-[#794098] truncate">{campaign.name}</span>
           )}
           <div className="hidden md:flex items-center gap-8">
             <a className="text-[#794098] border-b-2 border-[#794098] pb-1 font-semibold transition-all duration-300" href="#localizacao">Localização</a>
@@ -79,47 +142,47 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
             <a className="text-[#455f88] hover:text-[#8b4aae] transition-all duration-300" href="#beneficios">Benefícios</a>
             <a className="text-[#455f88] hover:text-[#8b4aae] transition-all duration-300" href="#sobre">Sobre</a>
           </div>
-          <button onClick={scrollToForm} className="bg-[#794098] text-white px-5 py-2 md:px-6 md:py-3 text-[13px] md:text-base rounded-full font-semibold hover:bg-[#8b4aae] transition-all duration-300 active:scale-95 whitespace-nowrap shadow-sm">
+          <button onClick={scrollToForm} className="bg-[#794098] text-white px-4 py-1.5 md:px-6 md:py-3 text-[12px] md:text-base rounded-full font-medium md:font-semibold hover:bg-[#8b4aae] transition-all duration-300 active:scale-95 whitespace-nowrap shadow-sm">
             Simular Agora
           </button>
         </div>
       </nav>
 
       {/* Hero Section */}
-      <section id="formulario" className="relative min-h-[100vh] md:min-h-[800px] pt-24 pb-12 flex items-center overflow-hidden">
+      <section id="formulario" className="relative min-h-[100vh] md:min-h-[800px] pt-20 pb-12 flex items-center overflow-hidden">
         <div className="absolute inset-0 z-0">
-          <div className="absolute inset-0 bg-gradient-to-t from-[#121c2c] via-[#121c2c]/70 to-[#121c2c]/30 z-10 md:bg-gradient-to-r md:from-[#121c2c]/90 md:via-[#121c2c]/60 md:to-transparent"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-[#121c2c] via-[#121c2c]/40 to-black/10 z-10 md:bg-gradient-to-r md:from-[#121c2c]/80 md:via-[#121c2c]/40 md:to-transparent"></div>
           {hero.toLowerCase().match(/\.(mp4|webm|mov|mkv)(\?.*)?$/) || hero.includes('.mp4') ? (
             <video className="w-full h-full object-cover" src={hero} autoPlay loop muted playsInline />
           ) : (
             <img className="w-full h-full object-cover" src={hero} alt="Hero Background" />
           )}
         </div>
-        <div className="relative z-20 max-w-[800px] mx-auto px-4 md:px-6 flex flex-col items-center justify-center text-center w-full pt-6 pb-16">
+        <div className="relative z-20 max-w-[800px] mx-auto px-4 md:px-6 flex flex-col items-center justify-center text-center w-full pt-4 pb-16">
           <div className="text-white flex flex-col items-center w-full">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-4 md:mb-6 leading-tight tracking-tight drop-shadow-lg">
-              {campaign.hero_title || "Saia do aluguel com parcelas facilitadas em até 72x pelo Minha Casa Minha Vida"}
+              Saia do aluguel com parcelas facilitadas em até 72x
             </h1>
             <p className="text-lg md:text-2xl mb-8 md:mb-10 text-[#f6fff4] font-light max-w-3xl drop-shadow-md">
-              {campaign.hero_subtitle || "Apartamentos de 2 quartos em Caucaia com lazer completo, entrada facilitada e possibilidade de subsídio de até R$55 mil."}
+              Apartamentos com lazer completo e possibilidade de subsídio de até R$55 mil pelo Minha Casa Minha Vida.
             </p>
             
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-10 md:mb-12 w-full max-w-4xl">
-              <div className="flex flex-col items-center justify-center bg-white/10 backdrop-blur-sm rounded-2xl p-4 border border-white/20">
-                <span className="text-2xl mb-2">💰</span>
-                <span className="text-sm md:text-base font-semibold leading-tight">Subsídio de<br/>até R$55 mil</span>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-8 md:mb-12 w-full max-w-4xl">
+              <div className="flex flex-col items-center justify-center bg-white/10 backdrop-blur-md rounded-2xl p-5 border border-white/20 hover:bg-white/15 transition-all">
+                <Wallet className="w-8 h-8 md:w-10 md:h-10 mb-3 text-[#e3c2f2] opacity-90" strokeWidth={1.5} />
+                <span className="text-sm md:text-base font-medium leading-tight">Subsídio de<br/>até R$55 mil</span>
               </div>
-              <div className="flex flex-col items-center justify-center bg-gradient-to-br from-[#794098] to-[#b971dc] rounded-2xl p-4 border border-[#e3c2f2]/40 shadow-[0_0_20px_rgba(185,113,220,0.5)] transform hover:scale-105 transition-all">
-                <span className="text-2xl mb-2">🤝</span>
+              <div className="flex flex-col items-center justify-center bg-gradient-to-br from-[#794098] to-[#b971dc] rounded-2xl p-5 border border-[#e3c2f2]/40 shadow-[0_0_25px_rgba(185,113,220,0.6)] transform hover:scale-105 transition-all">
+                <Handshake className="w-8 h-8 md:w-10 md:h-10 mb-3 text-white" strokeWidth={1.5} />
                 <span className="text-sm md:text-base font-extrabold leading-tight">Entrada facilitada<br/>em até 72x</span>
               </div>
-              <div className="flex flex-col items-center justify-center bg-white/10 backdrop-blur-sm rounded-2xl p-4 border border-white/20">
-                <span className="text-2xl mb-2">🏦</span>
-                <span className="text-sm md:text-base font-semibold leading-tight">Use seu<br/>FGTS</span>
+              <div className="flex flex-col items-center justify-center bg-white/10 backdrop-blur-md rounded-2xl p-5 border border-white/20 hover:bg-white/15 transition-all">
+                <Landmark className="w-8 h-8 md:w-10 md:h-10 mb-3 text-[#e3c2f2] opacity-90" strokeWidth={1.5} />
+                <span className="text-sm md:text-base font-medium leading-tight">Use seu<br/>FGTS</span>
               </div>
-              <div className="flex flex-col items-center justify-center bg-white/10 backdrop-blur-sm rounded-2xl p-4 border border-white/20">
-                <span className="text-2xl mb-2">📉</span>
-                <span className="text-sm md:text-base font-semibold leading-tight">Menores juros<br/>do mercado</span>
+              <div className="flex flex-col items-center justify-center bg-white/10 backdrop-blur-md rounded-2xl p-5 border border-white/20 hover:bg-white/15 transition-all">
+                <TrendingDown className="w-8 h-8 md:w-10 md:h-10 mb-3 text-[#e3c2f2] opacity-90" strokeWidth={1.5} />
+                <span className="text-sm md:text-base font-medium leading-tight">Menores juros<br/>do mercado</span>
               </div>
             </div>
 
@@ -127,11 +190,9 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
               href={`https://wa.me/${campaign.whatsapp_number?.replace(/\D/g, "")}?text=${encodeURIComponent("Olá 👋 Tenho interesse no Ville de Lisboa e gostaria de fazer minha simulação pelo Minha Casa Minha Vida.")}`}
               target="_blank" 
               rel="noopener noreferrer" 
-              className="bg-[#25D366] text-white px-8 md:px-12 py-5 rounded-full font-bold text-lg md:text-xl inline-flex items-center justify-center gap-3 w-full md:w-auto shadow-[0_10px_30px_rgba(37,211,102,0.4)] hover:shadow-[0_15px_40px_rgba(37,211,102,0.6)] transition-all transform hover:-translate-y-1 active:scale-95"
+              className="bg-[#25D366] text-white px-8 md:px-12 py-4 md:py-5 rounded-full font-bold text-base md:text-xl inline-flex items-center justify-center gap-3 w-full md:w-auto shadow-[0_10px_30px_rgba(37,211,102,0.4)] hover:shadow-[0_15px_40px_rgba(37,211,102,0.6)] transition-all transform hover:-translate-y-1 active:scale-95"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" viewBox="0 0 16 16">
-                <path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.004-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z"/>
-              </svg>
+              <MessageCircle className="w-6 h-6 md:w-7 md:h-7" />
               QUERO FAZER MINHA SIMULAÇÃO
             </a>
           </div>
@@ -215,8 +276,26 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
             <div className="h-1 w-20 bg-[#b971dc] mx-auto rounded-full"></div>
           </div>
           <div className="relative group max-w-5xl mx-auto">
-            <div className="flex overflow-hidden rounded-xl shadow-2xl aspect-[16/9]">
+            <div 
+              className="flex overflow-hidden rounded-xl shadow-2xl aspect-[16/9] relative"
+              onTouchStart={onTouchStart}
+              onTouchMove={onTouchMove}
+              onTouchEnd={onTouchEndAction}
+            >
               <img src={galleryImages[galleryIndex] as string} className="w-full h-full object-cover transition-opacity duration-500" alt="Galeria" />
+              
+              <button 
+                onClick={prevSlide}
+                className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white p-2 rounded-full transition-colors opacity-0 group-hover:opacity-100 md:flex hidden items-center justify-center"
+              >
+                <ChevronLeft className="w-8 h-8" />
+              </button>
+              <button 
+                onClick={nextSlide}
+                className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white p-2 rounded-full transition-colors opacity-0 group-hover:opacity-100 md:flex hidden items-center justify-center"
+              >
+                <ChevronRight className="w-8 h-8" />
+              </button>
             </div>
             <div className="flex justify-center gap-2 mt-6">
               {galleryImages.map((_, i) => (
@@ -375,6 +454,19 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
           </div>
         </div>
       </footer>
+
+      {/* Floating CTA Mobile */}
+      <div className="md:hidden fixed bottom-6 left-0 right-0 px-4 z-50 animate-in slide-in-from-bottom-10 fade-in duration-500 delay-500">
+        <a 
+          href={`https://wa.me/${campaign.whatsapp_number?.replace(/\D/g, "")}?text=${encodeURIComponent("Olá 👋 Tenho interesse no Ville de Lisboa e gostaria de fazer minha simulação pelo Minha Casa Minha Vida.")}`}
+          target="_blank" 
+          rel="noopener noreferrer" 
+          className="bg-[#25D366] text-white w-full py-4 rounded-2xl font-bold text-[15px] flex items-center justify-center gap-2 shadow-[0_8px_25px_rgba(37,211,102,0.5)] border border-[#25D366]/50 hover:bg-[#20b858] transition-colors"
+        >
+          <MessageCircle className="w-6 h-6" />
+          Simular pelo WhatsApp
+        </a>
+      </div>
     </div>
   );
 }
