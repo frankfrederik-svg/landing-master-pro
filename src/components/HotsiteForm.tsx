@@ -14,6 +14,7 @@ type Props = {
   campaignId: string;
   whatsappNumber?: string | null;
   whatsappMessage?: string | null;
+  buttonText?: string;
 };
 
 const incomeTypes = ["CLT", "Autônomo", "Servidor público", "Empresário"];
@@ -36,18 +37,13 @@ function maskWhatsapp(raw: string) {
   return `(${d.slice(0, 2)}) ${d.slice(2, 7)}-${d.slice(7)}`;
 }
 
-export function HotsiteForm({ campaignId, whatsappNumber, whatsappMessage }: Props) {
+export function HotsiteForm({ campaignId, whatsappNumber, whatsappMessage, buttonText }: Props) {
   const [name, setName] = useState("");
   const [countryCode, setCountryCode] = useState("+55");
   const [whatsapp, setWhatsapp] = useState("");
   const [income, setIncome] = useState<IncomeRange | "">("");
-  const [usesEntry, setUsesEntry] = useState<"sim" | "nao">("nao");
-  const [entryValue, setEntryValue] = useState("");
-  const [joinsIncome, setJoinsIncome] = useState<"sim" | "nao">("nao");
-  const [birthDate, setBirthDate] = useState("");
   const [incomeType, setIncomeType] = useState("");
   const [hasFgts, setHasFgts] = useState<"sim" | "nao">("nao");
-  const [cleanName, setCleanName] = useState<"sim" | "nao">("sim");
   const [submitting, setSubmitting] = useState(false);
 
   const faixa = useMemo(() => (income ? classifyFaixa(income) : null), [income]);
@@ -67,13 +63,13 @@ export function HotsiteForm({ campaignId, whatsappNumber, whatsappMessage }: Pro
         whatsapp: `${countryCode} ${whatsapp.trim()}`,
         income_range: INCOME_OPTIONS.find((o) => o.value === income)?.label ?? income,
         mcmv_faixa: faixa?.faixa ?? null,
-        uses_entry_value: usesEntry === "sim",
-        entry_value: usesEntry === "sim" ? parseMoney(entryValue) : null,
-        joins_income: joinsIncome === "sim",
-        birth_date: birthDate || null,
+        uses_entry_value: false,
+        entry_value: null,
+        joins_income: false,
+        birth_date: null,
         income_type: incomeType || null,
         has_fgts: hasFgts === "sim",
-        clean_name: cleanName === "sim",
+        clean_name: true,
       },
     });
     setSubmitting(false);
@@ -94,17 +90,17 @@ export function HotsiteForm({ campaignId, whatsappNumber, whatsappMessage }: Pro
   }
 
   return (
-    <form onSubmit={onSubmit} className="space-y-5 rounded-3xl bg-card p-6 shadow-elegant md:p-8">
+    <form onSubmit={onSubmit} className="space-y-6">
       <div className="space-y-2">
-        <Label htmlFor="name">Nome completo</Label>
-        <Input id="name" required value={name} onChange={(e) => setName(e.target.value)} placeholder="Seu nome" />
+        <Label htmlFor="name" className="text-base">Nome completo</Label>
+        <Input id="name" required value={name} onChange={(e) => setName(e.target.value)} placeholder="Seu nome" className="h-12 text-base" />
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="wpp">WhatsApp</Label>
-        <div className="flex gap-2">
+        <Label htmlFor="wpp" className="text-base">WhatsApp</Label>
+        <div className="flex gap-3">
           <Select value={countryCode} onValueChange={setCountryCode}>
-            <SelectTrigger className="w-[120px] shrink-0">
+            <SelectTrigger className="w-[120px] shrink-0 h-12 text-base">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -118,7 +114,7 @@ export function HotsiteForm({ campaignId, whatsappNumber, whatsappMessage }: Pro
           <Input 
             id="wpp" 
             required 
-            className="flex-1"
+            className="flex-1 h-12 text-base"
             value={whatsapp} 
             onChange={(e) => {
               if (countryCode === "+55") {
@@ -128,14 +124,15 @@ export function HotsiteForm({ campaignId, whatsappNumber, whatsappMessage }: Pro
               }
             }} 
             placeholder={countryCode === "+55" ? "(11) 90000-0000" : "Número"} 
+            inputMode="tel"
           />
         </div>
       </div>
 
       <div className="space-y-2">
-        <Label>Renda familiar bruta</Label>
+        <Label className="text-base">Renda familiar bruta</Label>
         <Select value={income} onValueChange={(v) => setIncome(v as IncomeRange)}>
-          <SelectTrigger><SelectValue placeholder="Selecione sua faixa de renda" /></SelectTrigger>
+          <SelectTrigger className="h-12 text-base"><SelectValue placeholder="Selecione sua faixa de renda" /></SelectTrigger>
           <SelectContent>
             {INCOME_OPTIONS.map((o) => (
               <SelectItem key={o.value} value={o.value}>{o.label}</SelectItem>
@@ -156,70 +153,31 @@ export function HotsiteForm({ campaignId, whatsappNumber, whatsappMessage }: Pro
         </div>
       )}
 
-      <div className="grid gap-4 md:grid-cols-2">
+      <div className="grid gap-6 md:grid-cols-2 mt-4">
         <div className="space-y-2">
-          <Label>Vai usar valor para abater na entrada?</Label>
-          <RadioGroup value={usesEntry} onValueChange={(v) => setUsesEntry(v as "sim" | "nao")} className="flex gap-4">
-            <label className="flex items-center gap-2"><RadioGroupItem value="sim" /> Sim</label>
-            <label className="flex items-center gap-2"><RadioGroupItem value="nao" /> Não</label>
-          </RadioGroup>
-        </div>
-        {usesEntry === "sim" && (
-          <div className="space-y-2">
-            <Label>Valor aproximado</Label>
-            <Input value={entryValue} onChange={(e) => setEntryValue(maskMoney(e.target.value))} placeholder="R$ 0,00" inputMode="numeric" />
-          </div>
-        )}
-      </div>
-
-      <div className="grid gap-4 md:grid-cols-2">
-        <div className="space-y-2">
-          <Label>Vai juntar renda com alguém?</Label>
-          <RadioGroup value={joinsIncome} onValueChange={(v) => setJoinsIncome(v as "sim" | "nao")} className="flex gap-4">
-            <label className="flex items-center gap-2"><RadioGroupItem value="sim" /> Sim</label>
-            <label className="flex items-center gap-2"><RadioGroupItem value="nao" /> Não</label>
-          </RadioGroup>
-        </div>
-        <div className="space-y-2">
-          <Label>Data de nascimento (mais velho)</Label>
-          <Input type="date" value={birthDate} onChange={(e) => setBirthDate(e.target.value)} />
-        </div>
-      </div>
-
-      <div className="grid gap-4 md:grid-cols-3">
-        <div className="space-y-2">
-          <Label>Tipo de renda</Label>
+          <Label className="text-base">Tipo de renda</Label>
           <Select value={incomeType} onValueChange={setIncomeType}>
-            <SelectTrigger><SelectValue placeholder="Selecione" /></SelectTrigger>
+            <SelectTrigger className="h-12 text-base"><SelectValue placeholder="Selecione" /></SelectTrigger>
             <SelectContent>
               {incomeTypes.map((t) => <SelectItem key={t} value={t}>{t}</SelectItem>)}
             </SelectContent>
           </Select>
         </div>
         <div className="space-y-2">
-          <Label>Possui FGTS?</Label>
-          <RadioGroup value={hasFgts} onValueChange={(v) => setHasFgts(v as "sim" | "nao")} className="flex gap-4 pt-2">
-            <label className="flex items-center gap-2"><RadioGroupItem value="sim" /> Sim</label>
-            <label className="flex items-center gap-2"><RadioGroupItem value="nao" /> Não</label>
-          </RadioGroup>
-        </div>
-        <div className="space-y-2">
-          <Label>Nome limpo?</Label>
-          <RadioGroup value={cleanName} onValueChange={(v) => setCleanName(v as "sim" | "nao")} className="flex gap-4 pt-2">
-            <label className="flex items-center gap-2"><RadioGroupItem value="sim" /> Sim</label>
-            <label className="flex items-center gap-2"><RadioGroupItem value="nao" /> Não</label>
+          <Label className="text-base">Possui FGTS?</Label>
+          <RadioGroup value={hasFgts} onValueChange={(v) => setHasFgts(v as "sim" | "nao")} className="flex gap-6 pt-2">
+            <label className="flex items-center gap-2 cursor-pointer text-base"><RadioGroupItem value="sim" className="h-5 w-5" /> Sim</label>
+            <label className="flex items-center gap-2 cursor-pointer text-base"><RadioGroupItem value="nao" className="h-5 w-5" /> Não</label>
           </RadioGroup>
         </div>
       </div>
 
-      <Button type="submit" variant="cta" size="xl" className="w-full" disabled={submitting}>
-        {submitting ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : <MessageCircle className="mr-2 h-5 w-5" />}
-        {submitting ? "Enviando..." : "Falar com especialista"}
+      <Button type="submit" variant="cta" className="w-full min-h-[4rem] h-auto py-3 px-3 text-[13px] md:text-lg font-bold shadow-lg hover:shadow-xl transition-all mt-6" disabled={submitting}>
+        {submitting ? <Loader2 className="mr-2 h-5 w-5 shrink-0 animate-spin" /> : <MessageCircle className="mr-2 h-5 w-5 shrink-0" />}
+        <span className="whitespace-normal leading-tight">
+          {submitting ? "Enviando..." : (buttonText || "Falar com especialista")}
+        </span>
       </Button>
-
-      <p className="text-center text-xs text-muted-foreground">
-        🔒 Seus dados estão seguros. Usamos apenas para entrar em contato.
-      </p>
     </form>
   );
 }

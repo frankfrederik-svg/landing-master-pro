@@ -23,6 +23,22 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
   // Gallery
   const [galleryIndex, setGalleryIndex] = useState(0);
 
+  // Prova Social Counter
+  const [reservasCount, setReservasCount] = useState(1);
+  useEffect(() => {
+    let current = 1;
+    const interval = setInterval(() => {
+      if (current < 62) {
+        current += Math.floor(Math.random() * 5) + 2;
+        if (current > 62) current = 62;
+        setReservasCount(current);
+      } else {
+        clearInterval(interval);
+      }
+    }, 40);
+    return () => clearInterval(interval);
+  }, []);
+
   // Extrai imagens dos empreendimentos para a galeria ou usa imagens padrão
   const propertyImages = properties.flatMap(p => {
     if (!p.image_url) return [];
@@ -50,12 +66,12 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
   return (
     <div className="bg-[#f9f9ff] text-[#121c2c] font-sans overflow-x-hidden">
       {/* TopNavBar */}
-      <nav className="fixed top-0 w-full z-50 bg-[#f9f9ff]/95 backdrop-blur-md shadow-sm h-20">
-        <div className="flex justify-between items-center max-w-[1200px] mx-auto px-6 h-full">
+      <nav className="fixed top-0 w-full z-50 bg-[#f9f9ff]/95 backdrop-blur-md shadow-sm h-16 md:h-20 transition-all">
+        <div className="flex justify-between items-center max-w-[1200px] mx-auto px-4 md:px-6 h-full gap-3">
           {campaign.layout_data?.logo ? (
-            <img src={campaign.layout_data.logo} alt={campaign.name} className="h-16 object-contain" />
+            <img src={campaign.layout_data.logo} alt={campaign.name} className="h-10 md:h-14 w-auto object-contain max-w-[130px] md:max-w-none" />
           ) : (
-            <span className="text-2xl font-bold text-[#794098]">{campaign.name}</span>
+            <span className="text-xl md:text-2xl font-bold text-[#794098] truncate">{campaign.name}</span>
           )}
           <div className="hidden md:flex items-center gap-8">
             <a className="text-[#794098] border-b-2 border-[#794098] pb-1 font-semibold transition-all duration-300" href="#localizacao">Localização</a>
@@ -63,58 +79,61 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
             <a className="text-[#455f88] hover:text-[#8b4aae] transition-all duration-300" href="#beneficios">Benefícios</a>
             <a className="text-[#455f88] hover:text-[#8b4aae] transition-all duration-300" href="#sobre">Sobre</a>
           </div>
-          <button onClick={scrollToForm} className="bg-[#794098] text-white px-6 py-3 rounded-full font-semibold hover:bg-[#8b4aae] transition-all duration-300 active:scale-95">
+          <button onClick={scrollToForm} className="bg-[#794098] text-white px-5 py-2 md:px-6 md:py-3 text-[13px] md:text-base rounded-full font-semibold hover:bg-[#8b4aae] transition-all duration-300 active:scale-95 whitespace-nowrap shadow-sm">
             Simular Agora
           </button>
         </div>
       </nav>
 
       {/* Hero Section */}
-      <section id="formulario" className="relative min-h-[921px] pt-20 flex items-center overflow-hidden">
+      <section id="formulario" className="relative min-h-[100vh] md:min-h-[800px] pt-24 pb-12 flex items-center overflow-hidden">
         <div className="absolute inset-0 z-0">
-          <div className="absolute inset-0 bg-gradient-to-r from-[#121c2c]/90 via-[#121c2c]/60 to-transparent z-10"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-[#121c2c] via-[#121c2c]/70 to-[#121c2c]/30 z-10 md:bg-gradient-to-r md:from-[#121c2c]/90 md:via-[#121c2c]/60 md:to-transparent"></div>
           {hero.toLowerCase().match(/\.(mp4|webm|mov|mkv)(\?.*)?$/) || hero.includes('.mp4') ? (
             <video className="w-full h-full object-cover" src={hero} autoPlay loop muted playsInline />
           ) : (
             <img className="w-full h-full object-cover" src={hero} alt="Hero Background" />
           )}
         </div>
-        <div className="relative z-20 max-w-[1200px] mx-auto px-6 grid md:grid-cols-2 gap-12 items-center w-full py-12">
-          {/* Content Left */}
-          <div className="text-white">
-            <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">
-              {campaign.hero_title}
+        <div className="relative z-20 max-w-[800px] mx-auto px-4 md:px-6 flex flex-col items-center justify-center text-center w-full pt-6 pb-16">
+          <div className="text-white flex flex-col items-center w-full">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-4 md:mb-6 leading-tight tracking-tight drop-shadow-lg">
+              {campaign.hero_title || "Saia do aluguel com parcelas facilitadas em até 72x pelo Minha Casa Minha Vida"}
             </h1>
-            <p className="text-lg md:text-xl mb-8 text-[#f6fff4]">
-              {campaign.hero_subtitle}
+            <p className="text-lg md:text-2xl mb-8 md:mb-10 text-[#f6fff4] font-light max-w-3xl drop-shadow-md">
+              {campaign.hero_subtitle || "Apartamentos de 2 quartos em Caucaia com lazer completo, entrada facilitada e possibilidade de subsídio de até R$55 mil."}
             </p>
-            <ul className="space-y-4 mb-8">
-              <li className="flex items-center gap-3">
-                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#e3c2f2] text-[#2c133a] text-sm font-bold">✓</span>
-                <span className="text-base">Subsídios de até R$ 55 mil</span>
-              </li>
-              <li className="flex items-center gap-3">
-                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#e3c2f2] text-[#2c133a] text-sm font-bold">✓</span>
-                <span className="text-base">Menores juros do mercado</span>
-              </li>
-              <li className="flex items-center gap-3">
-                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#e3c2f2] text-[#2c133a] text-sm font-bold">✓</span>
-                <span className="text-base">Entrada facilitada</span>
-              </li>
-              <li className="flex items-center gap-3">
-                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#e3c2f2] text-[#2c133a] text-sm font-bold">✓</span>
-                <span className="text-base">Use seu FGTS</span>
-              </li>
-            </ul>
-          </div>
-          {/* Lead Capture Form */}
-          <div className="bg-white p-8 rounded-xl shadow-[0_20px_40px_rgba(69,95,136,0.15)] max-w-md mx-auto md:mr-0 w-full">
-            <h2 className="text-2xl font-bold text-[#121c2c] mb-2">Simular meu apê</h2>
-            <p className="text-sm text-[#3e4a3f] mb-6">Receba uma simulação personalizada em poucos minutos.</p>
-            {/* O HotsiteForm será renderizado com a cor original do tema dele (Tailwind config da base), 
-                mas ele atende perfeitamente à funcionalidade. */}
-            <HotsiteForm campaignId={campaign.id} whatsappNumber={campaign.whatsapp_number} whatsappMessage={campaign.whatsapp_message} />
-            <p className="mt-4 text-[12px] text-[#3e4a3f] text-center">Seus dados estão seguros conosco.</p>
+            
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-10 md:mb-12 w-full max-w-4xl">
+              <div className="flex flex-col items-center justify-center bg-white/10 backdrop-blur-sm rounded-2xl p-4 border border-white/20">
+                <span className="text-2xl mb-2">💰</span>
+                <span className="text-sm md:text-base font-semibold leading-tight">Subsídio de<br/>até R$55 mil</span>
+              </div>
+              <div className="flex flex-col items-center justify-center bg-gradient-to-br from-[#794098] to-[#b971dc] rounded-2xl p-4 border border-[#e3c2f2]/40 shadow-[0_0_20px_rgba(185,113,220,0.5)] transform hover:scale-105 transition-all">
+                <span className="text-2xl mb-2">🤝</span>
+                <span className="text-sm md:text-base font-extrabold leading-tight">Entrada facilitada<br/>em até 72x</span>
+              </div>
+              <div className="flex flex-col items-center justify-center bg-white/10 backdrop-blur-sm rounded-2xl p-4 border border-white/20">
+                <span className="text-2xl mb-2">🏦</span>
+                <span className="text-sm md:text-base font-semibold leading-tight">Use seu<br/>FGTS</span>
+              </div>
+              <div className="flex flex-col items-center justify-center bg-white/10 backdrop-blur-sm rounded-2xl p-4 border border-white/20">
+                <span className="text-2xl mb-2">📉</span>
+                <span className="text-sm md:text-base font-semibold leading-tight">Menores juros<br/>do mercado</span>
+              </div>
+            </div>
+
+            <a 
+              href={`https://wa.me/${campaign.whatsapp_number?.replace(/\D/g, "")}?text=${encodeURIComponent("Olá 👋 Tenho interesse no Ville de Lisboa e gostaria de fazer minha simulação pelo Minha Casa Minha Vida.")}`}
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="bg-[#25D366] text-white px-8 md:px-12 py-5 rounded-full font-bold text-lg md:text-xl inline-flex items-center justify-center gap-3 w-full md:w-auto shadow-[0_10px_30px_rgba(37,211,102,0.4)] hover:shadow-[0_15px_40px_rgba(37,211,102,0.6)] transition-all transform hover:-translate-y-1 active:scale-95"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.004-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z"/>
+              </svg>
+              QUERO FAZER MINHA SIMULAÇÃO
+            </a>
           </div>
         </div>
       </section>
@@ -261,30 +280,83 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
         </div>
       </section>
 
-      {/* Prova Social */}
-      <section className="py-16 bg-[#121c2c] text-white">
-        <div className="max-w-[1200px] mx-auto px-6 text-center">
-          <h2 className="text-4xl font-bold mb-4">Mais de 1 milhão</h2>
-          <p className="text-2xl text-[#e3c2f2] max-w-2xl mx-auto">
-            de brasileiros já realizaram o sonho da casa própria com parceiros como nós.
-          </p>
+      {/* Prova Social e Urgência */}
+      <section className="py-20 bg-[#121c2c] text-white relative overflow-hidden">
+        {/* Decorativo */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[#794098]/20 rounded-full blur-[100px] pointer-events-none"></div>
+        
+        <div className="max-w-[1200px] mx-auto px-6 relative z-10">
+          <div className="flex flex-col items-center text-center">
+            
+            {/* Badges de Urgência */}
+            <div className="flex flex-wrap justify-center gap-3 mb-10">
+              <span className="bg-red-500/20 text-red-300 border border-red-500/30 px-4 py-1.5 rounded-full text-sm font-semibold flex items-center gap-2 animate-pulse">
+                <span className="w-2 h-2 rounded-full bg-red-500"></span> Alta procura
+              </span>
+              <span className="bg-[#794098]/30 text-[#e3c2f2] border border-[#794098]/50 px-4 py-1.5 rounded-full text-sm font-semibold flex items-center gap-2">
+                ⏱️ Últimas unidades desta etapa
+              </span>
+              <span className="bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-4 py-1.5 rounded-full text-sm font-semibold flex items-center gap-2">
+                ✨ Reservas recentes
+              </span>
+            </div>
+
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 flex flex-wrap items-center justify-center gap-3 md:gap-4">
+              <span>Mais de</span>
+              <span className="text-7xl md:text-8xl text-transparent bg-clip-text bg-gradient-to-r from-[#b971dc] to-[#794098] drop-shadow-[0_0_15px_rgba(185,113,220,0.5)] tabular-nums">
+                {reservasCount}
+              </span>
+              <span>famílias</span>
+            </h2>
+            
+            <p className="text-xl md:text-3xl text-[#e3c2f2] max-w-3xl mx-auto font-light leading-relaxed">
+              já realizaram a reserva da sua unidade. <br className="hidden md:block"/>
+              <strong className="text-white font-semibold">Não fique de fora dessa oportunidade.</strong>
+            </p>
+
+            {/* Social Proof Avatars */}
+            <div className="mt-12 flex flex-col items-center">
+              <div className="flex -space-x-4 mb-4">
+                <div className="w-12 h-12 rounded-full border-2 border-[#121c2c] bg-[#455f88] flex items-center justify-center text-sm font-bold shadow-lg">AM</div>
+                <div className="w-12 h-12 rounded-full border-2 border-[#121c2c] bg-[#8b4aae] flex items-center justify-center text-sm font-bold shadow-lg">JS</div>
+                <div className="w-12 h-12 rounded-full border-2 border-[#121c2c] bg-emerald-600 flex items-center justify-center text-sm font-bold shadow-lg">MR</div>
+                <div className="w-12 h-12 rounded-full border-2 border-[#121c2c] bg-[#e3c2f2] text-[#2c133a] flex items-center justify-center text-sm font-bold shadow-lg">LC</div>
+                <div className="w-12 h-12 rounded-full border-2 border-[#121c2c] bg-[#794098] flex items-center justify-center text-sm font-bold shadow-lg">+{reservasCount > 4 ? reservasCount - 4 : 0}</div>
+              </div>
+              <p className="text-sm text-[#8b9fc1] font-medium tracking-wide">Pessoas reais realizando o sonho do primeiro imóvel</p>
+            </div>
+            
+          </div>
         </div>
       </section>
 
-      {/* CTA Final */}
-      <section className="py-24 bg-[#f9f9ff] relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-[#794098]/5 rounded-full -translate-y-1/2 translate-x-1/2"></div>
-        <div className="absolute bottom-0 left-0 w-64 h-64 bg-[#455f88]/5 rounded-full translate-y-1/2 -translate-x-1/2"></div>
-        <div className="max-w-[1200px] mx-auto px-6 text-center relative z-10">
-          <h2 className="text-3xl font-bold text-[#121c2c] mb-6">
-            Garanta agora seu apartamento com condições especiais do Minha Casa Minha Vida
-          </h2>
-          <p className="text-lg text-[#3e4a3f] mb-10 max-w-2xl mx-auto">
-            Não deixe para amanhã o sonho que você pode realizar hoje. Fale com um consultor e peça sua simulação grátis.
-          </p>
-          <a href={`https://wa.me/${campaign.whatsapp_number?.replace(/\D/g, "")}`} target="_blank" rel="noopener noreferrer" className="bg-[#25D366] text-white px-10 py-5 rounded-full font-bold text-lg inline-flex items-center gap-3 hover:shadow-xl transition-all transform hover:-translate-y-1 active:scale-95">
-            Falar no WhatsApp
-          </a>
+      {/* Formulário Final */}
+      <section id="formulario" className="py-24 bg-gradient-to-b from-[#f9f9ff] to-white relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#794098]/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 z-0 pointer-events-none"></div>
+        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-[#455f88]/5 rounded-full blur-3xl translate-y-1/3 -translate-x-1/3 z-0 pointer-events-none"></div>
+        <div className="max-w-[1000px] mx-auto px-6 relative z-10">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-5xl font-bold text-[#121c2c] mb-6 leading-tight">
+              Quero financiar meu apê<br className="hidden md:block" /> com entrada parcelada
+            </h2>
+            <p className="text-lg md:text-xl text-[#3e4a3f] max-w-3xl mx-auto">
+              Preencha os dados abaixo e fale com um especialista para descobrir parcelas, possibilidade de subsídio e condições facilitadas.
+            </p>
+          </div>
+          
+          <div className="bg-white p-8 md:p-12 rounded-3xl shadow-[0_20px_60px_rgba(69,95,136,0.12)] border border-[#bdcabd]/20 max-w-2xl mx-auto w-full relative">
+            <div className="absolute -top-6 -right-6 w-24 h-24 bg-gradient-to-br from-[#794098] to-[#b971dc] rounded-full opacity-10 blur-xl pointer-events-none"></div>
+            
+            <HotsiteForm 
+              campaignId={campaign.id} 
+              whatsappNumber={campaign.whatsapp_number} 
+              whatsappMessage="Olá 👋 Acabei de preencher a simulação do Ville de Lisboa e gostaria de receber minhas condições de financiamento."
+              buttonText="QUERO RECEBER MINHA SIMULAÇÃO"
+            />
+            <p className="mt-6 text-[13px] text-[#455f88] text-center font-medium">
+              🔒 Suas informações estão seguras. Não enviamos spam.
+            </p>
+          </div>
         </div>
       </section>
 
