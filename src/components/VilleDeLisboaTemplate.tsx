@@ -25,7 +25,15 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
   // Floating CTA visibility
   const [showFloatingCTA, setShowFloatingCTA] = useState(false);
   useEffect(() => {
-    const handleScroll = () => setShowFloatingCTA(window.scrollY > 400);
+    const handleScroll = () => {
+      const formElement = document.getElementById("formulario");
+      let isFormVisible = false;
+      if (formElement) {
+        const rect = formElement.getBoundingClientRect();
+        isFormVisible = rect.top < window.innerHeight;
+      }
+      setShowFloatingCTA(window.scrollY > 400 && !isFormVisible);
+    };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
