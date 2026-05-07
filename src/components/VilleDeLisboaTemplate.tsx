@@ -158,7 +158,7 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
       </nav>
 
       {/* Hero Section */}
-      <section id="formulario" className="relative min-h-[100vh] md:min-h-[800px] pt-20 pb-12 flex items-center overflow-hidden">
+      <section id="hero" className="relative min-h-[100vh] md:min-h-[800px] pt-20 pb-12 flex items-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-gradient-to-t from-[#121c2c] via-[#121c2c]/40 to-black/10 z-10 md:bg-gradient-to-r md:from-[#121c2c]/80 md:via-[#121c2c]/40 md:to-transparent"></div>
           
@@ -443,8 +443,11 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
         <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-[#455f88]/5 rounded-full blur-3xl translate-y-1/3 -translate-x-1/3 z-0 pointer-events-none"></div>
         <div className="max-w-[1000px] mx-auto px-6 relative z-10">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-5xl font-bold text-[#121c2c] mb-6 leading-tight">
-              Quero financiar meu apê<br className="hidden md:block" /> com entrada parcelada
+            <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold text-[#121c2c] mb-6 leading-tight tracking-tight">
+              Financie seu apê com <br className="hidden md:block" />
+              <span className="block mt-2 font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-[#794098] to-[#b971dc] drop-shadow-[0_5px_15px_rgba(121,64,152,0.25)]">
+                entrada parcelada em até 72x
+              </span>
             </h2>
             <p className="text-lg md:text-xl text-[#3e4a3f] max-w-3xl mx-auto">
               Preencha os dados abaixo e fale com um especialista para descobrir parcelas, possibilidade de subsídio e condições facilitadas.
