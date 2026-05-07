@@ -187,7 +187,7 @@ function CampaignsTab() {
                 <div><Label>Nome</Label><Input value={editing.name} onChange={(e) => setEditing({ ...editing, name: e.target.value })} /></div>
                 <div><Label>Slug (URL)</Label><Input value={editing.slug} onChange={(e) => setEditing({ ...editing, slug: e.target.value })} placeholder="feirao-mrv" /></div>
               </div>
-              <div className="grid gap-3 md:grid-cols-2">
+              <div className="grid gap-3 md:grid-cols-3">
                 <div>
                   <Label>Template (Layout)</Label>
                   <Select value={editing.layout || "default"} onValueChange={(v) => setEditing({ ...editing, layout: v })}>
@@ -198,7 +198,8 @@ function CampaignsTab() {
                     </SelectContent>
                   </Select>
                 </div>
-                <div><Label>Banner Hero</Label><ImageUpload value={editing.banner_url} onChange={(url) => setEditing({ ...editing, banner_url: url })} label="Upload Banner" /></div>
+                <div><Label>Banner Hero (Desktop)</Label><ImageUpload value={editing.banner_url} onChange={(url) => setEditing({ ...editing, banner_url: url })} label="Upload Banner Desktop" /></div>
+                <div><Label>Banner Hero (Mobile)</Label><ImageUpload value={editing.layout_data?.banner_mobile || null} onChange={(url) => setEditing({ ...editing, layout_data: { ...(editing.layout_data || {}), banner_mobile: url } })} label="Upload Banner Mobile" /></div>
               </div>
 
               {editing.layout === "ville_de_lisboa" && (
