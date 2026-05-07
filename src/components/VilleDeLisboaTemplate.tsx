@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { HotsiteForm } from "./HotsiteForm";
 import { resolveImage } from "@/lib/faixa";
-import { Wallet, Handshake, Landmark, TrendingDown, MessageCircle, ChevronLeft, ChevronRight } from "lucide-react";
+import { Wallet, Handshake, Landmark, TrendingDown, MessageCircle, ChevronLeft, ChevronRight, ChevronDown } from "lucide-react";
 
 type Campaign = {
   id: string; slug: string; name: string;
@@ -19,7 +19,16 @@ type Property = {
 export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Campaign; properties: Property[] }) {
   const scrollToForm = () => document.getElementById("formulario")?.scrollIntoView({ behavior: "smooth" });
 
-  const hero = campaign.banner_url || "https://lh3.googleusercontent.com/aida-public/AB6AXuBueCwgJ97yJn2N2uZcVoKVXI1UGZT0D54Bn7JpIL0A8IX2CFEtCK3twYewgbNT5qhk3gGjJBKaaNAqJRqsIFzwXlcUFEgOp2RYZw0xSXBagAqG4DziccCi8H7MI7Hxcrbgsf_Q7k_u1otNOw1kuWpPkFEODmyojSIYNbId3oHqaH_b1ktFY_3e6oaejQiVy7zlvH3RpwwuYVxUdgG6y3z3w-Tb5k_KTn256CHLudAw-dFMqG3_wOcvdxKjXRScyuTi66TwVeVhya8";
+  const heroDesktop = campaign.banner_url || "https://lh3.googleusercontent.com/aida-public/AB6AXuBueCwgJ97yJn2N2uZcVoKVXI1UGZT0D54Bn7JpIL0A8IX2CFEtCK3twYewgbNT5qhk3gGjJBKaaNAqJRqsIFzwXlcUFEgOp2RYZw0xSXBagAqG4DziccCi8H7MI7Hxcrbgsf_Q7k_u1otNOw1kuWpPkFEODmyojSIYNbId3oHqaH_b1ktFY_3e6oaejQiVy7zlvH3RpwwuYVxUdgG6y3z3w-Tb5k_KTn256CHLudAw-dFMqG3_wOcvdxKjXRScyuTi66TwVeVhya8";
+  const heroMobile = campaign.layout_data?.banner_mobile || heroDesktop;
+
+  // Floating CTA visibility
+  const [showFloatingCTA, setShowFloatingCTA] = useState(false);
+  useEffect(() => {
+    const handleScroll = () => setShowFloatingCTA(window.scrollY > 400);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   // Gallery
   const [galleryIndex, setGalleryIndex] = useState(0);
@@ -152,11 +161,24 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
       <section id="formulario" className="relative min-h-[100vh] md:min-h-[800px] pt-20 pb-12 flex items-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-gradient-to-t from-[#121c2c] via-[#121c2c]/40 to-black/10 z-10 md:bg-gradient-to-r md:from-[#121c2c]/80 md:via-[#121c2c]/40 md:to-transparent"></div>
-          {hero.toLowerCase().match(/\.(mp4|webm|mov|mkv)(\?.*)?$/) || hero.includes('.mp4') ? (
-            <video className="w-full h-full object-cover" src={hero} autoPlay loop muted playsInline />
-          ) : (
-            <img className="w-full h-full object-cover" src={hero} alt="Hero Background" />
-          )}
+          
+          {/* Mobile Video/Banner */}
+          <div className="md:hidden w-full h-full">
+            {heroMobile.toLowerCase().match(/\.(mp4|webm|mov|mkv)(\?.*)?$/) || heroMobile.includes('.mp4') ? (
+              <video className="w-full h-full object-cover" src={heroMobile} autoPlay loop muted playsInline />
+            ) : (
+              <img className="w-full h-full object-cover" src={heroMobile} alt="Hero Background Mobile" />
+            )}
+          </div>
+
+          {/* Desktop Video/Banner */}
+          <div className="hidden md:block w-full h-full">
+            {heroDesktop.toLowerCase().match(/\.(mp4|webm|mov|mkv)(\?.*)?$/) || heroDesktop.includes('.mp4') ? (
+              <video className="w-full h-full object-cover" src={heroDesktop} autoPlay loop muted playsInline />
+            ) : (
+              <img className="w-full h-full object-cover" src={heroDesktop} alt="Hero Background Desktop" />
+            )}
+          </div>
         </div>
         <div className="relative z-20 max-w-[800px] mx-auto px-4 md:px-6 flex flex-col items-center justify-center text-center w-full pt-4 pb-16">
           <div className="text-white flex flex-col items-center w-full">
@@ -196,6 +218,12 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
               QUERO FAZER MINHA SIMULAÇÃO
             </a>
           </div>
+        </div>
+
+        {/* Scroll Indicator */}
+        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center animate-bounce text-white/80 z-20">
+          <span className="text-[10px] md:text-xs uppercase tracking-[0.2em] mb-1 font-medium">Saiba mais</span>
+          <ChevronDown className="w-5 h-5 md:w-6 md:h-6" />
         </div>
       </section>
 
@@ -456,7 +484,7 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
       </footer>
 
       {/* Floating CTA Mobile */}
-      <div className="md:hidden fixed bottom-6 left-0 right-0 px-4 z-50 animate-in slide-in-from-bottom-10 fade-in duration-500 delay-500">
+      <div className={`md:hidden fixed bottom-6 left-0 right-0 px-4 z-50 transition-all duration-500 transform ${showFloatingCTA ? 'translate-y-0 opacity-100' : 'translate-y-24 opacity-0 pointer-events-none'}`}>
         <a 
           href={`https://wa.me/${campaign.whatsapp_number?.replace(/\D/g, "")}?text=${encodeURIComponent("Olá 👋 Tenho interesse no Ville de Lisboa e gostaria de fazer minha simulação pelo Minha Casa Minha Vida.")}`}
           target="_blank" 
