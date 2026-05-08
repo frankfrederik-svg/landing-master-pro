@@ -268,6 +268,83 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
         </div>
       </section>
 
+      {/* Localização Estratégica */}
+      <section className="py-20 bg-white" id="localizacao">
+        <div className="max-w-[1200px] mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-5xl font-bold text-[#121c2c] mb-6 leading-tight">
+              Localização estratégica para <br className="hidden md:block"/> facilitar sua rotina
+            </h2>
+            <p className="text-lg md:text-xl text-[#3e4a3f] max-w-3xl mx-auto font-light">
+              More com fácil acesso às principais vias da região e perto de pontos importantes de Caucaia.
+            </p>
+          </div>
+
+          <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+            <div className="order-2 lg:order-1">
+              <h3 className="text-2xl md:text-3xl font-bold text-[#794098] mb-6">
+                E você tem um diferencial forte de localização:
+              </h3>
+              <ul className="space-y-4 mb-10 text-lg text-[#3e4a3f] font-medium">
+                <li className="flex items-center gap-3">
+                  <span className="flex-shrink-0 w-8 h-8 rounded-full bg-[#794098]/10 text-[#794098] flex items-center justify-center">📍</span>
+                  Fácil acesso pela Av. Mister Hull
+                </li>
+                <li className="flex items-center gap-3">
+                  <span className="flex-shrink-0 w-8 h-8 rounded-full bg-[#794098]/10 text-[#794098] flex items-center justify-center">📍</span>
+                  Próximo à Fundação Bradesco
+                </li>
+                <li className="flex items-center gap-3">
+                  <span className="flex-shrink-0 w-8 h-8 rounded-full bg-[#794098]/10 text-[#794098] flex items-center justify-center">📍</span>
+                  Ao lado da Empresa de Ônibus Vitória
+                </li>
+              </ul>
+
+              <div className="grid sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-4">
+                <div className="bg-[#f9f9ff] p-5 rounded-2xl border border-[#bdcabd]/30 shadow-sm transition-transform hover:-translate-y-1">
+                  <div className="w-12 h-12 rounded-xl bg-[#e3c2f2] text-[#794098] flex items-center justify-center mb-4 text-2xl">📍</div>
+                  <h4 className="font-bold text-[#121c2c] mb-1">Av. Mister Hull</h4>
+                  <p className="text-sm text-[#455f88] leading-relaxed">Fácil acesso para Fortaleza e Caucaia.</p>
+                </div>
+                <div className="bg-[#f9f9ff] p-5 rounded-2xl border border-[#bdcabd]/30 shadow-sm transition-transform hover:-translate-y-1">
+                  <div className="w-12 h-12 rounded-xl bg-[#e3c2f2] text-[#794098] flex items-center justify-center mb-4 text-2xl">🏫</div>
+                  <h4 className="font-bold text-[#121c2c] mb-1">Fundação Bradesco</h4>
+                  <p className="text-sm text-[#455f88] leading-relaxed">Próximo de um dos pontos mais conhecidos da região.</p>
+                </div>
+                <div className="bg-[#f9f9ff] p-5 rounded-2xl border border-[#bdcabd]/30 shadow-sm transition-transform hover:-translate-y-1 sm:col-span-2 lg:col-span-1 xl:col-span-2">
+                  <div className="w-12 h-12 rounded-xl bg-[#e3c2f2] text-[#794098] flex items-center justify-center mb-4 text-2xl">🚌</div>
+                  <h4 className="font-bold text-[#121c2c] mb-1">Empresa Vitória</h4>
+                  <p className="text-sm text-[#455f88] leading-relaxed">Mobilidade e acesso facilitado para o dia a dia.</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="order-1 lg:order-2">
+              <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-[#bdcabd]/20 aspect-square lg:aspect-auto lg:h-[700px] bg-[#e3c2f2]/20">
+                <iframe 
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3981.336424458315!2d-38.61868582531633!3d-3.7366367431184855!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x7c74bceb3c5c9cd%3A0x2db4df444fbda0f6!2sAv.%20Dom%20Almeida%20Lustosa%20-%20Caucaia%2C%20CE!5e0!3m2!1spt-BR!2sbr!4v1715104800000!5m2!1spt-BR!2sbr"
+                  className="w-full h-full border-0 grayscale opacity-80 mix-blend-multiply" 
+                  allowFullScreen={false} 
+                  loading="lazy" 
+                  referrerPolicy="no-referrer-when-downgrade"
+                  title="Mapa da Região"
+                ></iframe>
+                <div className="absolute inset-0 bg-gradient-to-t from-[#121c2c]/90 via-transparent to-transparent pointer-events-none"></div>
+                <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8 pointer-events-none">
+                  <div className="bg-white/95 backdrop-blur-md p-6 rounded-2xl shadow-lg border border-white/20 pointer-events-auto">
+                    <h4 className="text-[#794098] font-bold text-[11px] md:text-sm uppercase tracking-wider mb-2">Endereço do Empreendimento</h4>
+                    <p className="text-[#121c2c] font-semibold text-base md:text-xl flex items-start gap-3">
+                      <span className="text-xl md:text-2xl mt-0.5">📍</span>
+                      Av. Dom Almeida Lustosa, Parque Albano (Jurema), Caucaia - CE
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Sobre o Empreendimento */}
       <section className="py-20 bg-[#f0f3ff]" id="sobre">
         <div className="max-w-[1200px] mx-auto px-6 grid md:grid-cols-2 gap-16 items-center">
