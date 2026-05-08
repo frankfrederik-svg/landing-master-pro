@@ -156,10 +156,10 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
             <span className={`font-bold text-[#794098] truncate transition-all duration-500 ${isScrolled ? 'text-base md:text-xl' : 'text-lg md:text-2xl'}`}>{campaign.name}</span>
           )}
           <div className="hidden md:flex items-center gap-8">
-            <a className="text-[#455f88] hover:text-[#794098] text-sm font-medium transition-all duration-300" href="#localizacao" onClick={(e) => {e.preventDefault(); document.getElementById('localizacao')?.scrollIntoView({behavior: 'smooth'})}}>Localização</a>
-            <a className="text-[#455f88] hover:text-[#794098] text-sm font-medium transition-all duration-300" href="#diferenciais" onClick={(e) => {e.preventDefault(); document.getElementById('diferenciais')?.scrollIntoView({behavior: 'smooth'})}}>Diferenciais</a>
-            <a className="text-[#455f88] hover:text-[#794098] text-sm font-medium transition-all duration-300" href="#beneficios" onClick={(e) => {e.preventDefault(); document.getElementById('beneficios')?.scrollIntoView({behavior: 'smooth'})}}>Benefícios</a>
-            <a className="text-[#455f88] hover:text-[#794098] text-sm font-medium transition-all duration-300" href="#sobre" onClick={(e) => {e.preventDefault(); document.getElementById('sobre')?.scrollIntoView({behavior: 'smooth'})}}>Sobre</a>
+            <a className="text-[#455f88] hover:text-[#794098] text-sm font-medium transition-all duration-300" href="#localizacao" onClick={(e) => { e.preventDefault(); document.getElementById('localizacao')?.scrollIntoView({ behavior: 'smooth' }) }}>Localização</a>
+            <a className="text-[#455f88] hover:text-[#794098] text-sm font-medium transition-all duration-300" href="#diferenciais" onClick={(e) => { e.preventDefault(); document.getElementById('diferenciais')?.scrollIntoView({ behavior: 'smooth' }) }}>Diferenciais</a>
+            <a className="text-[#455f88] hover:text-[#794098] text-sm font-medium transition-all duration-300" href="#beneficios" onClick={(e) => { e.preventDefault(); document.getElementById('beneficios')?.scrollIntoView({ behavior: 'smooth' }) }}>Benefícios</a>
+            <a className="text-[#455f88] hover:text-[#794098] text-sm font-medium transition-all duration-300" href="#sobre" onClick={(e) => { e.preventDefault(); document.getElementById('sobre')?.scrollIntoView({ behavior: 'smooth' }) }}>Sobre</a>
           </div>
           <button onClick={scrollToForm} className={`bg-[#794098] text-white rounded-full font-semibold hover:bg-[#8b4aae] transition-all duration-300 active:scale-95 whitespace-nowrap shadow-md hover:shadow-lg flex items-center justify-center ${isScrolled ? 'px-4 py-1.5 md:px-6 md:py-2.5 text-[11px] md:text-sm' : 'px-5 py-2 md:px-7 md:py-3 text-[13px] md:text-base'}`}>
             <span className="md:hidden">Simular</span>
@@ -325,7 +325,7 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
             <div className="order-1 lg:order-2">
               <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-[#bdcabd]/20 aspect-square lg:aspect-auto lg:h-[700px] bg-[#e3c2f2]/20">
                 <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3981.336424458315!2d-38.61868582531633!3d-3.7366367431184855!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x7c74bceb3c5c9cd%3A0x2db4df444fbda0f6!2sAv.%20Dom%20Almeida%20Lustosa%20-%20Caucaia%2C%20CE!5e0!3m2!1spt-BR!2sbr!4v1715104800000!5m2!1spt-BR!2sbr"
+                  src="https://maps.google.com/maps?q=Rua%20Banabuiu,%20213%20-%20Parque%20Albano,%20Caucaia%20-%20CE&t=&z=16&ie=UTF8&iwloc=&output=embed"
                   className="w-full h-full border-0 grayscale opacity-80 mix-blend-multiply"
                   allowFullScreen={false}
                   loading="lazy"
@@ -338,7 +338,7 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
                     <h4 className="text-[#794098] font-bold text-[11px] md:text-sm uppercase tracking-wider mb-2">Endereço do Empreendimento</h4>
                     <p className="text-[#121c2c] font-semibold text-base md:text-xl flex items-start gap-3">
                       <span className="text-xl md:text-2xl mt-0.5">📍</span>
-                      Av. Dom Almeida Lustosa, Parque Albano, Caucaia - CE
+                      Rua Banabuiu, 213 - Parque Albano, Caucaia - CE
                     </p>
                   </div>
                 </div>
