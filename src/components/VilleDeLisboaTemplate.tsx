@@ -332,6 +332,18 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
                   referrerPolicy="no-referrer-when-downgrade"
                   title="Mapa da Região"
                 ></iframe>
+                
+                {/* Floating Logo Pin no Centro do Mapa */}
+                {campaign.layout_data?.logo && (
+                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-full z-10 pointer-events-none flex flex-col items-center animate-bounce drop-shadow-xl mt-[-10px]">
+                    <div className="bg-white p-2 md:p-3 rounded-2xl shadow-lg border-2 border-[#794098]">
+                      <img src={campaign.layout_data.logo} alt="Local" className="h-8 md:h-10 object-contain" />
+                    </div>
+                    {/* Triângulo do Pino */}
+                    <div className="w-0 h-0 border-l-[10px] border-r-[10px] border-t-[14px] border-l-transparent border-r-transparent border-t-[#794098] -mt-[2px]"></div>
+                  </div>
+                )}
+
                 <div className="absolute inset-0 bg-gradient-to-t from-[#121c2c]/90 via-transparent to-transparent pointer-events-none"></div>
                 <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8 pointer-events-none">
                   <div className="bg-white/95 backdrop-blur-md p-6 rounded-2xl shadow-lg border border-white/20 pointer-events-auto">
