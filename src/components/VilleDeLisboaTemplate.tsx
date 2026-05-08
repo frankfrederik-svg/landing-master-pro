@@ -141,6 +141,12 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
     return () => clearInterval(timer);
   }, [galleryImages.length]);
 
+  const isVideo = (url: string) => {
+    if (!url) return false;
+    const lower = url.toLowerCase();
+    return lower.match(/\.(mp4|webm|mov|mkv)(\?.*)?$/) || lower.includes('.mp4') || (lower.includes('supabase') && !lower.match(/\.(jpg|jpeg|png|gif|webp|svg)(\?.*)?$/));
+  };
+
   return (
     <div className="bg-[#f9f9ff] text-[#121c2c] font-sans overflow-x-hidden">
       {/* TopNavBar */}
@@ -171,20 +177,20 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
           <div className="absolute inset-0 bg-gradient-to-t from-[#121c2c] via-[#121c2c]/40 to-black/10 z-10 md:bg-gradient-to-r md:from-[#121c2c]/80 md:via-[#121c2c]/40 md:to-transparent pointer-events-none"></div>
 
           {/* Mobile Video/Banner */}
-          <div className="absolute inset-0 md:hidden z-0">
-            {heroMobile.toLowerCase().match(/\.(mp4|webm|mov|mkv)(\?.*)?$/) || heroMobile.includes('.mp4') ? (
-              <video className="w-full h-full object-cover" src={heroMobile} autoPlay loop muted playsInline />
+          <div className="absolute inset-0 md:hidden z-0 bg-[#121c2c]">
+            {isVideo(heroMobile) ? (
+              <video key={heroMobile} className="w-full h-full object-cover" src={heroMobile} autoPlay loop muted playsInline />
             ) : (
-              <img className="w-full h-full object-cover" src={heroMobile} alt="Hero Background Mobile" />
+              <img key={heroMobile} className="w-full h-full object-cover" src={heroMobile} alt="Hero Background Mobile" />
             )}
           </div>
 
           {/* Desktop Video/Banner */}
-          <div className="absolute inset-0 hidden md:block z-0">
-            {heroDesktop.toLowerCase().match(/\.(mp4|webm|mov|mkv)(\?.*)?$/) || heroDesktop.includes('.mp4') ? (
-              <video className="w-full h-full object-cover" src={heroDesktop} autoPlay loop muted playsInline />
+          <div className="absolute inset-0 hidden md:block z-0 bg-[#121c2c]">
+            {isVideo(heroDesktop) ? (
+              <video key={heroDesktop} className="w-full h-full object-cover" src={heroDesktop} autoPlay loop muted playsInline />
             ) : (
-              <img className="w-full h-full object-cover" src={heroDesktop} alt="Hero Background Desktop" />
+              <img key={heroDesktop} className="w-full h-full object-cover" src={heroDesktop} alt="Hero Background Desktop" />
             )}
           </div>
         </div>
