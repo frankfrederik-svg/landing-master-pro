@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { HotsiteForm } from "./HotsiteForm";
 import { resolveImage } from "@/lib/faixa";
 import { Wallet, Handshake, Landmark, TrendingDown, MessageCircle, ChevronLeft, ChevronRight, ChevronDown } from "lucide-react";
+import heroFallbackImg from "@/assets/hero-ville-de-lisboa.jpg";
 
 type Campaign = {
   id: string; slug: string; name: string;
@@ -117,7 +118,7 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
   // Gallery swipe
   const [touchStart, setTouchStart] = useState(0);
   const [touchEnd, setTouchEnd] = useState(0);
-  
+
   const nextSlide = () => setGalleryIndex(i => (i + 1) % galleryImages.length);
   const prevSlide = () => setGalleryIndex(i => (i - 1 + galleryImages.length) % galleryImages.length);
 
@@ -179,9 +180,9 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
           {/* Mobile Video/Banner */}
           <div className="absolute inset-0 md:hidden z-0 bg-[#121c2c]">
             {isVideo(heroMobile) ? (
-              <video key={heroMobile} className="w-full h-full object-cover" autoPlay loop muted playsInline poster={campaign.layout_data?.poster_mobile || "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=2075&auto=format&fit=crop"}>
+              <video key={heroMobile} className="w-full h-full object-cover" autoPlay loop muted playsInline poster={campaign.layout_data?.poster_mobile || heroFallbackImg}>
                 <source src={heroMobile} type="video/mp4" />
-                <img src={campaign.layout_data?.poster_mobile || "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=2075&auto=format&fit=crop"} alt="Fallback Mobile" className="w-full h-full object-cover" />
+                <img src={campaign.layout_data?.poster_mobile || heroFallbackImg} alt="Fallback Mobile" className="w-full h-full object-cover" />
               </video>
             ) : (
               <img key={heroMobile} className="w-full h-full object-cover" src={heroMobile} alt="Hero Background Mobile" />
@@ -191,9 +192,9 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
           {/* Desktop Video/Banner */}
           <div className="absolute inset-0 hidden md:block z-0 bg-[#121c2c]">
             {isVideo(heroDesktop) ? (
-              <video key={heroDesktop} className="w-full h-full object-cover" autoPlay loop muted playsInline poster={campaign.layout_data?.poster_desktop || "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=2075&auto=format&fit=crop"}>
+              <video key={heroDesktop} className="w-full h-full object-cover" autoPlay loop muted playsInline poster={campaign.layout_data?.poster_desktop || heroFallbackImg}>
                 <source src={heroDesktop} type="video/mp4" />
-                <img src={campaign.layout_data?.poster_desktop || "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=2075&auto=format&fit=crop"} alt="Fallback Desktop" className="w-full h-full object-cover" />
+                <img src={campaign.layout_data?.poster_desktop || heroFallbackImg} alt="Fallback Desktop" className="w-full h-full object-cover" />
               </video>
             ) : (
               <img key={heroDesktop} className="w-full h-full object-cover" src={heroDesktop} alt="Hero Background Desktop" />
