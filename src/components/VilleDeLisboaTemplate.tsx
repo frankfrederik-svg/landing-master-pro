@@ -22,10 +22,12 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
   const heroDesktop = campaign.banner_url || "https://lh3.googleusercontent.com/aida-public/AB6AXuBueCwgJ97yJn2N2uZcVoKVXI1UGZT0D54Bn7JpIL0A8IX2CFEtCK3twYewgbNT5qhk3gGjJBKaaNAqJRqsIFzwXlcUFEgOp2RYZw0xSXBagAqG4DziccCi8H7MI7Hxcrbgsf_Q7k_u1otNOw1kuWpPkFEODmyojSIYNbId3oHqaH_b1ktFY_3e6oaejQiVy7zlvH3RpwwuYVxUdgG6y3z3w-Tb5k_KTn256CHLudAw-dFMqG3_wOcvdxKjXRScyuTi66TwVeVhya8";
   const heroMobile = campaign.layout_data?.banner_mobile || heroDesktop;
 
-  // Floating CTA visibility
+  // Scrolling states
   const [showFloatingCTA, setShowFloatingCTA] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   useEffect(() => {
     const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
       const formElement = document.getElementById("formulario");
       let isFormVisible = false;
       if (formElement) {
@@ -50,7 +52,7 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
     const lastUpdate = localStorage.getItem('ville_last_update');
     const now = Date.now();
     let currentBase = 62;
-    
+
     if (stored && lastUpdate) {
       const hoursPassed = Math.floor((now - parseInt(lastUpdate)) / (1000 * 60 * 60));
       if (hoursPassed > 0) {
@@ -64,7 +66,7 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
       localStorage.setItem('ville_reservations', '62');
       localStorage.setItem('ville_last_update', now.toString());
     }
-    
+
     setBaseCount(currentBase);
 
     const hourInterval = setInterval(() => {
@@ -146,21 +148,22 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
   return (
     <div className="bg-[#f9f9ff] text-[#121c2c] font-sans overflow-x-hidden">
       {/* TopNavBar */}
-      <nav className="fixed top-0 w-full z-50 bg-[#f9f9ff]/95 backdrop-blur-md shadow-sm h-14 md:h-20 transition-all">
-        <div className="flex justify-between items-center max-w-[1200px] mx-auto px-4 md:px-6 h-full gap-3">
+      <nav className={`fixed top-0 w-full z-50 transition-all duration-500 backdrop-blur-xl ${isScrolled ? 'bg-white/90 shadow-[0_4px_30px_rgba(0,0,0,0.05)] py-2 md:py-3' : 'bg-white/70 py-3 md:py-4 border-b border-white/20'}`}>
+        <div className="flex justify-between items-center max-w-[1200px] mx-auto px-4 md:px-6 gap-3">
           {campaign.layout_data?.logo ? (
-            <img src={campaign.layout_data.logo} alt={campaign.name} className="h-8 md:h-14 w-auto object-contain max-w-[110px] md:max-w-none" />
+            <img src={campaign.layout_data.logo} alt={campaign.name} className={`w-auto object-contain transition-all duration-500 ${isScrolled ? 'h-6 md:h-10' : 'h-8 md:h-12'}`} />
           ) : (
-            <span className="text-lg md:text-2xl font-bold text-[#794098] truncate">{campaign.name}</span>
+            <span className={`font-bold text-[#794098] truncate transition-all duration-500 ${isScrolled ? 'text-base md:text-xl' : 'text-lg md:text-2xl'}`}>{campaign.name}</span>
           )}
           <div className="hidden md:flex items-center gap-8">
-            <a className="text-[#794098] border-b-2 border-[#794098] pb-1 font-semibold transition-all duration-300" href="#localizacao">Localização</a>
-            <a className="text-[#455f88] hover:text-[#8b4aae] transition-all duration-300" href="#diferenciais">Diferenciais</a>
-            <a className="text-[#455f88] hover:text-[#8b4aae] transition-all duration-300" href="#beneficios">Benefícios</a>
-            <a className="text-[#455f88] hover:text-[#8b4aae] transition-all duration-300" href="#sobre">Sobre</a>
+            <a className="text-[#455f88] hover:text-[#794098] text-sm font-medium transition-all duration-300" href="#localizacao" onClick={(e) => {e.preventDefault(); document.getElementById('localizacao')?.scrollIntoView({behavior: 'smooth'})}}>Localização</a>
+            <a className="text-[#455f88] hover:text-[#794098] text-sm font-medium transition-all duration-300" href="#diferenciais" onClick={(e) => {e.preventDefault(); document.getElementById('diferenciais')?.scrollIntoView({behavior: 'smooth'})}}>Diferenciais</a>
+            <a className="text-[#455f88] hover:text-[#794098] text-sm font-medium transition-all duration-300" href="#beneficios" onClick={(e) => {e.preventDefault(); document.getElementById('beneficios')?.scrollIntoView({behavior: 'smooth'})}}>Benefícios</a>
+            <a className="text-[#455f88] hover:text-[#794098] text-sm font-medium transition-all duration-300" href="#sobre" onClick={(e) => {e.preventDefault(); document.getElementById('sobre')?.scrollIntoView({behavior: 'smooth'})}}>Sobre</a>
           </div>
-          <button onClick={scrollToForm} className="bg-[#794098] text-white px-4 py-1.5 md:px-6 md:py-3 text-[12px] md:text-base rounded-full font-medium md:font-semibold hover:bg-[#8b4aae] transition-all duration-300 active:scale-95 whitespace-nowrap shadow-sm">
-            Simular Agora
+          <button onClick={scrollToForm} className={`bg-[#794098] text-white rounded-full font-semibold hover:bg-[#8b4aae] transition-all duration-300 active:scale-95 whitespace-nowrap shadow-md hover:shadow-lg flex items-center justify-center ${isScrolled ? 'px-4 py-1.5 md:px-6 md:py-2.5 text-[11px] md:text-sm' : 'px-5 py-2 md:px-7 md:py-3 text-[13px] md:text-base'}`}>
+            <span className="md:hidden">Simular</span>
+            <span className="hidden md:inline">Simular Agora</span>
           </button>
         </div>
       </nav>
@@ -169,7 +172,7 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
       <section id="hero" className="relative min-h-[100vh] md:min-h-[800px] pt-20 pb-12 flex items-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-gradient-to-t from-[#121c2c] via-[#121c2c]/40 to-black/10 z-10 md:bg-gradient-to-r md:from-[#121c2c]/80 md:via-[#121c2c]/40 md:to-transparent"></div>
-          
+
           {/* Mobile Video/Banner */}
           <div className="md:hidden w-full h-full">
             {heroMobile.toLowerCase().match(/\.(mp4|webm|mov|mkv)(\?.*)?$/) || heroMobile.includes('.mp4') ? (
@@ -196,30 +199,30 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
             <p className="text-lg md:text-2xl mb-8 md:mb-10 text-[#f6fff4] font-light max-w-3xl drop-shadow-md">
               Apartamentos com lazer completo e possibilidade de subsídio de até R$55 mil pelo Minha Casa Minha Vida.
             </p>
-            
+
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-8 md:mb-12 w-full max-w-4xl">
               <div className="flex flex-col items-center justify-center bg-white/10 backdrop-blur-md rounded-2xl p-5 border border-white/20 hover:bg-white/15 transition-all">
                 <Wallet className="w-8 h-8 md:w-10 md:h-10 mb-3 text-[#e3c2f2] opacity-90" strokeWidth={1.5} />
-                <span className="text-sm md:text-base font-medium leading-tight">Subsídio de<br/>até R$55 mil</span>
+                <span className="text-sm md:text-base font-medium leading-tight">Subsídio de<br />até R$55 mil</span>
               </div>
               <div className="flex flex-col items-center justify-center bg-gradient-to-br from-[#794098] to-[#b971dc] rounded-2xl p-5 border border-[#e3c2f2]/40 shadow-[0_0_25px_rgba(185,113,220,0.6)] transform hover:scale-105 transition-all">
                 <Handshake className="w-8 h-8 md:w-10 md:h-10 mb-3 text-white" strokeWidth={1.5} />
-                <span className="text-sm md:text-base font-extrabold leading-tight">Entrada facilitada<br/>em até 72x</span>
+                <span className="text-sm md:text-base font-extrabold leading-tight">Entrada facilitada<br />em até 72x</span>
               </div>
               <div className="flex flex-col items-center justify-center bg-white/10 backdrop-blur-md rounded-2xl p-5 border border-white/20 hover:bg-white/15 transition-all">
                 <Landmark className="w-8 h-8 md:w-10 md:h-10 mb-3 text-[#e3c2f2] opacity-90" strokeWidth={1.5} />
-                <span className="text-sm md:text-base font-medium leading-tight">Use seu<br/>FGTS</span>
+                <span className="text-sm md:text-base font-medium leading-tight">Use seu<br />FGTS</span>
               </div>
               <div className="flex flex-col items-center justify-center bg-white/10 backdrop-blur-md rounded-2xl p-5 border border-white/20 hover:bg-white/15 transition-all">
                 <TrendingDown className="w-8 h-8 md:w-10 md:h-10 mb-3 text-[#e3c2f2] opacity-90" strokeWidth={1.5} />
-                <span className="text-sm md:text-base font-medium leading-tight">Menores juros<br/>do mercado</span>
+                <span className="text-sm md:text-base font-medium leading-tight">Menores juros<br />do mercado</span>
               </div>
             </div>
 
-            <a 
+            <a
               href={`https://wa.me/${campaign.whatsapp_number?.replace(/\D/g, "")}?text=${encodeURIComponent("Olá 👋 Tenho interesse no Ville de Lisboa e gostaria de fazer minha simulação pelo Minha Casa Minha Vida.")}`}
-              target="_blank" 
-              rel="noopener noreferrer" 
+              target="_blank"
+              rel="noopener noreferrer"
               className="bg-[#25D366] text-white px-8 md:px-12 py-4 md:py-5 rounded-full font-bold text-base md:text-xl inline-flex items-center justify-center gap-3 w-full md:w-auto shadow-[0_10px_30px_rgba(37,211,102,0.4)] hover:shadow-[0_15px_40px_rgba(37,211,102,0.6)] transition-all transform hover:-translate-y-1 active:scale-95"
             >
               <MessageCircle className="w-6 h-6 md:w-7 md:h-7" />
@@ -273,7 +276,7 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
         <div className="max-w-[1200px] mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-5xl font-bold text-[#121c2c] mb-6 leading-tight">
-              Localização estratégica para <br className="hidden md:block"/> facilitar sua rotina
+              Localização estratégica para <br className="hidden md:block" /> facilitar sua rotina
             </h2>
             <p className="text-lg md:text-xl text-[#3e4a3f] max-w-3xl mx-auto font-light">
               More com fácil acesso às principais vias da região e perto de pontos importantes de Caucaia.
@@ -321,11 +324,11 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
 
             <div className="order-1 lg:order-2">
               <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-[#bdcabd]/20 aspect-square lg:aspect-auto lg:h-[700px] bg-[#e3c2f2]/20">
-                <iframe 
+                <iframe
                   src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3981.336424458315!2d-38.61868582531633!3d-3.7366367431184855!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x7c74bceb3c5c9cd%3A0x2db4df444fbda0f6!2sAv.%20Dom%20Almeida%20Lustosa%20-%20Caucaia%2C%20CE!5e0!3m2!1spt-BR!2sbr!4v1715104800000!5m2!1spt-BR!2sbr"
-                  className="w-full h-full border-0 grayscale opacity-80 mix-blend-multiply" 
-                  allowFullScreen={false} 
-                  loading="lazy" 
+                  className="w-full h-full border-0 grayscale opacity-80 mix-blend-multiply"
+                  allowFullScreen={false}
+                  loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
                   title="Mapa da Região"
                 ></iframe>
@@ -335,7 +338,7 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
                     <h4 className="text-[#794098] font-bold text-[11px] md:text-sm uppercase tracking-wider mb-2">Endereço do Empreendimento</h4>
                     <p className="text-[#121c2c] font-semibold text-base md:text-xl flex items-start gap-3">
                       <span className="text-xl md:text-2xl mt-0.5">📍</span>
-                      Av. Dom Almeida Lustosa, Parque Albano (Jurema), Caucaia - CE
+                      Av. Dom Almeida Lustosa, Parque Albano, Caucaia - CE
                     </p>
                   </div>
                 </div>
@@ -389,21 +392,21 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
             <div className="h-1 w-20 bg-[#b971dc] mx-auto rounded-full"></div>
           </div>
           <div className="relative group max-w-5xl mx-auto">
-            <div 
+            <div
               className="flex overflow-hidden rounded-xl shadow-2xl aspect-[16/9] relative"
               onTouchStart={onTouchStart}
               onTouchMove={onTouchMove}
               onTouchEnd={onTouchEndAction}
             >
               <img src={galleryImages[galleryIndex] as string} className="w-full h-full object-cover transition-opacity duration-500" alt="Galeria" />
-              
-              <button 
+
+              <button
                 onClick={prevSlide}
                 className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white p-2 rounded-full transition-colors opacity-0 group-hover:opacity-100 md:flex hidden items-center justify-center"
               >
                 <ChevronLeft className="w-8 h-8" />
               </button>
-              <button 
+              <button
                 onClick={nextSlide}
                 className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white p-2 rounded-full transition-colors opacity-0 group-hover:opacity-100 md:flex hidden items-center justify-center"
               >
@@ -476,10 +479,10 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
       <section className="py-20 bg-[#121c2c] text-white relative overflow-hidden">
         {/* Decorativo */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[#794098]/20 rounded-full blur-[100px] pointer-events-none"></div>
-        
+
         <div className="max-w-[1200px] mx-auto px-6 relative z-10">
           <div className="flex flex-col items-center text-center">
-            
+
             {/* Badges de Urgência */}
             <div className="flex flex-wrap justify-center gap-3 mb-10">
               <span className="bg-red-500/20 text-red-300 border border-red-500/30 px-4 py-1.5 rounded-full text-sm font-semibold flex items-center gap-2 animate-pulse">
@@ -500,9 +503,9 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
               </span>
               <span>famílias</span>
             </h2>
-            
+
             <p className="text-xl md:text-3xl text-[#e3c2f2] max-w-3xl mx-auto font-light leading-relaxed">
-              já realizaram a reserva da sua unidade. <br className="hidden md:block"/>
+              já realizaram a reserva da sua unidade. <br className="hidden md:block" />
               <strong className="text-white font-semibold">Não fique de fora dessa oportunidade.</strong>
             </p>
 
@@ -517,7 +520,7 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
               </div>
               <p className="text-sm text-[#8b9fc1] font-medium tracking-wide">Pessoas reais realizando o sonho do primeiro imóvel</p>
             </div>
-            
+
           </div>
         </div>
       </section>
@@ -538,13 +541,13 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
               Preencha os dados abaixo e fale com um especialista para descobrir parcelas, possibilidade de subsídio e condições facilitadas.
             </p>
           </div>
-          
+
           <div className="bg-white p-8 md:p-12 rounded-3xl shadow-[0_20px_60px_rgba(69,95,136,0.12)] border border-[#bdcabd]/20 max-w-2xl mx-auto w-full relative">
             <div className="absolute -top-6 -right-6 w-24 h-24 bg-gradient-to-br from-[#794098] to-[#b971dc] rounded-full opacity-10 blur-xl pointer-events-none"></div>
-            
-            <HotsiteForm 
-              campaignId={campaign.id} 
-              whatsappNumber={campaign.whatsapp_number} 
+
+            <HotsiteForm
+              campaignId={campaign.id}
+              whatsappNumber={campaign.whatsapp_number}
               whatsappMessage="Olá 👋 Acabei de preencher a simulação do Ville de Lisboa e gostaria de receber minhas condições de financiamento."
               buttonText="QUERO RECEBER MINHA SIMULAÇÃO"
             />
@@ -573,10 +576,10 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
 
       {/* Floating CTA Mobile */}
       <div className={`md:hidden fixed bottom-6 left-0 right-0 px-4 z-50 transition-all duration-500 transform ${showFloatingCTA ? 'translate-y-0 opacity-100' : 'translate-y-24 opacity-0 pointer-events-none'}`}>
-        <a 
+        <a
           href={`https://wa.me/${campaign.whatsapp_number?.replace(/\D/g, "")}?text=${encodeURIComponent("Olá 👋 Tenho interesse no Ville de Lisboa e gostaria de fazer minha simulação pelo Minha Casa Minha Vida.")}`}
-          target="_blank" 
-          rel="noopener noreferrer" 
+          target="_blank"
+          rel="noopener noreferrer"
           className="bg-[#25D366] text-white w-full py-4 rounded-2xl font-bold text-[15px] flex items-center justify-center gap-2 shadow-[0_8px_25px_rgba(37,211,102,0.5)] border border-[#25D366]/50 hover:bg-[#20b858] transition-colors"
         >
           <MessageCircle className="w-6 h-6" />
