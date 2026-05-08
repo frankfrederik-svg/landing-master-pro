@@ -179,9 +179,9 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
           {/* Mobile Video/Banner */}
           <div className="absolute inset-0 md:hidden z-0 bg-[#121c2c]">
             {isVideo(heroMobile) ? (
-              <video key={heroMobile} className="w-full h-full object-cover" autoPlay loop muted playsInline poster="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=2075&auto=format&fit=crop">
+              <video key={heroMobile} className="w-full h-full object-cover" autoPlay loop muted playsInline poster={campaign.layout_data?.poster_mobile || "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=2075&auto=format&fit=crop"}>
                 <source src={heroMobile} type="video/mp4" />
-                <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=2075&auto=format&fit=crop" alt="Fallback" className="w-full h-full object-cover" />
+                <img src={campaign.layout_data?.poster_mobile || "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=2075&auto=format&fit=crop"} alt="Fallback Mobile" className="w-full h-full object-cover" />
               </video>
             ) : (
               <img key={heroMobile} className="w-full h-full object-cover" src={heroMobile} alt="Hero Background Mobile" />
@@ -191,9 +191,9 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
           {/* Desktop Video/Banner */}
           <div className="absolute inset-0 hidden md:block z-0 bg-[#121c2c]">
             {isVideo(heroDesktop) ? (
-              <video key={heroDesktop} className="w-full h-full object-cover" autoPlay loop muted playsInline poster="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=2075&auto=format&fit=crop">
+              <video key={heroDesktop} className="w-full h-full object-cover" autoPlay loop muted playsInline poster={campaign.layout_data?.poster_desktop || "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=2075&auto=format&fit=crop"}>
                 <source src={heroDesktop} type="video/mp4" />
-                <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=2075&auto=format&fit=crop" alt="Fallback" className="w-full h-full object-cover" />
+                <img src={campaign.layout_data?.poster_desktop || "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=2075&auto=format&fit=crop"} alt="Fallback Desktop" className="w-full h-full object-cover" />
               </video>
             ) : (
               <img key={heroDesktop} className="w-full h-full object-cover" src={heroDesktop} alt="Hero Background Desktop" />

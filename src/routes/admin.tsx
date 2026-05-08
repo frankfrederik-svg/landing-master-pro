@@ -201,6 +201,10 @@ function CampaignsTab() {
                 <div><Label>Banner Hero (Desktop)</Label><ImageUpload value={editing.banner_url} onChange={(url) => setEditing({ ...editing, banner_url: url })} label="Upload Banner Desktop" /></div>
                 <div><Label>Banner Hero (Mobile)</Label><ImageUpload value={editing.layout_data?.banner_mobile || null} onChange={(url) => setEditing({ ...editing, layout_data: { ...(editing.layout_data || {}), banner_mobile: url } })} label="Upload Banner Mobile" /></div>
               </div>
+              <div className="grid gap-3 md:grid-cols-2 mt-3">
+                <div><Label>Capa/Fallback do Vídeo (Desktop)</Label><ImageUpload value={editing.layout_data?.poster_desktop || null} onChange={(url) => setEditing({ ...editing, layout_data: { ...(editing.layout_data || {}), poster_desktop: url } })} label="Imagem Estática Desktop" /></div>
+                <div><Label>Capa/Fallback do Vídeo (Mobile)</Label><ImageUpload value={editing.layout_data?.poster_mobile || null} onChange={(url) => setEditing({ ...editing, layout_data: { ...(editing.layout_data || {}), poster_mobile: url } })} label="Imagem Estática Mobile" /></div>
+              </div>
 
               {editing.layout === "ville_de_lisboa" && (
                 <div className="rounded-2xl border border-dashed bg-muted/30 p-4 space-y-3">
