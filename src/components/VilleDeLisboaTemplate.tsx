@@ -19,7 +19,7 @@ type Property = {
 export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Campaign; properties: Property[] }) {
   const scrollToForm = () => document.getElementById("formulario")?.scrollIntoView({ behavior: "smooth" });
 
-  const heroDesktop = campaign.banner_url || "https://lh3.googleusercontent.com/aida-public/AB6AXuBueCwgJ97yJn2N2uZcVoKVXI1UGZT0D54Bn7JpIL0A8IX2CFEtCK3twYewgbNT5qhk3gGjJBKaaNAqJRqsIFzwXlcUFEgOp2RYZw0xSXBagAqG4DziccCi8H7MI7Hxcrbgsf_Q7k_u1otNOw1kuWpPkFEODmyojSIYNbId3oHqaH_b1ktFY_3e6oaejQiVy7zlvH3RpwwuYVxUdgG6y3z3w-Tb5k_KTn256CHLudAw-dFMqG3_wOcvdxKjXRScyuTi66TwVeVhya8";
+  const heroDesktop = campaign.banner_url || "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=2075&auto=format&fit=crop";
   const heroMobile = campaign.layout_data?.banner_mobile || heroDesktop;
 
   // Scrolling states
@@ -109,34 +109,30 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
   }).slice(0, 5).map(u => resolveImage(u));
 
   const galleryImages = propertyImages.length > 0 ? propertyImages : [
-    hero,
+    heroDesktop,
     "https://lh3.googleusercontent.com/aida-public/AB6AXuAflQ94r17rQ6B8qPdBUzXMGtBjrrObuCedd1aB2riFFLJqq6P4fL0oL6zQLZ5_1rr_w1RGOMGXp9KABRtG26n5Pm7LcSch-wl1rtw06Hl1VvE9L2K3w40fIOQ8MPM7GPxlnxv37jCWA1LsjOjUr79TceKoyJFjo_hFJ5fikTwK19lvx6hpJA_bNssP7UrAbDer6uB4IKOMVX88IX09GQ-w0h_iwm7GiesvUVhhlH3tsj8xPk_MPE_PHmIU-fxs8IBvhSfz-W5EBwo",
     "https://lh3.googleusercontent.com/aida-public/AB6AXuAyTveLNCkexo8X-DzC53w_UE4bXdVvnggsMi3SBcMn69p2N2DWg4Jg9Bp7_PoZWuz319QeG-P1zkNxv6-DP5KI7vRSZuVctkSFMFhXtFwVovt6I6ib-SzoaFDDDHB_pMzRnIe_oCweBbwBeTMhQf6FFG2eZLgHKp5PN6ZrObIzlTjScBe0f4H-5xeyCeNZkvLaKndq_JSaqIW3kql6oohkSdxrvq4Qpel-OHqBlmYb3tGVAtFetDp0ZNNWdAZoLOk-QRccn3hR6Ug"
   ];
 
-  // Swipe e Navegação da Galeria
-  const [touchStart, setTouchStart] = useState<number | null>(null);
-  const [touchEnd, setTouchEnd] = useState<number | null>(null);
+  // Gallery swipe
+  const [touchStart, setTouchStart] = useState(0);
+  const [touchEnd, setTouchEnd] = useState(0);
+  
+  const nextSlide = () => setGalleryIndex(i => (i + 1) % galleryImages.length);
+  const prevSlide = () => setGalleryIndex(i => (i - 1 + galleryImages.length) % galleryImages.length);
 
-  const onTouchStart = (e: React.TouchEvent) => {
-    setTouchEnd(null);
-    setTouchStart(e.targetTouches[0].clientX);
-  }
-
+  const onTouchStart = (e: React.TouchEvent) => setTouchStart(e.targetTouches[0].clientX);
   const onTouchMove = (e: React.TouchEvent) => setTouchEnd(e.targetTouches[0].clientX);
-
   const onTouchEndAction = () => {
     if (!touchStart || !touchEnd) return;
     const distance = touchStart - touchEnd;
-    if (distance > 50) {
-      setGalleryIndex(i => (i + 1) % galleryImages.length);
-    } else if (distance < -50) {
-      setGalleryIndex(i => (i - 1 + galleryImages.length) % galleryImages.length);
-    }
-  }
-
-  const prevSlide = () => setGalleryIndex(i => (i - 1 + galleryImages.length) % galleryImages.length);
-  const nextSlide = () => setGalleryIndex(i => (i + 1) % galleryImages.length);
+    const isLeftSwipe = distance > 50;
+    const isRightSwipe = distance < -50;
+    if (isLeftSwipe) nextSlide();
+    if (isRightSwipe) prevSlide();
+    setTouchStart(0);
+    setTouchEnd(0);
+  };
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -171,10 +167,11 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
       {/* Hero Section */}
       <section id="hero" className="relative min-h-[100vh] md:min-h-[800px] pt-20 pb-12 flex items-center overflow-hidden">
         <div className="absolute inset-0 z-0">
-          <div className="absolute inset-0 bg-gradient-to-t from-[#121c2c] via-[#121c2c]/40 to-black/10 z-10 md:bg-gradient-to-r md:from-[#121c2c]/80 md:via-[#121c2c]/40 md:to-transparent"></div>
+          {/* Overlay Gradient (Z-10 ensures it's on top of media) */}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#121c2c] via-[#121c2c]/40 to-black/10 z-10 md:bg-gradient-to-r md:from-[#121c2c]/80 md:via-[#121c2c]/40 md:to-transparent pointer-events-none"></div>
 
           {/* Mobile Video/Banner */}
-          <div className="md:hidden w-full h-full">
+          <div className="absolute inset-0 md:hidden z-0">
             {heroMobile.toLowerCase().match(/\.(mp4|webm|mov|mkv)(\?.*)?$/) || heroMobile.includes('.mp4') ? (
               <video className="w-full h-full object-cover" src={heroMobile} autoPlay loop muted playsInline />
             ) : (
@@ -183,7 +180,7 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
           </div>
 
           {/* Desktop Video/Banner */}
-          <div className="hidden md:block w-full h-full">
+          <div className="absolute inset-0 hidden md:block z-0">
             {heroDesktop.toLowerCase().match(/\.(mp4|webm|mov|mkv)(\?.*)?$/) || heroDesktop.includes('.mp4') ? (
               <video className="w-full h-full object-cover" src={heroDesktop} autoPlay loop muted playsInline />
             ) : (
