@@ -196,9 +196,17 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-4 md:mb-6 leading-tight tracking-tight drop-shadow-lg">
               Saia do aluguel com parcelas facilitadas em até 72x
             </h1>
-            <p className="text-lg md:text-2xl mb-8 md:mb-10 text-[#f6fff4] font-light max-w-3xl drop-shadow-md">
+            <p className="text-lg md:text-2xl mb-6 md:mb-8 text-[#f6fff4] font-light max-w-3xl drop-shadow-md">
               Apartamentos com lazer completo e possibilidade de subsídio de até R$55 mil pelo Minha Casa Minha Vida.
             </p>
+
+            {/* Destaque de Renda */}
+            <div className="mb-8 md:mb-12 inline-flex items-center justify-center gap-2 md:gap-3 bg-gradient-to-r from-[#794098]/90 to-[#b971dc]/90 backdrop-blur-md border border-[#e3c2f2]/50 shadow-[0_8px_30px_rgba(185,113,220,0.4)] px-5 py-2.5 md:px-8 md:py-3.5 rounded-full transform hover:scale-105 transition-all w-fit max-w-[95%]">
+              <span className="text-lg md:text-2xl animate-pulse">🔥</span>
+              <span className="text-white font-bold text-[15px] md:text-xl tracking-wide">
+                Renda familiar a partir de R$ 1.800
+              </span>
+            </div>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-8 md:mb-12 w-full max-w-4xl">
               <div className="flex flex-col items-center justify-center bg-white/10 backdrop-blur-md rounded-2xl p-5 border border-white/20 hover:bg-white/15 transition-all">
@@ -312,7 +320,7 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
                 <div className="bg-[#f9f9ff] p-5 rounded-2xl border border-[#bdcabd]/30 shadow-sm transition-transform hover:-translate-y-1">
                   <div className="w-12 h-12 rounded-xl bg-[#e3c2f2] text-[#794098] flex items-center justify-center mb-4 text-2xl">🏫</div>
                   <h4 className="font-bold text-[#121c2c] mb-1">Fundação Bradesco</h4>
-                  <p className="text-sm text-[#455f88] leading-relaxed">Próximo de um dos pontos mais conhecidos da região.</p>
+                  <p className="text-sm text-[#455f88] leading-relaxed">Referência em ensino gratuito e de excelência para crianças, jovens e adultos há quase 70 anos.</p>
                 </div>
                 <div className="bg-[#f9f9ff] p-5 rounded-2xl border border-[#bdcabd]/30 shadow-sm transition-transform hover:-translate-y-1 sm:col-span-2 lg:col-span-1 xl:col-span-2">
                   <div className="w-12 h-12 rounded-xl bg-[#e3c2f2] text-[#794098] flex items-center justify-center mb-4 text-2xl">🚌</div>
@@ -332,7 +340,7 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
                   referrerPolicy="no-referrer-when-downgrade"
                   title="Mapa da Região"
                 ></iframe>
-                
+
                 {/* Floating Logo Pin no Centro do Mapa */}
                 {campaign.layout_data?.logo && (
                   <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-full z-10 pointer-events-none flex flex-col items-center animate-bounce drop-shadow-xl mt-[-10px]">
@@ -388,7 +396,7 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
                 <span className="flex items-center justify-center w-12 h-12 text-[#794098] bg-[#794098]/10 rounded-lg text-2xl">🏊‍♂️</span>
                 <div>
                   <h4 className="font-bold">Lazer de Clube</h4>
-                  <p className="text-sm text-[#3e4a3f]">Piscina, playground, salão de festas e muito mais.</p>
+                  <p className="text-sm text-[#3e4a3f]">Piscina, playground, espaço Piquenique, Pet Place e muito mais.</p>
                 </div>
               </div>
             </div>
