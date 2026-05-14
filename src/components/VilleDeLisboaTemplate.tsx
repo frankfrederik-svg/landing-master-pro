@@ -156,15 +156,15 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
           {campaign.layout_data?.logo ? (
             <img src={campaign.layout_data.logo} alt={campaign.name} className={`w-auto object-contain transition-all duration-500 ${isScrolled ? 'h-6 md:h-10' : 'h-8 md:h-12'}`} />
           ) : (
-            <span className={`font-bold text-[#794098] truncate transition-all duration-500 ${isScrolled ? 'text-base md:text-xl' : 'text-lg md:text-2xl'}`}>{campaign.name}</span>
+            <span className={`font-bold text-[#008A46] truncate transition-all duration-500 ${isScrolled ? 'text-base md:text-xl' : 'text-lg md:text-2xl'}`}>{campaign.name}</span>
           )}
           <div className="hidden md:flex items-center gap-8">
-            <a className="text-[#455f88] hover:text-[#794098] text-sm font-medium transition-all duration-300" href="#localizacao" onClick={(e) => { e.preventDefault(); document.getElementById('localizacao')?.scrollIntoView({ behavior: 'smooth' }) }}>Localização</a>
-            <a className="text-[#455f88] hover:text-[#794098] text-sm font-medium transition-all duration-300" href="#diferenciais" onClick={(e) => { e.preventDefault(); document.getElementById('diferenciais')?.scrollIntoView({ behavior: 'smooth' }) }}>Diferenciais</a>
-            <a className="text-[#455f88] hover:text-[#794098] text-sm font-medium transition-all duration-300" href="#beneficios" onClick={(e) => { e.preventDefault(); document.getElementById('beneficios')?.scrollIntoView({ behavior: 'smooth' }) }}>Benefícios</a>
-            <a className="text-[#455f88] hover:text-[#794098] text-sm font-medium transition-all duration-300" href="#sobre" onClick={(e) => { e.preventDefault(); document.getElementById('sobre')?.scrollIntoView({ behavior: 'smooth' }) }}>Sobre</a>
+            <a className="text-[#455f88] hover:text-[#008A46] text-sm font-medium transition-all duration-300" href="#localizacao" onClick={(e) => { e.preventDefault(); document.getElementById('localizacao')?.scrollIntoView({ behavior: 'smooth' }) }}>Localização</a>
+            <a className="text-[#455f88] hover:text-[#008A46] text-sm font-medium transition-all duration-300" href="#diferenciais" onClick={(e) => { e.preventDefault(); document.getElementById('diferenciais')?.scrollIntoView({ behavior: 'smooth' }) }}>Diferenciais</a>
+            <a className="text-[#455f88] hover:text-[#008A46] text-sm font-medium transition-all duration-300" href="#beneficios" onClick={(e) => { e.preventDefault(); document.getElementById('beneficios')?.scrollIntoView({ behavior: 'smooth' }) }}>Benefícios</a>
+            <a className="text-[#455f88] hover:text-[#008A46] text-sm font-medium transition-all duration-300" href="#sobre" onClick={(e) => { e.preventDefault(); document.getElementById('sobre')?.scrollIntoView({ behavior: 'smooth' }) }}>Sobre</a>
           </div>
-          <button onClick={scrollToForm} className={`bg-[#794098] text-white rounded-full font-semibold hover:bg-[#8b4aae] transition-all duration-300 active:scale-95 whitespace-nowrap shadow-md hover:shadow-lg flex items-center justify-center ${isScrolled ? 'px-4 py-1.5 md:px-6 md:py-2.5 text-[11px] md:text-sm' : 'px-5 py-2 md:px-7 md:py-3 text-[13px] md:text-base'}`}>
+          <button onClick={scrollToForm} className={`bg-[#008A46] text-white rounded-full font-semibold hover:bg-[#007A33] transition-all duration-300 active:scale-95 whitespace-nowrap shadow-md hover:shadow-lg flex items-center justify-center ${isScrolled ? 'px-4 py-1.5 md:px-6 md:py-2.5 text-[11px] md:text-sm' : 'px-5 py-2 md:px-7 md:py-3 text-[13px] md:text-base'}`}>
             <span className="md:hidden">Simular</span>
             <span className="hidden md:inline">Simular Agora</span>
           </button>
@@ -203,37 +203,37 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
         </div>
         <div className="relative z-20 max-w-[800px] mx-auto px-4 md:px-6 flex flex-col items-center justify-center text-center w-full pt-4 pb-16">
           <div className="text-white flex flex-col items-center w-full">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-4 md:mb-6 leading-tight tracking-tight drop-shadow-lg">
-              Saia do aluguel com parcelas facilitadas em até 72x
+            <h1 className="text-4xl md:text-5xl lg:text-7xl font-black mb-4 md:mb-6 leading-[1.1] tracking-tighter drop-shadow-2xl">
+              Saia do aluguel com parcelas em até 72x
             </h1>
-            <p className="text-lg md:text-2xl mb-6 md:mb-8 text-[#f6fff4] font-light max-w-3xl drop-shadow-md">
-              Apartamentos com lazer completo e possibilidade de subsídio de até R$55 mil pelo Minha Casa Minha Vida.
+            <p className="text-xl md:text-3xl mb-8 md:mb-10 text-white/90 font-medium max-w-4xl drop-shadow-lg leading-snug">
+              Lazer completo e subsídio de até <span className="font-extrabold text-[#bbf7d0]">R$ 55 mil</span> pelo Minha Casa Minha Vida.
             </p>
 
             {/* Destaque de Renda */}
-            <div className="mb-8 md:mb-12 inline-flex items-center justify-center gap-2 md:gap-3 bg-gradient-to-r from-[#794098]/90 to-[#b971dc]/90 backdrop-blur-md border border-[#e3c2f2]/50 shadow-[0_8px_30px_rgba(185,113,220,0.4)] px-5 py-2.5 md:px-8 md:py-3.5 rounded-full transform hover:scale-105 transition-all w-fit max-w-[95%]">
-              <span className="text-lg md:text-2xl animate-pulse">🔥</span>
-              <span className="text-white font-bold text-[15px] md:text-xl tracking-wide">
+            <div className="mb-10 md:mb-14 inline-flex items-center justify-center gap-3 bg-gradient-to-r from-[#008A46] to-[#00A34A] border border-white/20 shadow-[0_10px_40px_rgba(0,163,74,0.5)] px-6 py-3 md:px-10 md:py-4 rounded-full transform hover:-translate-y-1 hover:shadow-[0_15px_50px_rgba(0,163,74,0.6)] transition-all w-fit max-w-[95%]">
+              <span className="text-2xl md:text-3xl animate-bounce">🔥</span>
+              <span className="text-white font-extrabold text-base md:text-2xl tracking-wider uppercase">
                 Renda familiar a partir de R$ 1.800
               </span>
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-8 md:mb-12 w-full max-w-4xl">
-              <div className="flex flex-col items-center justify-center bg-white/10 backdrop-blur-md rounded-2xl p-5 border border-white/20 hover:bg-white/15 transition-all">
-                <Wallet className="w-8 h-8 md:w-10 md:h-10 mb-3 text-[#e3c2f2] opacity-90" strokeWidth={1.5} />
-                <span className="text-sm md:text-base font-medium leading-tight">Subsídio de<br />até R$55 mil</span>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-10 md:mb-16 w-full max-w-5xl">
+              <div className="flex flex-col items-center justify-center bg-white/10 backdrop-blur-md rounded-3xl p-6 border border-white/20 hover:bg-white/20 transition-all shadow-xl hover:-translate-y-1">
+                <Wallet className="w-10 h-10 md:w-12 md:h-12 mb-4 text-[#bbf7d0]" strokeWidth={1.5} />
+                <span className="text-sm md:text-lg font-semibold leading-tight">Subsídio de<br />até R$55 mil</span>
               </div>
-              <div className="flex flex-col items-center justify-center bg-gradient-to-br from-[#794098] to-[#b971dc] rounded-2xl p-5 border border-[#e3c2f2]/40 shadow-[0_0_25px_rgba(185,113,220,0.6)] transform hover:scale-105 transition-all">
-                <Handshake className="w-8 h-8 md:w-10 md:h-10 mb-3 text-white" strokeWidth={1.5} />
-                <span className="text-sm md:text-base font-extrabold leading-tight">Entrada facilitada<br />em até 72x</span>
+              <div className="flex flex-col items-center justify-center bg-gradient-to-b from-[#008A46] to-[#007A33] rounded-3xl p-6 border border-white/30 shadow-[0_0_30px_rgba(0,163,74,0.5)] transform hover:-translate-y-2 transition-all">
+                <Handshake className="w-10 h-10 md:w-12 md:h-12 mb-4 text-white" strokeWidth={1.5} />
+                <span className="text-sm md:text-lg font-black leading-tight text-white">Entrada facilitada<br />em até 72x</span>
               </div>
-              <div className="flex flex-col items-center justify-center bg-white/10 backdrop-blur-md rounded-2xl p-5 border border-white/20 hover:bg-white/15 transition-all">
-                <Landmark className="w-8 h-8 md:w-10 md:h-10 mb-3 text-[#e3c2f2] opacity-90" strokeWidth={1.5} />
-                <span className="text-sm md:text-base font-medium leading-tight">Use seu<br />FGTS</span>
+              <div className="flex flex-col items-center justify-center bg-white/10 backdrop-blur-md rounded-3xl p-6 border border-white/20 hover:bg-white/20 transition-all shadow-xl hover:-translate-y-1">
+                <Landmark className="w-10 h-10 md:w-12 md:h-12 mb-4 text-[#bbf7d0]" strokeWidth={1.5} />
+                <span className="text-sm md:text-lg font-semibold leading-tight">Use seu<br />FGTS</span>
               </div>
-              <div className="flex flex-col items-center justify-center bg-white/10 backdrop-blur-md rounded-2xl p-5 border border-white/20 hover:bg-white/15 transition-all">
-                <TrendingDown className="w-8 h-8 md:w-10 md:h-10 mb-3 text-[#e3c2f2] opacity-90" strokeWidth={1.5} />
-                <span className="text-sm md:text-base font-medium leading-tight">Menores juros<br />do mercado</span>
+              <div className="flex flex-col items-center justify-center bg-white/10 backdrop-blur-md rounded-3xl p-6 border border-white/20 hover:bg-white/20 transition-all shadow-xl hover:-translate-y-1">
+                <TrendingDown className="w-10 h-10 md:w-12 md:h-12 mb-4 text-[#bbf7d0]" strokeWidth={1.5} />
+                <span className="text-sm md:text-lg font-semibold leading-tight">Menores juros<br />do mercado</span>
               </div>
             </div>
 
@@ -241,9 +241,9 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
               href={`https://wa.me/${campaign.whatsapp_number?.replace(/\D/g, "")}?text=${encodeURIComponent("Olá 👋 Tenho interesse no Ville de Lisboa e gostaria de fazer minha simulação pelo Minha Casa Minha Vida.")}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-[#25D366] text-white px-8 md:px-12 py-4 md:py-5 rounded-full font-bold text-base md:text-xl inline-flex items-center justify-center gap-3 w-full md:w-auto shadow-[0_10px_30px_rgba(37,211,102,0.4)] hover:shadow-[0_15px_40px_rgba(37,211,102,0.6)] transition-all transform hover:-translate-y-1 active:scale-95"
+              className="bg-gradient-to-r from-[#25D366] to-[#1DA851] text-white px-8 md:px-14 py-4 md:py-6 rounded-full font-black text-lg md:text-2xl inline-flex items-center justify-center gap-3 w-full md:w-auto shadow-[0_15px_40px_rgba(37,211,102,0.5)] hover:shadow-[0_20px_50px_rgba(37,211,102,0.7)] transition-all transform hover:-translate-y-2 active:scale-95"
             >
-              <MessageCircle className="w-6 h-6 md:w-7 md:h-7" />
+              <MessageCircle className="w-7 h-7 md:w-8 md:h-8 animate-pulse" />
               QUERO FAZER MINHA SIMULAÇÃO
             </a>
           </div>
@@ -257,33 +257,34 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
       </section>
 
       {/* Benefícios Section */}
-      <section className="py-20 bg-[#f9f9ff]" id="beneficios">
+      <section className="py-20 bg-gradient-to-b from-white to-[#f9f9ff]" id="beneficios">
         <div className="max-w-[1200px] mx-auto px-6">
           <div className="text-center mb-16">
-            <img src="\src\assets\ville-de-lisboa\logo-mcmv.png" alt="Minha Casa Minha Vida" className="h-16 object-contain mx-auto mb-6" />
-            <h2 className="text-3xl font-bold text-[#794098] mb-4">Vantagens do Minha Casa Minha Vida</h2>
-            <div className="h-1 w-20 bg-[#b971dc] mx-auto rounded-full"></div>
+            <img src="\src\assets\ville-de-lisboa\logo-mcmv.png" alt="Minha Casa Minha Vida" className="h-20 object-contain mx-auto mb-8 drop-shadow-sm" />
+            <h2 className="text-4xl md:text-5xl font-black text-[#121c2c] tracking-tight mb-4">Vantagens Exclusivas</h2>
+            <p className="text-lg text-gray-500 max-w-2xl mx-auto mb-8">O programa Minha Casa Minha Vida oferece as melhores condições do mercado para você conquistar seu apartamento.</p>
+            <div className="h-1.5 w-24 bg-gradient-to-r from-[#008A46] to-[#00A34A] mx-auto rounded-full"></div>
           </div>
-          <div className="grid md:grid-cols-4 gap-6">
-            <div className="bg-white p-8 rounded-xl shadow-sm border border-[#bdcabd]/30 flex flex-col items-center text-center transition-transform hover:-translate-y-2">
-              <div className="w-16 h-16 rounded-full bg-[#794098]/10 flex items-center justify-center mb-6 text-2xl">💰</div>
-              <h3 className="font-bold mb-2">Subsídio de até R$ 55 mil</h3>
-              <p className="text-sm text-[#3e4a3f]">O governo ajuda você a pagar uma parte do seu imóvel.</p>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+            <div className="bg-white p-8 rounded-3xl shadow-[0_8px_30px_rgba(0,0,0,0.04)] border border-gray-100 flex flex-col items-center text-center transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_15px_40px_rgba(0,163,74,0.1)] group">
+              <div className="w-20 h-20 rounded-2xl bg-green-50 flex items-center justify-center mb-6 text-3xl group-hover:bg-[#008A46] group-hover:scale-110 transition-all duration-300">💰</div>
+              <h3 className="font-extrabold text-xl mb-3 text-[#121c2c]">Subsídio de até R$ 55 mil</h3>
+              <p className="text-base text-gray-500 leading-relaxed">O governo ajuda você a pagar uma parte significativa do seu imóvel.</p>
             </div>
-            <div className="bg-white p-8 rounded-xl shadow-sm border border-[#bdcabd]/30 flex flex-col items-center text-center transition-transform hover:-translate-y-2">
-              <div className="w-16 h-16 rounded-full bg-[#455f88]/10 flex items-center justify-center mb-6 text-2xl">📉</div>
-              <h3 className="font-bold mb-2">Juros reduzidos</h3>
-              <p className="text-sm text-[#3e4a3f]">As menores taxas do mercado imobiliário para você.</p>
+            <div className="bg-white p-8 rounded-3xl shadow-[0_8px_30px_rgba(0,0,0,0.04)] border border-gray-100 flex flex-col items-center text-center transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_15px_40px_rgba(0,163,74,0.1)] group">
+              <div className="w-20 h-20 rounded-2xl bg-blue-50 flex items-center justify-center mb-6 text-3xl group-hover:bg-[#455f88] group-hover:scale-110 transition-all duration-300">📉</div>
+              <h3 className="font-extrabold text-xl mb-3 text-[#121c2c]">Juros Reduzidos</h3>
+              <p className="text-base text-gray-500 leading-relaxed">Aproveite as menores taxas de juros de todo o mercado imobiliário.</p>
             </div>
-            <div className="bg-white p-8 rounded-xl shadow-sm border border-[#bdcabd]/30 flex flex-col items-center text-center transition-transform hover:-translate-y-2">
-              <div className="w-16 h-16 rounded-full bg-[#794098]/10 flex items-center justify-center mb-6 text-2xl">🤝</div>
-              <h3 className="font-bold mb-2">Facilidade na entrada</h3>
-              <p className="text-sm text-[#3e4a3f]">A construtora parcela sua entrada em condições exclusivas.</p>
+            <div className="bg-[#008A46] text-white p-8 rounded-3xl shadow-[0_15px_40px_rgba(0,138,70,0.2)] border border-green-600 flex flex-col items-center text-center transition-all duration-300 hover:-translate-y-2 transform scale-105 z-10">
+              <div className="w-20 h-20 rounded-2xl bg-white/20 flex items-center justify-center mb-6 text-3xl backdrop-blur-md">🤝</div>
+              <h3 className="font-extrabold text-xl mb-3">Facilidade na Entrada</h3>
+              <p className="text-base text-white/90 leading-relaxed">A construtora parcela sua entrada em condições exclusivas e flexíveis.</p>
             </div>
-            <div className="bg-white p-8 rounded-xl shadow-sm border border-[#bdcabd]/30 flex flex-col items-center text-center transition-transform hover:-translate-y-2">
-              <div className="w-16 h-16 rounded-full bg-[#455f88]/10 flex items-center justify-center mb-6 text-2xl">🏦</div>
-              <h3 className="font-bold mb-2">Uso do FGTS</h3>
-              <p className="text-sm text-[#3e4a3f]">Utilize o seu saldo do fundo de garantia no financiamento.</p>
+            <div className="bg-white p-8 rounded-3xl shadow-[0_8px_30px_rgba(0,0,0,0.04)] border border-gray-100 flex flex-col items-center text-center transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_15px_40px_rgba(0,163,74,0.1)] group">
+              <div className="w-20 h-20 rounded-2xl bg-orange-50 flex items-center justify-center mb-6 text-3xl group-hover:bg-orange-500 group-hover:scale-110 transition-all duration-300">🏦</div>
+              <h3 className="font-extrabold text-xl mb-3 text-[#121c2c]">Uso do FGTS</h3>
+              <p className="text-base text-gray-500 leading-relaxed">Utilize o seu saldo do fundo de garantia direto no financiamento.</p>
             </div>
           </div>
         </div>
@@ -303,37 +304,37 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
 
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
             <div className="order-2 lg:order-1">
-              <h3 className="text-2xl md:text-3xl font-bold text-[#794098] mb-6">
+              <h3 className="text-2xl md:text-3xl font-bold text-[#008A46] mb-6">
                 E você tem um diferencial forte de localização:
               </h3>
               <ul className="space-y-4 mb-10 text-lg text-[#3e4a3f] font-medium">
                 <li className="flex items-center gap-3">
-                  <span className="flex-shrink-0 w-8 h-8 rounded-full bg-[#794098]/10 text-[#794098] flex items-center justify-center">📍</span>
+                  <span className="flex-shrink-0 w-8 h-8 rounded-full bg-[#008A46]/10 text-[#008A46] flex items-center justify-center">📍</span>
                   Fácil acesso pela Av. Mister Hull
                 </li>
                 <li className="flex items-center gap-3">
-                  <span className="flex-shrink-0 w-8 h-8 rounded-full bg-[#794098]/10 text-[#794098] flex items-center justify-center">📍</span>
+                  <span className="flex-shrink-0 w-8 h-8 rounded-full bg-[#008A46]/10 text-[#008A46] flex items-center justify-center">📍</span>
                   Próximo à Fundação Bradesco
                 </li>
                 <li className="flex items-center gap-3">
-                  <span className="flex-shrink-0 w-8 h-8 rounded-full bg-[#794098]/10 text-[#794098] flex items-center justify-center">📍</span>
+                  <span className="flex-shrink-0 w-8 h-8 rounded-full bg-[#008A46]/10 text-[#008A46] flex items-center justify-center">📍</span>
                   Ao lado da Empresa de Ônibus Vitória
                 </li>
               </ul>
 
               <div className="grid sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-4">
                 <div className="bg-[#f9f9ff] p-5 rounded-2xl border border-[#bdcabd]/30 shadow-sm transition-transform hover:-translate-y-1">
-                  <div className="w-12 h-12 rounded-xl bg-[#e3c2f2] text-[#794098] flex items-center justify-center mb-4 text-2xl">📍</div>
+                  <div className="w-12 h-12 rounded-xl bg-[#bbf7d0] text-[#008A46] flex items-center justify-center mb-4 text-2xl">📍</div>
                   <h4 className="font-bold text-[#121c2c] mb-1">Av. Mister Hull</h4>
                   <p className="text-sm text-[#455f88] leading-relaxed">Fácil acesso para Fortaleza e Caucaia.</p>
                 </div>
                 <div className="bg-[#f9f9ff] p-5 rounded-2xl border border-[#bdcabd]/30 shadow-sm transition-transform hover:-translate-y-1">
-                  <div className="w-12 h-12 rounded-xl bg-[#e3c2f2] text-[#794098] flex items-center justify-center mb-4 text-2xl">🏫</div>
+                  <div className="w-12 h-12 rounded-xl bg-[#bbf7d0] text-[#008A46] flex items-center justify-center mb-4 text-2xl">🏫</div>
                   <h4 className="font-bold text-[#121c2c] mb-1">Fundação Bradesco</h4>
                   <p className="text-sm text-[#455f88] leading-relaxed">Referência em ensino gratuito e de excelência para crianças, jovens e adultos há quase 70 anos.</p>
                 </div>
                 <div className="bg-[#f9f9ff] p-5 rounded-2xl border border-[#bdcabd]/30 shadow-sm transition-transform hover:-translate-y-1 sm:col-span-2 lg:col-span-1 xl:col-span-2">
-                  <div className="w-12 h-12 rounded-xl bg-[#e3c2f2] text-[#794098] flex items-center justify-center mb-4 text-2xl">🚌</div>
+                  <div className="w-12 h-12 rounded-xl bg-[#bbf7d0] text-[#008A46] flex items-center justify-center mb-4 text-2xl">🚌</div>
                   <h4 className="font-bold text-[#121c2c] mb-1">Empresa Vitória</h4>
                   <p className="text-sm text-[#455f88] leading-relaxed">Mobilidade e acesso facilitado para o dia a dia.</p>
                 </div>
@@ -341,7 +342,7 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
             </div>
 
             <div className="order-1 lg:order-2">
-              <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-[#bdcabd]/20 aspect-square lg:aspect-auto lg:h-[700px] bg-[#e3c2f2]/20">
+              <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-[#bdcabd]/20 aspect-square lg:aspect-auto lg:h-[700px] bg-[#bbf7d0]/20">
                 <iframe
                   src="https://maps.google.com/maps?q=Rua%20Banabuiu,%20213%20-%20Parque%20Albano,%20Caucaia%20-%20CE&t=&z=16&ie=UTF8&iwloc=&output=embed"
                   className="w-full h-full border-0 grayscale opacity-80 mix-blend-multiply"
@@ -354,18 +355,18 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
                 {/* Floating Logo Pin no Centro do Mapa */}
                 {campaign.layout_data?.logo && (
                   <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-full z-10 pointer-events-none flex flex-col items-center animate-bounce drop-shadow-xl mt-[-10px]">
-                    <div className="bg-white p-2 md:p-3 rounded-2xl shadow-lg border-2 border-[#794098]">
+                    <div className="bg-white p-2 md:p-3 rounded-2xl shadow-lg border-2 border-[#008A46]">
                       <img src={campaign.layout_data.logo} alt="Local" className="h-8 md:h-10 object-contain" />
                     </div>
                     {/* Triângulo do Pino */}
-                    <div className="w-0 h-0 border-l-[10px] border-r-[10px] border-t-[14px] border-l-transparent border-r-transparent border-t-[#794098] -mt-[2px]"></div>
+                    <div className="w-0 h-0 border-l-[10px] border-r-[10px] border-t-[14px] border-l-transparent border-r-transparent border-t-[#008A46] -mt-[2px]"></div>
                   </div>
                 )}
 
                 <div className="absolute inset-0 bg-gradient-to-t from-[#121c2c]/90 via-transparent to-transparent pointer-events-none"></div>
                 <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8 pointer-events-none">
                   <div className="bg-white/95 backdrop-blur-md p-6 rounded-2xl shadow-lg border border-white/20 pointer-events-auto">
-                    <h4 className="text-[#794098] font-bold text-[11px] md:text-sm uppercase tracking-wider mb-2">Endereço do Empreendimento</h4>
+                    <h4 className="text-[#008A46] font-bold text-[11px] md:text-sm uppercase tracking-wider mb-2">Endereço do Empreendimento</h4>
                     <p className="text-[#121c2c] font-semibold text-base md:text-xl flex items-start gap-3">
                       <span className="text-xl md:text-2xl mt-0.5">📍</span>
                       Rua Banabuiu, 213 - Parque Albano, Caucaia - CE
@@ -390,20 +391,20 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
             </div>
           </div>
           <div>
-            <h2 className="text-4xl font-bold text-[#794098] mb-6">{campaign.name}</h2>
+            <h2 className="text-4xl font-bold text-[#008A46] mb-6">{campaign.name}</h2>
             <p className="text-lg text-[#3e4a3f] mb-8 leading-relaxed">
               Um empreendimento pensado para quem quer sair do aluguel com qualidade de vida, segurança e lazer completo. Une modernidade e praticidade para sua família.
             </p>
             <div className="space-y-6">
               <div className="flex gap-4">
-                <span className="flex items-center justify-center w-12 h-12 text-[#794098] bg-[#794098]/10 rounded-lg text-2xl">🏢</span>
+                <span className="flex items-center justify-center w-12 h-12 text-[#008A46] bg-[#008A46]/10 rounded-lg text-2xl">🏢</span>
                 <div>
                   <h4 className="font-bold">Apartamentos Modernos</h4>
                   <p className="text-sm text-[#3e4a3f]">Plantas inteligentes para o máximo aproveitamento de espaço.</p>
                 </div>
               </div>
               <div className="flex gap-4">
-                <span className="flex items-center justify-center w-12 h-12 text-[#794098] bg-[#794098]/10 rounded-lg text-2xl">🏊‍♂️</span>
+                <span className="flex items-center justify-center w-12 h-12 text-[#008A46] bg-[#008A46]/10 rounded-lg text-2xl">🏊‍♂️</span>
                 <div>
                   <h4 className="font-bold">Lazer de Clube</h4>
                   <p className="text-sm text-[#3e4a3f]">Piscina, playground, espaço Piquenique, Pet Place e muito mais.</p>
@@ -418,8 +419,8 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
       <section className="py-20 bg-[#f9f9ff]" id="galeria">
         <div className="max-w-[1200px] mx-auto px-6">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-[#794098] mb-4">Galeria do Empreendimento</h2>
-            <div className="h-1 w-20 bg-[#b971dc] mx-auto rounded-full"></div>
+            <h2 className="text-3xl font-bold text-[#008A46] mb-4">Galeria do Empreendimento</h2>
+            <div className="h-1 w-20 bg-[#00A34A] mx-auto rounded-full"></div>
           </div>
           <div className="relative group max-w-5xl mx-auto">
             <div
@@ -445,7 +446,7 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
             </div>
             <div className="flex justify-center gap-2 mt-6">
               {galleryImages.map((_, i) => (
-                <button key={i} onClick={() => setGalleryIndex(i)} className={`h-2.5 rounded-full transition-all duration-300 ${i === galleryIndex ? 'w-6 bg-[#794098]' : 'w-2.5 bg-[#bdcabd]'}`} />
+                <button key={i} onClick={() => setGalleryIndex(i)} className={`h-2.5 rounded-full transition-all duration-300 ${i === galleryIndex ? 'w-6 bg-[#008A46]' : 'w-2.5 bg-[#bdcabd]'}`} />
               ))}
             </div>
           </div>
@@ -455,7 +456,7 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
       {/* Diferenciais */}
       <section className="py-20 bg-white" id="diferenciais">
         <div className="max-w-[1200px] mx-auto px-6">
-          <div className="bg-[#8b4aae] p-12 rounded-3xl text-[#f6fff4]">
+          <div className="bg-[#007A33] p-12 rounded-3xl text-[#f6fff4]">
             <div className="grid md:grid-cols-2 gap-12 items-center">
               <div>
                 <h2 className="text-3xl font-bold mb-8">Por que escolher o {campaign.name}?</h2>
@@ -508,7 +509,7 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
       {/* Prova Social e Urgência */}
       <section className="py-20 bg-[#121c2c] text-white relative overflow-hidden">
         {/* Decorativo */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[#794098]/20 rounded-full blur-[100px] pointer-events-none"></div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[#008A46]/20 rounded-full blur-[100px] pointer-events-none"></div>
 
         <div className="max-w-[1200px] mx-auto px-6 relative z-10">
           <div className="flex flex-col items-center text-center">
@@ -518,7 +519,7 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
               <span className="bg-red-500/20 text-red-300 border border-red-500/30 px-4 py-1.5 rounded-full text-sm font-semibold flex items-center gap-2 animate-pulse">
                 <span className="w-2 h-2 rounded-full bg-red-500"></span> Alta procura
               </span>
-              <span className="bg-[#794098]/30 text-[#e3c2f2] border border-[#794098]/50 px-4 py-1.5 rounded-full text-sm font-semibold flex items-center gap-2">
+              <span className="bg-[#008A46]/30 text-[#bbf7d0] border border-[#008A46]/50 px-4 py-1.5 rounded-full text-sm font-semibold flex items-center gap-2">
                 ⏱️ Últimas unidades desta etapa
               </span>
               <span className="bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-4 py-1.5 rounded-full text-sm font-semibold flex items-center gap-2">
@@ -528,13 +529,13 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
 
             <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 flex flex-wrap items-center justify-center gap-3 md:gap-4">
               <span>Mais de</span>
-              <span className="text-7xl md:text-8xl text-transparent bg-clip-text bg-gradient-to-r from-[#b971dc] to-[#794098] drop-shadow-[0_0_15px_rgba(185,113,220,0.5)] tabular-nums">
+              <span className="text-7xl md:text-8xl text-transparent bg-clip-text bg-gradient-to-r from-[#00A34A] to-[#008A46] drop-shadow-[0_0_15px_rgba(0,163,74,0.5)] tabular-nums">
                 {reservasCount}
               </span>
               <span>famílias</span>
             </h2>
 
-            <p className="text-xl md:text-3xl text-[#e3c2f2] max-w-3xl mx-auto font-light leading-relaxed">
+            <p className="text-xl md:text-3xl text-[#bbf7d0] max-w-3xl mx-auto font-light leading-relaxed">
               já realizaram a reserva da sua unidade. <br className="hidden md:block" />
               <strong className="text-white font-semibold">Não fique de fora dessa oportunidade.</strong>
             </p>
@@ -543,10 +544,10 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
             <div className="mt-12 flex flex-col items-center">
               <div className="flex -space-x-4 mb-4">
                 <div className="w-12 h-12 rounded-full border-2 border-[#121c2c] bg-[#455f88] flex items-center justify-center text-sm font-bold shadow-lg">AM</div>
-                <div className="w-12 h-12 rounded-full border-2 border-[#121c2c] bg-[#8b4aae] flex items-center justify-center text-sm font-bold shadow-lg">JS</div>
+                <div className="w-12 h-12 rounded-full border-2 border-[#121c2c] bg-[#007A33] flex items-center justify-center text-sm font-bold shadow-lg">JS</div>
                 <div className="w-12 h-12 rounded-full border-2 border-[#121c2c] bg-emerald-600 flex items-center justify-center text-sm font-bold shadow-lg">MR</div>
-                <div className="w-12 h-12 rounded-full border-2 border-[#121c2c] bg-[#e3c2f2] text-[#2c133a] flex items-center justify-center text-sm font-bold shadow-lg">LC</div>
-                <div className="w-12 h-12 rounded-full border-2 border-[#121c2c] bg-[#794098] flex items-center justify-center text-sm font-bold shadow-lg">+{reservasCount > 4 ? reservasCount - 4 : 0}</div>
+                <div className="w-12 h-12 rounded-full border-2 border-[#121c2c] bg-[#bbf7d0] text-[#2c133a] flex items-center justify-center text-sm font-bold shadow-lg">LC</div>
+                <div className="w-12 h-12 rounded-full border-2 border-[#121c2c] bg-[#008A46] flex items-center justify-center text-sm font-bold shadow-lg">+{reservasCount > 4 ? reservasCount - 4 : 0}</div>
               </div>
               <p className="text-sm text-[#8b9fc1] font-medium tracking-wide">Pessoas reais realizando o sonho do primeiro imóvel</p>
             </div>
@@ -557,13 +558,13 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
 
       {/* Formulário Final */}
       <section id="formulario" className="py-24 bg-gradient-to-b from-[#f9f9ff] to-white relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#794098]/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 z-0 pointer-events-none"></div>
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#008A46]/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 z-0 pointer-events-none"></div>
         <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-[#455f88]/5 rounded-full blur-3xl translate-y-1/3 -translate-x-1/3 z-0 pointer-events-none"></div>
         <div className="max-w-[1000px] mx-auto px-6 relative z-10">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold text-[#121c2c] mb-6 leading-tight tracking-tight">
               Financie seu apê com <br className="hidden md:block" />
-              <span className="block mt-2 font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-[#794098] to-[#b971dc] drop-shadow-[0_5px_15px_rgba(121,64,152,0.25)]">
+              <span className="block mt-2 font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-[#008A46] to-[#00A34A] drop-shadow-[0_5px_15px_rgba(121,64,152,0.25)]">
                 entrada parcelada em até 72x
               </span>
             </h2>
@@ -573,7 +574,7 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
           </div>
 
           <div className="bg-white p-8 md:p-12 rounded-3xl shadow-[0_20px_60px_rgba(69,95,136,0.12)] border border-[#bdcabd]/20 max-w-2xl mx-auto w-full relative">
-            <div className="absolute -top-6 -right-6 w-24 h-24 bg-gradient-to-br from-[#794098] to-[#b971dc] rounded-full opacity-10 blur-xl pointer-events-none"></div>
+            <div className="absolute -top-6 -right-6 w-24 h-24 bg-gradient-to-br from-[#008A46] to-[#00A34A] rounded-full opacity-10 blur-xl pointer-events-none"></div>
 
             <HotsiteForm
               campaignId={campaign.id}
@@ -595,7 +596,7 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
             {campaign.layout_data?.logo ? (
               <img src={campaign.layout_data.logo} alt={campaign.name} className="h-16 object-contain grayscale opacity-70" />
             ) : (
-              <span className="text-2xl font-bold text-[#794098] opacity-70">{campaign.name}</span>
+              <span className="text-2xl font-bold text-[#008A46] opacity-70">{campaign.name}</span>
             )}
             <p className="text-[#3f5882] text-center md:text-left max-w-xs mt-2">
               © {new Date().getFullYear()} {campaign.name}. Todos os direitos reservados.
@@ -605,15 +606,15 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
       </footer>
 
       {/* Floating CTA Mobile */}
-      <div className={`md:hidden fixed bottom-6 left-0 right-0 px-4 z-50 transition-all duration-500 transform ${showFloatingCTA ? 'translate-y-0 opacity-100' : 'translate-y-24 opacity-0 pointer-events-none'}`}>
+      <div className={`md:hidden fixed bottom-0 left-0 right-0 p-4 bg-white/95 backdrop-blur-xl border-t border-gray-100 shadow-[0_-10px_40px_rgba(0,0,0,0.08)] z-50 transition-all duration-500 transform ${showFloatingCTA ? 'translate-y-0 opacity-100' : 'translate-y-24 opacity-0 pointer-events-none'}`}>
         <a
-          href={`https://wa.me/${campaign.whatsapp_number?.replace(/\D/g, "")}?text=${encodeURIComponent("Olá 👋 Tenho interesse no Ville de Lisboa e gostaria de fazer minha simulação pelo Minha Casa Minha Vida.")}`}
+          href={`https://wa.me/${campaign.whatsapp_number?.replace(/\D/g, "")}?text=${encodeURIComponent("Olá 👋 Tenho interesse no Ville de Lisboa e gostaria de fazer minha simulação.")}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="bg-[#25D366] text-white w-full py-4 rounded-2xl font-bold text-[15px] flex items-center justify-center gap-2 shadow-[0_8px_25px_rgba(37,211,102,0.5)] border border-[#25D366]/50 hover:bg-[#20b858] transition-colors"
+          className="flex items-center justify-center gap-3 w-full bg-gradient-to-r from-[#25D366] to-[#1DA851] text-white py-4 rounded-2xl font-black text-lg shadow-[0_8px_20px_rgba(37,211,102,0.3)] active:scale-95 transition-transform"
         >
-          <MessageCircle className="w-6 h-6" />
-          Simular pelo WhatsApp
+          <MessageCircle className="w-6 h-6 animate-pulse" />
+          SIMULAR NO WHATSAPP
         </a>
       </div>
     </div>
