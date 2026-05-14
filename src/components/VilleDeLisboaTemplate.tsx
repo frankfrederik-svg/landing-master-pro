@@ -48,9 +48,9 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Gallery
   const [galleryIndex, setGalleryIndex] = useState(0);
   const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
+  const [imageRotation, setImageRotation] = useState(0);
 
   // Extrai imagens
   const propertyImages = properties.flatMap(p => {
@@ -86,11 +86,13 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
 
   useEffect(() => {
     if (selectedImageIndex !== null) {
+      setImageRotation(0);
       setShowRotateHint(true);
       const timer = setTimeout(() => setShowRotateHint(false), 4500);
       return () => clearTimeout(timer);
     } else {
       setShowRotateHint(false);
+      setImageRotation(0);
     }
   }, [selectedImageIndex]);
 
@@ -688,42 +690,57 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
 
       {/* Lightbox Modal */}
       {selectedImageIndex !== null && galleryImages[selectedImageIndex] && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/95 backdrop-blur-sm p-0 md:p-8" onClick={() => setSelectedImageIndex(null)}>
-          <button className="absolute top-4 right-4 md:top-6 md:right-6 text-white/70 hover:text-white transition-colors z-50 bg-black/20 p-2 rounded-full" onClick={() => setSelectedImageIndex(null)}>
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/95 backdrop-blur-sm p-0 md:p-8 overflow-hidden" onClick={() => setSelectedImageIndex(null)}>
+          <button className="absolute top-4 right-4 md:top-6 md:right-6 text-white/70 hover:text-white transition-colors z-[120] bg-black/20 p-2 rounded-full" onClick={() => setSelectedImageIndex(null)}>
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
           </button>
 
+          {/* Rotate Button */}
+          <button 
+            className="md:hidden absolute top-4 left-4 text-white/70 hover:text-white transition-colors z-[120] bg-black/40 backdrop-blur-md p-2.5 rounded-full flex items-center gap-2 border border-white/10" 
+            onClick={(e) => { e.stopPropagation(); setImageRotation(prev => (prev + 90) % 360); }}
+          >
+            <RotateCcw className="w-5 h-5" />
+            <span className="text-xs font-bold uppercase tracking-wider pr-1">Girar</span>
+          </button>
+
           {galleryImages.length > 1 && (
-            <button className="absolute left-2 md:left-6 top-1/2 -translate-y-1/2 text-white/50 hover:text-white transition-colors z-50 bg-black/20 p-3 rounded-full backdrop-blur-md" onClick={prevImage}>
+            <button className="absolute left-2 md:left-6 top-1/2 -translate-y-1/2 text-white/50 hover:text-white transition-colors z-[120] bg-black/20 p-3 rounded-full backdrop-blur-md" onClick={prevImage}>
               <ChevronLeft className="w-8 h-8 md:w-10 md:h-10" />
             </button>
           )}
 
           <div
-            className="w-full h-full flex items-center justify-center relative overflow-hidden select-none"
+            className="flex items-center justify-center relative select-none transition-transform duration-300 ease-out"
+            style={{ 
+              transform: `rotate(${imageRotation}deg)`,
+              width: imageRotation % 180 !== 0 ? '100dvh' : '100dvw',
+              height: imageRotation % 180 !== 0 ? '100dvw' : '100dvh',
+            }}
             onTouchStart={handleTouchStart}
             onTouchEnd={handleTouchEnd}
             onClick={(e) => e.stopPropagation()}
           >
             <img
-              key={selectedImageIndex} // force re-render for animation if wanted
+              key={`${selectedImageIndex}-${imageRotation === 0}`} // force slight re-render on first open
               src={galleryImages[selectedImageIndex]}
               alt={`Galeria ${selectedImageIndex + 1}`}
-              className="max-w-full max-h-[100vh] md:max-h-full object-contain md:rounded-xl shadow-2xl animate-in fade-in zoom-in-95 duration-200 pointer-events-none"
+              className="max-w-full max-h-full object-contain md:rounded-xl shadow-2xl animate-in fade-in zoom-in-95 duration-200 pointer-events-none"
             />
-            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 bg-black/60 backdrop-blur-md text-white text-sm px-4 py-1.5 rounded-full font-medium">
-              {selectedImageIndex + 1} / {galleryImages.length}
-            </div>
+          </div>
 
-            {/* Rotate Hint for Mobile */}
-            <div className={`md:hidden absolute top-20 left-1/2 -translate-x-1/2 bg-black/80 backdrop-blur-md text-white text-xs px-4 py-2.5 rounded-full font-medium flex items-center gap-2 transition-all duration-700 z-[110] shadow-[0_10px_30px_rgba(0,0,0,0.5)] border border-white/10 ${showRotateHint ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4 pointer-events-none'}`}>
-              <RotateCcw className="w-4 h-4 text-[#a3e635]" />
-              Gire a tela para ver melhor
-            </div>
+          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 bg-black/60 backdrop-blur-md text-white text-sm px-4 py-1.5 rounded-full font-medium z-[110]">
+            {selectedImageIndex + 1} / {galleryImages.length}
+          </div>
+
+          {/* Rotate Hint for Mobile */}
+          <div className={`md:hidden absolute top-20 left-1/2 -translate-x-1/2 bg-black/80 backdrop-blur-md text-white text-xs px-4 py-2.5 rounded-full font-medium flex items-center gap-2 transition-all duration-700 z-[110] shadow-[0_10px_30px_rgba(0,0,0,0.5)] border border-white/10 ${showRotateHint && imageRotation === 0 ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4 pointer-events-none'}`}>
+            <RotateCcw className="w-4 h-4 text-[#a3e635]" />
+            Toque em girar para ampliar
           </div>
 
           {galleryImages.length > 1 && (
-            <button className="absolute right-2 md:right-6 top-1/2 -translate-y-1/2 text-white/50 hover:text-white transition-colors z-50 bg-black/20 p-3 rounded-full backdrop-blur-md" onClick={nextImage}>
+            <button className="absolute right-2 md:right-6 top-1/2 -translate-y-1/2 text-white/50 hover:text-white transition-colors z-[120] bg-black/20 p-3 rounded-full backdrop-blur-md" onClick={nextImage}>
               <ChevronRight className="w-8 h-8 md:w-10 md:h-10" />
             </button>
           )}
