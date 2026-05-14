@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { HotsiteForm } from "./HotsiteForm";
 import { resolveImage } from "@/lib/faixa";
-import { Wallet, Handshake, Landmark, TrendingDown, MessageCircle, ChevronLeft, ChevronRight, CheckCircle2, ShieldCheck, MapPin, Building, Users } from "lucide-react";
+import { Wallet, Handshake, Landmark, TrendingDown, MessageCircle, ChevronLeft, ChevronRight, CheckCircle2, ShieldCheck, MapPin, Building, Users, RotateCcw } from "lucide-react";
 import heroFallbackImg from "@/assets/hero-ville-de-lisboa.jpg";
 
 type Campaign = {
@@ -31,6 +31,7 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
 
   // Scrolling states
   const [showFloatingCTA, setShowFloatingCTA] = useState(false);
+  const [showRotateHint, setShowRotateHint] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   useEffect(() => {
     const handleScroll = () => {
@@ -82,6 +83,16 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [selectedImageIndex, galleryImages.length]);
+
+  useEffect(() => {
+    if (selectedImageIndex !== null) {
+      setShowRotateHint(true);
+      const timer = setTimeout(() => setShowRotateHint(false), 4500);
+      return () => clearTimeout(timer);
+    } else {
+      setShowRotateHint(false);
+    }
+  }, [selectedImageIndex]);
 
   // Lightbox navigation handlers
   const touchStartX = useRef<number | null>(null);
@@ -702,6 +713,12 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
             />
             <div className="absolute bottom-6 left-1/2 -translate-x-1/2 bg-black/60 backdrop-blur-md text-white text-sm px-4 py-1.5 rounded-full font-medium">
               {selectedImageIndex + 1} / {galleryImages.length}
+            </div>
+
+            {/* Rotate Hint for Mobile */}
+            <div className={`md:hidden absolute top-20 left-1/2 -translate-x-1/2 bg-black/80 backdrop-blur-md text-white text-xs px-4 py-2.5 rounded-full font-medium flex items-center gap-2 transition-all duration-700 z-[110] shadow-[0_10px_30px_rgba(0,0,0,0.5)] border border-white/10 ${showRotateHint ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4 pointer-events-none'}`}>
+              <RotateCcw className="w-4 h-4 text-[#a3e635]" />
+              Gire a tela para ver melhor
             </div>
           </div>
 
