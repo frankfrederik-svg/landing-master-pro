@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { HotsiteForm } from "./HotsiteForm";
 import { resolveImage } from "@/lib/faixa";
-import { Wallet, Handshake, Landmark, TrendingDown, MessageCircle, ChevronLeft, ChevronRight, ChevronDown } from "lucide-react";
+import { Wallet, Handshake, Landmark, TrendingDown, MessageCircle, ChevronLeft, ChevronRight, CheckCircle2, ShieldCheck, MapPin, Building, Users } from "lucide-react";
 import heroFallbackImg from "@/assets/hero-ville-de-lisboa.jpg";
 
 type Campaign = {
@@ -18,7 +18,13 @@ type Property = {
 };
 
 export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Campaign; properties: Property[] }) {
-  const scrollToForm = () => document.getElementById("formulario")?.scrollIntoView({ behavior: "smooth" });
+  const scrollToForm = () => {
+    const el = document.getElementById("formulario");
+    if (el) {
+      const y = el.getBoundingClientRect().top + window.scrollY - 100;
+      window.scrollTo({ top: y, behavior: 'smooth' });
+    }
+  };
 
   const heroDesktop = campaign.banner_url || "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=2075&auto=format&fit=crop";
   const heroMobile = campaign.layout_data?.banner_mobile || heroDesktop;
@@ -33,9 +39,9 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
       let isFormVisible = false;
       if (formElement) {
         const rect = formElement.getBoundingClientRect();
-        isFormVisible = rect.top < window.innerHeight;
+        isFormVisible = rect.top < window.innerHeight && rect.bottom > 0;
       }
-      setShowFloatingCTA(window.scrollY > 400 && !isFormVisible);
+      setShowFloatingCTA(window.scrollY > 300 && !isFormVisible);
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
@@ -44,61 +50,7 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
   // Gallery
   const [galleryIndex, setGalleryIndex] = useState(0);
 
-  // Prova Social Counter (Atualiza 1 por hora)
-  const [baseCount, setBaseCount] = useState(62);
-  const [reservasCount, setReservasCount] = useState(1);
-
-  useEffect(() => {
-    const stored = localStorage.getItem('ville_reservations');
-    const lastUpdate = localStorage.getItem('ville_last_update');
-    const now = Date.now();
-    let currentBase = 62;
-
-    if (stored && lastUpdate) {
-      const hoursPassed = Math.floor((now - parseInt(lastUpdate)) / (1000 * 60 * 60));
-      if (hoursPassed > 0) {
-        currentBase = parseInt(stored) + hoursPassed;
-        localStorage.setItem('ville_reservations', currentBase.toString());
-        localStorage.setItem('ville_last_update', now.toString());
-      } else {
-        currentBase = parseInt(stored);
-      }
-    } else {
-      localStorage.setItem('ville_reservations', '62');
-      localStorage.setItem('ville_last_update', now.toString());
-    }
-
-    setBaseCount(currentBase);
-
-    const hourInterval = setInterval(() => {
-      setBaseCount(prev => {
-        const next = prev + 1;
-        localStorage.setItem('ville_reservations', next.toString());
-        localStorage.setItem('ville_last_update', Date.now().toString());
-        return next;
-      });
-    }, 1000 * 60 * 60);
-
-    return () => clearInterval(hourInterval);
-  }, []);
-
-  // Animação inicial
-  useEffect(() => {
-    let current = reservasCount === 1 ? 1 : reservasCount;
-    const interval = setInterval(() => {
-      setReservasCount(prev => {
-        if (prev < baseCount) {
-          const next = prev + Math.floor(Math.random() * 5) + 2;
-          return next > baseCount ? baseCount : next;
-        }
-        clearInterval(interval);
-        return prev;
-      });
-    }, 40);
-    return () => clearInterval(interval);
-  }, [baseCount]);
-
-  // Extrai imagens dos empreendimentos para a galeria ou usa imagens padrão
+  // Extrai imagens
   const propertyImages = properties.flatMap(p => {
     if (!p.image_url) return [];
     try {
@@ -149,473 +101,480 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
   };
 
   return (
-    <div className="bg-[#f9f9ff] text-[#121c2c] font-sans overflow-x-hidden">
+    <div className="bg-[#f5f5f5] text-[#333] font-sans overflow-x-hidden">
       {/* TopNavBar */}
-      <nav className={`fixed top-0 w-full z-50 transition-all duration-500 backdrop-blur-xl ${isScrolled ? 'bg-white/90 shadow-[0_4px_30px_rgba(0,0,0,0.05)] py-2 md:py-3' : 'bg-white/70 py-3 md:py-4 border-b border-white/20'}`}>
+      <nav className="fixed top-0 w-full z-50 transition-all duration-300 bg-white shadow-sm py-2 md:py-3 border-b border-gray-100">
         <div className="flex justify-between items-center max-w-[1200px] mx-auto px-4 md:px-6 gap-3">
-          {campaign.layout_data?.logo ? (
-            <img src={campaign.layout_data.logo} alt={campaign.name} className={`w-auto object-contain transition-all duration-500 ${isScrolled ? 'h-6 md:h-10' : 'h-8 md:h-12'}`} />
-          ) : (
-            <span className={`font-bold text-[#008A46] truncate transition-all duration-500 ${isScrolled ? 'text-base md:text-xl' : 'text-lg md:text-2xl'}`}>{campaign.name}</span>
-          )}
-          <div className="hidden md:flex items-center gap-8">
-            <a className="text-[#455f88] hover:text-[#008A46] text-sm font-medium transition-all duration-300" href="#localizacao" onClick={(e) => { e.preventDefault(); document.getElementById('localizacao')?.scrollIntoView({ behavior: 'smooth' }) }}>Localização</a>
-            <a className="text-[#455f88] hover:text-[#008A46] text-sm font-medium transition-all duration-300" href="#diferenciais" onClick={(e) => { e.preventDefault(); document.getElementById('diferenciais')?.scrollIntoView({ behavior: 'smooth' }) }}>Diferenciais</a>
-            <a className="text-[#455f88] hover:text-[#008A46] text-sm font-medium transition-all duration-300" href="#beneficios" onClick={(e) => { e.preventDefault(); document.getElementById('beneficios')?.scrollIntoView({ behavior: 'smooth' }) }}>Benefícios</a>
-            <a className="text-[#455f88] hover:text-[#008A46] text-sm font-medium transition-all duration-300" href="#sobre" onClick={(e) => { e.preventDefault(); document.getElementById('sobre')?.scrollIntoView({ behavior: 'smooth' }) }}>Sobre</a>
+          {/* Logo */}
+          <div className="flex items-center gap-2">
+             {campaign.layout_data?.logo ? (
+                <img src={campaign.layout_data.logo} alt="MRV Logo" className="h-8 md:h-10 object-contain" />
+             ) : (
+                <span className="font-bold text-[#008A46] text-xl">MRV</span>
+             )}
           </div>
-          <button onClick={scrollToForm} className={`bg-[#008A46] text-white rounded-full font-semibold hover:bg-[#007A33] transition-all duration-300 active:scale-95 whitespace-nowrap shadow-md hover:shadow-lg flex items-center justify-center ${isScrolled ? 'px-4 py-1.5 md:px-6 md:py-2.5 text-[11px] md:text-sm' : 'px-5 py-2 md:px-7 md:py-3 text-[13px] md:text-base'}`}>
-            <span className="md:hidden">Simular</span>
-            <span className="hidden md:inline">Simular Agora</span>
-          </button>
+          {/* CTA */}
+          <a 
+            href={`https://wa.me/${campaign.whatsapp_number?.replace(/\D/g, "")}?text=${encodeURIComponent("Olá 👋 Tenho interesse no Ville de Lisboa.")}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-[#25D366] text-white rounded-full font-bold hover:bg-[#20b858] transition-all duration-300 px-5 py-2.5 text-xs md:text-sm flex items-center gap-2 shadow-sm"
+          >
+            <MessageCircle className="w-4 h-4 md:w-5 md:h-5" />
+            <span className="hidden md:inline">FALAR NO WHATSAPP</span>
+            <span className="md:hidden">WHATSAPP</span>
+          </a>
         </div>
       </nav>
 
       {/* Hero Section */}
-      <section id="hero" className="relative min-h-[100vh] md:min-h-[800px] pt-20 pb-12 flex items-center overflow-hidden">
+      <section className="relative pt-24 pb-32 md:pt-32 md:pb-40 min-h-[90vh] md:min-h-0 flex flex-col justify-center bg-[#121212]">
+        {/* Background Image with Overlay */}
         <div className="absolute inset-0 z-0">
-          {/* Overlay Gradient (Z-10 ensures it's on top of media) */}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#121c2c] via-[#121c2c]/40 to-black/10 z-10 md:bg-gradient-to-r md:from-[#121c2c]/80 md:via-[#121c2c]/40 md:to-transparent pointer-events-none"></div>
-
+          <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/50 to-[#f5f5f5] z-10 pointer-events-none"></div>
+          
           {/* Mobile Video/Banner */}
-          <div className="absolute inset-0 md:hidden z-0 bg-[#121c2c]">
+          <div className="absolute inset-0 md:hidden z-0">
             {isVideo(heroMobile) ? (
-              <video key={heroMobile} className="w-full h-full object-cover" autoPlay loop muted playsInline poster={campaign.layout_data?.poster_mobile || heroFallbackImg}>
+              <video key={heroMobile} className="w-full h-full object-cover opacity-60" autoPlay loop muted playsInline poster={campaign.layout_data?.poster_mobile || heroFallbackImg}>
                 <source src={heroMobile} type="video/mp4" />
-                <img src={campaign.layout_data?.poster_mobile || heroFallbackImg} alt="Fallback Mobile" className="w-full h-full object-cover" />
               </video>
             ) : (
-              <img key={heroMobile} className="w-full h-full object-cover" src={heroMobile} alt="Hero Background Mobile" />
+              <img key={heroMobile} className="w-full h-full object-cover opacity-60" src={heroMobile} alt="Hero Background Mobile" />
             )}
           </div>
 
           {/* Desktop Video/Banner */}
-          <div className="absolute inset-0 hidden md:block z-0 bg-[#121c2c]">
+          <div className="absolute inset-0 hidden md:block z-0">
             {isVideo(heroDesktop) ? (
-              <video key={heroDesktop} className="w-full h-full object-cover" autoPlay loop muted playsInline poster={campaign.layout_data?.poster_desktop || heroFallbackImg}>
+              <video key={heroDesktop} className="w-full h-full object-cover opacity-60" autoPlay loop muted playsInline poster={campaign.layout_data?.poster_desktop || heroFallbackImg}>
                 <source src={heroDesktop} type="video/mp4" />
-                <img src={campaign.layout_data?.poster_desktop || heroFallbackImg} alt="Fallback Desktop" className="w-full h-full object-cover" />
               </video>
             ) : (
-              <img key={heroDesktop} className="w-full h-full object-cover" src={heroDesktop} alt="Hero Background Desktop" />
+              <img key={heroDesktop} className="w-full h-full object-cover opacity-60" src={heroDesktop} alt="Hero Background Desktop" />
             )}
           </div>
         </div>
-        <div className="relative z-20 max-w-[800px] mx-auto px-4 md:px-6 flex flex-col items-center justify-center text-center w-full pt-4 pb-16">
-          <div className="text-white flex flex-col items-center w-full">
-            <h1 className="text-4xl md:text-5xl lg:text-7xl font-black mb-4 md:mb-6 leading-[1.1] tracking-tighter drop-shadow-2xl">
-              Saia do aluguel com parcelas em até 72x
-            </h1>
-            <p className="text-xl md:text-3xl mb-8 md:mb-10 text-white/90 font-medium max-w-4xl drop-shadow-lg leading-snug">
-              Lazer completo e subsídio de até <span className="font-extrabold text-[#bbf7d0]">R$ 55 mil</span> pelo Minha Casa Minha Vida.
-            </p>
 
-            {/* Destaque de Renda */}
-            <div className="mb-10 md:mb-14 inline-flex items-center justify-center gap-3 bg-gradient-to-r from-[#008A46] to-[#00A34A] border border-white/20 shadow-[0_10px_40px_rgba(0,163,74,0.5)] px-6 py-3 md:px-10 md:py-4 rounded-full transform hover:-translate-y-1 hover:shadow-[0_15px_50px_rgba(0,163,74,0.6)] transition-all w-fit max-w-[95%]">
-              <span className="text-2xl md:text-3xl animate-bounce">🔥</span>
-              <span className="text-white font-extrabold text-base md:text-2xl tracking-wider uppercase">
-                Renda familiar a partir de R$ 1.800
-              </span>
-            </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-10 md:mb-16 w-full max-w-5xl">
-              <div className="flex flex-col items-center justify-center bg-white/10 backdrop-blur-md rounded-3xl p-6 border border-white/20 hover:bg-white/20 transition-all shadow-xl hover:-translate-y-1">
-                <Wallet className="w-10 h-10 md:w-12 md:h-12 mb-4 text-[#bbf7d0]" strokeWidth={1.5} />
-                <span className="text-sm md:text-lg font-semibold leading-tight">Subsídio de<br />até R$55 mil</span>
-              </div>
-              <div className="flex flex-col items-center justify-center bg-gradient-to-b from-[#008A46] to-[#007A33] rounded-3xl p-6 border border-white/30 shadow-[0_0_30px_rgba(0,163,74,0.5)] transform hover:-translate-y-2 transition-all">
-                <Handshake className="w-10 h-10 md:w-12 md:h-12 mb-4 text-white" strokeWidth={1.5} />
-                <span className="text-sm md:text-lg font-black leading-tight text-white">Entrada facilitada<br />em até 72x</span>
-              </div>
-              <div className="flex flex-col items-center justify-center bg-white/10 backdrop-blur-md rounded-3xl p-6 border border-white/20 hover:bg-white/20 transition-all shadow-xl hover:-translate-y-1">
-                <Landmark className="w-10 h-10 md:w-12 md:h-12 mb-4 text-[#bbf7d0]" strokeWidth={1.5} />
-                <span className="text-sm md:text-lg font-semibold leading-tight">Use seu<br />FGTS</span>
-              </div>
-              <div className="flex flex-col items-center justify-center bg-white/10 backdrop-blur-md rounded-3xl p-6 border border-white/20 hover:bg-white/20 transition-all shadow-xl hover:-translate-y-1">
-                <TrendingDown className="w-10 h-10 md:w-12 md:h-12 mb-4 text-[#bbf7d0]" strokeWidth={1.5} />
-                <span className="text-sm md:text-lg font-semibold leading-tight">Menores juros<br />do mercado</span>
-              </div>
-            </div>
-
-            <a
-              href={`https://wa.me/${campaign.whatsapp_number?.replace(/\D/g, "")}?text=${encodeURIComponent("Olá 👋 Tenho interesse no Ville de Lisboa e gostaria de fazer minha simulação pelo Minha Casa Minha Vida.")}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-gradient-to-r from-[#25D366] to-[#1DA851] text-white px-8 md:px-14 py-4 md:py-6 rounded-full font-black text-lg md:text-2xl inline-flex items-center justify-center gap-3 w-full md:w-auto shadow-[0_15px_40px_rgba(37,211,102,0.5)] hover:shadow-[0_20px_50px_rgba(37,211,102,0.7)] transition-all transform hover:-translate-y-2 active:scale-95"
-            >
-              <MessageCircle className="w-7 h-7 md:w-8 md:h-8 animate-pulse" />
-              QUERO FAZER MINHA SIMULAÇÃO
-            </a>
+        <div className="relative z-20 max-w-[1200px] mx-auto px-4 md:px-6 w-full text-center md:text-left mt-10 md:mt-0">
+          {/* Badges */}
+          <div className="flex justify-center md:justify-start gap-2 mb-6">
+            <span className="bg-[#eab308] text-white px-3 py-1 rounded-full text-[10px] md:text-xs font-bold flex items-center gap-1 uppercase tracking-wide">
+              <span className="w-2 h-2 rounded-full bg-white opacity-80 animate-pulse"></span>
+              LANÇAMENTO
+            </span>
+            <span className="bg-black/50 backdrop-blur-md text-[#eab308] border border-[#eab308]/30 px-3 py-1 rounded-full text-[10px] md:text-xs font-bold uppercase tracking-wide flex items-center gap-1">
+              <Building className="w-3 h-3" />
+              VILLE DE LISBOA
+            </span>
           </div>
-        </div>
 
-        {/* Scroll Indicator */}
-        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center animate-bounce text-white/80 z-20">
-          <span className="text-[10px] md:text-xs uppercase tracking-[0.2em] mb-1 font-medium">Saiba mais</span>
-          <ChevronDown className="w-5 h-5 md:w-6 md:h-6" />
-        </div>
-      </section>
+          {/* Headlines */}
+          <h1 className="text-white text-4xl md:text-6xl font-black mb-4 leading-[1.1] tracking-tight drop-shadow-lg">
+            Seu apartamento próprio <br className="hidden md:block" /> com condições <br className="md:hidden" />
+            <span className="text-[#a3e635]">que cabem no seu bolso!</span>
+          </h1>
+          <p className="text-white/90 text-lg md:text-xl font-medium max-w-2xl mb-10 drop-shadow-md mx-auto md:mx-0">
+            Realize o sonho da casa própria com o <br className="md:hidden"/>
+            <span className="font-bold">Minha Casa Minha Vida</span> e vantagens exclusivas.
+          </p>
 
-      {/* Benefícios Section */}
-      <section className="py-20 bg-gradient-to-b from-white to-[#f9f9ff]" id="beneficios">
-        <div className="max-w-[1200px] mx-auto px-6">
-          <div className="text-center mb-16">
-            <img src="\src\assets\ville-de-lisboa\logo-mcmv.png" alt="Minha Casa Minha Vida" className="h-20 object-contain mx-auto mb-8 drop-shadow-sm" />
-            <h2 className="text-4xl md:text-5xl font-black text-[#121c2c] tracking-tight mb-4">Vantagens Exclusivas</h2>
-            <p className="text-lg text-gray-500 max-w-2xl mx-auto mb-8">O programa Minha Casa Minha Vida oferece as melhores condições do mercado para você conquistar seu apartamento.</p>
-            <div className="h-1.5 w-24 bg-gradient-to-r from-[#008A46] to-[#00A34A] mx-auto rounded-full"></div>
-          </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
-            <div className="bg-white p-8 rounded-3xl shadow-[0_8px_30px_rgba(0,0,0,0.04)] border border-gray-100 flex flex-col items-center text-center transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_15px_40px_rgba(0,163,74,0.1)] group">
-              <div className="w-20 h-20 rounded-2xl bg-green-50 flex items-center justify-center mb-6 text-3xl group-hover:bg-[#008A46] group-hover:scale-110 transition-all duration-300">💰</div>
-              <h3 className="font-extrabold text-xl mb-3 text-[#121c2c]">Subsídio de até R$ 55 mil</h3>
-              <p className="text-base text-gray-500 leading-relaxed">O governo ajuda você a pagar uma parte significativa do seu imóvel.</p>
+          {/* Benefits Cards Hero */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 max-w-4xl mx-auto md:mx-0">
+            <div className="bg-black/50 backdrop-blur-md border border-white/10 rounded-2xl p-4 md:p-5 flex flex-col items-center text-center hover:bg-black/70 transition-all shadow-lg">
+              <div className="mb-3">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#a3e635" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline><circle cx="12" cy="16" r="3" fill="#a3e635" opacity="0.3"></circle><text x="12" y="17.5" fill="#a3e635" fontSize="6" textAnchor="middle" fontWeight="bold">$</text></svg>
+              </div>
+              <span className="text-white text-[11px] md:text-sm font-semibold uppercase tracking-wider mb-1">Subsídios de até</span>
+              <span className="text-[#a3e635] text-base md:text-lg font-black">R$ 55 mil</span>
             </div>
-            <div className="bg-white p-8 rounded-3xl shadow-[0_8px_30px_rgba(0,0,0,0.04)] border border-gray-100 flex flex-col items-center text-center transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_15px_40px_rgba(0,163,74,0.1)] group">
-              <div className="w-20 h-20 rounded-2xl bg-blue-50 flex items-center justify-center mb-6 text-3xl group-hover:bg-[#455f88] group-hover:scale-110 transition-all duration-300">📉</div>
-              <h3 className="font-extrabold text-xl mb-3 text-[#121c2c]">Juros Reduzidos</h3>
-              <p className="text-base text-gray-500 leading-relaxed">Aproveite as menores taxas de juros de todo o mercado imobiliário.</p>
+            
+            <div className="bg-black/50 backdrop-blur-md border border-white/10 rounded-2xl p-4 md:p-5 flex flex-col items-center text-center hover:bg-black/70 transition-all shadow-lg">
+              <div className="mb-3">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#a3e635" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M23 6l-9.5 9.5-5-5L1 18"></path><polyline points="16 6 23 6 23 13"></polyline><circle cx="8" cy="14" r="2" fill="#a3e635" opacity="0.4"></circle><circle cx="14" cy="8" r="2" fill="#a3e635" opacity="0.4"></circle><line x1="7" y1="9" x2="15" y2="15" stroke="#a3e635"></line></svg>
+              </div>
+              <span className="text-white text-[11px] md:text-sm font-semibold uppercase tracking-wider mb-1">Menores juros</span>
+              <span className="text-[#a3e635] text-base md:text-lg font-black">do mercado</span>
             </div>
-            <div className="bg-[#008A46] text-white p-8 rounded-3xl shadow-[0_15px_40px_rgba(0,138,70,0.2)] border border-green-600 flex flex-col items-center text-center transition-all duration-300 hover:-translate-y-2 transform scale-105 z-10">
-              <div className="w-20 h-20 rounded-2xl bg-white/20 flex items-center justify-center mb-6 text-3xl backdrop-blur-md">🤝</div>
-              <h3 className="font-extrabold text-xl mb-3">Facilidade na Entrada</h3>
-              <p className="text-base text-white/90 leading-relaxed">A construtora parcela sua entrada em condições exclusivas e flexíveis.</p>
+            
+            <div className="bg-black/50 backdrop-blur-md border border-white/10 rounded-2xl p-4 md:p-5 flex flex-col items-center text-center hover:bg-black/70 transition-all shadow-lg">
+              <div className="mb-3">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#a3e635" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M8 12h8"></path><path d="M12 8v8"></path><rect x="3" y="4" width="18" height="16" rx="2" ry="2"></rect><path d="M2 10h20"></path></svg>
+              </div>
+              <span className="text-white text-[11px] md:text-sm font-semibold uppercase tracking-wider mb-1">Entrada facilitada</span>
+              <span className="text-[#a3e635] text-base md:text-lg font-black">pela MRV</span>
             </div>
-            <div className="bg-white p-8 rounded-3xl shadow-[0_8px_30px_rgba(0,0,0,0.04)] border border-gray-100 flex flex-col items-center text-center transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_15px_40px_rgba(0,163,74,0.1)] group">
-              <div className="w-20 h-20 rounded-2xl bg-orange-50 flex items-center justify-center mb-6 text-3xl group-hover:bg-orange-500 group-hover:scale-110 transition-all duration-300">🏦</div>
-              <h3 className="font-extrabold text-xl mb-3 text-[#121c2c]">Uso do FGTS</h3>
-              <p className="text-base text-gray-500 leading-relaxed">Utilize o seu saldo do fundo de garantia direto no financiamento.</p>
+            
+            <div className="bg-black/50 backdrop-blur-md border border-white/10 rounded-2xl p-4 md:p-5 flex flex-col items-center text-center hover:bg-black/70 transition-all shadow-lg">
+              <div className="mb-3">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#a3e635" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+              </div>
+              <span className="text-white text-[11px] md:text-sm font-semibold uppercase tracking-wider mb-1">Use seu</span>
+              <span className="text-[#a3e635] text-base md:text-lg font-black">FGTS</span>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Localização Estratégica */}
-      <section className="py-20 bg-white" id="localizacao">
-        <div className="max-w-[1200px] mx-auto px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-5xl font-bold text-[#121c2c] mb-6 leading-tight">
-              Localização estratégica para <br className="hidden md:block" /> facilitar sua rotina
+      {/* Floating Form Section */}
+      <section id="formulario" className="relative z-30 -mt-24 md:-mt-20 max-w-[900px] mx-auto px-4">
+        <div className="bg-white rounded-[32px] shadow-[0_20px_60px_rgba(0,0,0,0.12)] p-6 md:p-12 border border-gray-100">
+          <div className="text-center mb-8">
+            <h2 className="text-2xl md:text-4xl font-black text-[#121c2c] mb-2 tracking-tight">
+              Faça sua <span className="text-[#00A34A]">simulação gratuita</span> agora!
             </h2>
-            <p className="text-lg md:text-xl text-[#3e4a3f] max-w-3xl mx-auto font-light">
-              More com fácil acesso às principais vias da região e perto de pontos importantes de Caucaia.
+            <p className="text-gray-500 font-medium text-sm md:text-lg">
+              Preencha seus dados e fale com um especialista.
             </p>
           </div>
-
-          <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-            <div className="order-2 lg:order-1">
-              <h3 className="text-2xl md:text-3xl font-bold text-[#008A46] mb-6">
-                E você tem um diferencial forte de localização:
-              </h3>
-              <ul className="space-y-4 mb-10 text-lg text-[#3e4a3f] font-medium">
-                <li className="flex items-center gap-3">
-                  <span className="flex-shrink-0 w-8 h-8 rounded-full bg-[#008A46]/10 text-[#008A46] flex items-center justify-center">📍</span>
-                  Fácil acesso pela Av. Mister Hull
-                </li>
-                <li className="flex items-center gap-3">
-                  <span className="flex-shrink-0 w-8 h-8 rounded-full bg-[#008A46]/10 text-[#008A46] flex items-center justify-center">📍</span>
-                  Próximo à Fundação Bradesco
-                </li>
-                <li className="flex items-center gap-3">
-                  <span className="flex-shrink-0 w-8 h-8 rounded-full bg-[#008A46]/10 text-[#008A46] flex items-center justify-center">📍</span>
-                  Ao lado da Empresa de Ônibus Vitória
-                </li>
-              </ul>
-
-              <div className="grid sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-4">
-                <div className="bg-[#f9f9ff] p-5 rounded-2xl border border-[#bdcabd]/30 shadow-sm transition-transform hover:-translate-y-1">
-                  <div className="w-12 h-12 rounded-xl bg-[#bbf7d0] text-[#008A46] flex items-center justify-center mb-4 text-2xl">📍</div>
-                  <h4 className="font-bold text-[#121c2c] mb-1">Av. Mister Hull</h4>
-                  <p className="text-sm text-[#455f88] leading-relaxed">Fácil acesso para Fortaleza e Caucaia.</p>
-                </div>
-                <div className="bg-[#f9f9ff] p-5 rounded-2xl border border-[#bdcabd]/30 shadow-sm transition-transform hover:-translate-y-1">
-                  <div className="w-12 h-12 rounded-xl bg-[#bbf7d0] text-[#008A46] flex items-center justify-center mb-4 text-2xl">🏫</div>
-                  <h4 className="font-bold text-[#121c2c] mb-1">Fundação Bradesco</h4>
-                  <p className="text-sm text-[#455f88] leading-relaxed">Referência em ensino gratuito e de excelência para crianças, jovens e adultos há quase 70 anos.</p>
-                </div>
-                <div className="bg-[#f9f9ff] p-5 rounded-2xl border border-[#bdcabd]/30 shadow-sm transition-transform hover:-translate-y-1 sm:col-span-2 lg:col-span-1 xl:col-span-2">
-                  <div className="w-12 h-12 rounded-xl bg-[#bbf7d0] text-[#008A46] flex items-center justify-center mb-4 text-2xl">🚌</div>
-                  <h4 className="font-bold text-[#121c2c] mb-1">Empresa Vitória</h4>
-                  <p className="text-sm text-[#455f88] leading-relaxed">Mobilidade e acesso facilitado para o dia a dia.</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="order-1 lg:order-2">
-              <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-[#bdcabd]/20 aspect-square lg:aspect-auto lg:h-[700px] bg-[#bbf7d0]/20">
-                <iframe
-                  src="https://maps.google.com/maps?q=Rua%20Banabuiu,%20213%20-%20Parque%20Albano,%20Caucaia%20-%20CE&t=&z=16&ie=UTF8&iwloc=&output=embed"
-                  className="w-full h-full border-0 grayscale opacity-80 mix-blend-multiply"
-                  allowFullScreen={false}
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                  title="Mapa da Região"
-                ></iframe>
-
-                {/* Floating Logo Pin no Centro do Mapa */}
-                {campaign.layout_data?.logo && (
-                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-full z-10 pointer-events-none flex flex-col items-center animate-bounce drop-shadow-xl mt-[-10px]">
-                    <div className="bg-white p-2 md:p-3 rounded-2xl shadow-lg border-2 border-[#008A46]">
-                      <img src={campaign.layout_data.logo} alt="Local" className="h-8 md:h-10 object-contain" />
-                    </div>
-                    {/* Triângulo do Pino */}
-                    <div className="w-0 h-0 border-l-[10px] border-r-[10px] border-t-[14px] border-l-transparent border-r-transparent border-t-[#008A46] -mt-[2px]"></div>
-                  </div>
-                )}
-
-                <div className="absolute inset-0 bg-gradient-to-t from-[#121c2c]/90 via-transparent to-transparent pointer-events-none"></div>
-                <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8 pointer-events-none">
-                  <div className="bg-white/95 backdrop-blur-md p-6 rounded-2xl shadow-lg border border-white/20 pointer-events-auto">
-                    <h4 className="text-[#008A46] font-bold text-[11px] md:text-sm uppercase tracking-wider mb-2">Endereço do Empreendimento</h4>
-                    <p className="text-[#121c2c] font-semibold text-base md:text-xl flex items-start gap-3">
-                      <span className="text-xl md:text-2xl mt-0.5">📍</span>
-                      Rua Banabuiu, 213 - Parque Albano, Caucaia - CE
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Sobre o Empreendimento */}
-      <section className="py-20 bg-[#f0f3ff]" id="sobre">
-        <div className="max-w-[1200px] mx-auto px-6 grid md:grid-cols-2 gap-16 items-center">
-          <div className="relative group">
-            <div className="aspect-square rounded-2xl overflow-hidden shadow-xl">
-              <img className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" src={campaign.layout_data?.sobre1 || "https://lh3.googleusercontent.com/aida-public/AB6AXuAflQ94r17rQ6B8qPdBUzXMGtBjrrObuCedd1aB2riFFLJqq6P4fL0oL6zQLZ5_1rr_w1RGOMGXp9KABRtG26n5Pm7LcSch-wl1rtw06Hl1VvE9L2K3w40fIOQ8MPM7GPxlnxv37jCWA1LsjOjUr79TceKoyJFjo_hFJ5fikTwK19lvx6hpJA_bNssP7UrAbDer6uB4IKOMVX88IX09GQ-w0h_iwm7GiesvUVhhlH3tsj8xPk_MPE_PHmIU-fxs8IBvhSfz-W5EBwo"} alt="Sobre" />
-            </div>
-            <div className="absolute -bottom-6 -right-6 w-48 h-48 rounded-xl overflow-hidden shadow-2xl border-4 border-white hidden md:block">
-              <img className="w-full h-full object-cover" src={campaign.layout_data?.sobre2 || "https://lh3.googleusercontent.com/aida-public/AB6AXuDU-bgeFUwXI0tb496RgLapp854IY1uJoDcbHCl6_WTOvVrz9YtWCBlI1SZWrI8oskYXd5frm6h4QrsI4E02hkdN-Ng1guJvyN9AY6UDmJhc4aNsK7GbRIFY6ccHIzHF3ngR56jSsegDiyT-Xf8z77TEvRq5cfsu_9C4qGhBLeQ0we69EuUPYJ5m4ZcPK6bKTw7N2dcuA01a5kXjcg521A-zJuqtyfB84KoMNIiyvRiQuFr4s8b9utTcSo8WGCGfT9Pj3fC00qO5kc"} alt="Parque" />
-            </div>
-          </div>
-          <div>
-            <h2 className="text-4xl font-bold text-[#008A46] mb-6">{campaign.name}</h2>
-            <p className="text-lg text-[#3e4a3f] mb-8 leading-relaxed">
-              Um empreendimento pensado para quem quer sair do aluguel com qualidade de vida, segurança e lazer completo. Une modernidade e praticidade para sua família.
-            </p>
-            <div className="space-y-6">
-              <div className="flex gap-4">
-                <span className="flex items-center justify-center w-12 h-12 text-[#008A46] bg-[#008A46]/10 rounded-lg text-2xl">🏢</span>
-                <div>
-                  <h4 className="font-bold">Apartamentos Modernos</h4>
-                  <p className="text-sm text-[#3e4a3f]">Plantas inteligentes para o máximo aproveitamento de espaço.</p>
-                </div>
-              </div>
-              <div className="flex gap-4">
-                <span className="flex items-center justify-center w-12 h-12 text-[#008A46] bg-[#008A46]/10 rounded-lg text-2xl">🏊‍♂️</span>
-                <div>
-                  <h4 className="font-bold">Lazer de Clube</h4>
-                  <p className="text-sm text-[#3e4a3f]">Piscina, playground, espaço Piquenique, Pet Place e muito mais.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Galeria */}
-      <section className="py-20 bg-[#f9f9ff]" id="galeria">
-        <div className="max-w-[1200px] mx-auto px-6">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-[#008A46] mb-4">Galeria do Empreendimento</h2>
-            <div className="h-1 w-20 bg-[#00A34A] mx-auto rounded-full"></div>
-          </div>
-          <div className="relative group max-w-5xl mx-auto">
-            <div
-              className="flex overflow-hidden rounded-xl shadow-2xl aspect-[16/9] relative"
-              onTouchStart={onTouchStart}
-              onTouchMove={onTouchMove}
-              onTouchEnd={onTouchEndAction}
-            >
-              <img src={galleryImages[galleryIndex] as string} className="w-full h-full object-cover transition-opacity duration-500" alt="Galeria" />
-
-              <button
-                onClick={prevSlide}
-                className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white p-2 rounded-full transition-colors opacity-0 group-hover:opacity-100 md:flex hidden items-center justify-center"
-              >
-                <ChevronLeft className="w-8 h-8" />
-              </button>
-              <button
-                onClick={nextSlide}
-                className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white p-2 rounded-full transition-colors opacity-0 group-hover:opacity-100 md:flex hidden items-center justify-center"
-              >
-                <ChevronRight className="w-8 h-8" />
-              </button>
-            </div>
-            <div className="flex justify-center gap-2 mt-6">
-              {galleryImages.map((_, i) => (
-                <button key={i} onClick={() => setGalleryIndex(i)} className={`h-2.5 rounded-full transition-all duration-300 ${i === galleryIndex ? 'w-6 bg-[#008A46]' : 'w-2.5 bg-[#bdcabd]'}`} />
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Diferenciais */}
-      <section className="py-20 bg-white" id="diferenciais">
-        <div className="max-w-[1200px] mx-auto px-6">
-          <div className="bg-[#007A33] p-12 rounded-3xl text-[#f6fff4]">
-            <div className="grid md:grid-cols-2 gap-12 items-center">
-              <div>
-                <h2 className="text-3xl font-bold mb-8">Por que escolher o {campaign.name}?</h2>
-                <ul className="space-y-6">
-                  <li className="flex items-center gap-4">
-                    <span className="bg-white/20 p-2 rounded-full">✓</span>
-                    <span className="text-lg">Condomínio fechado com portaria 24h</span>
-                  </li>
-                  <li className="flex items-center gap-4">
-                    <span className="bg-white/20 p-2 rounded-full">✓</span>
-                    <span className="text-lg">Área de lazer completa e equipada</span>
-                  </li>
-                  <li className="flex items-center gap-4">
-                    <span className="bg-white/20 p-2 rounded-full">✓</span>
-                    <span className="text-lg">Segurança para toda a sua família</span>
-                  </li>
-                  <li className="flex items-center gap-4">
-                    <span className="bg-white/20 p-2 rounded-full">✓</span>
-                    <span className="text-lg">Localização estratégica</span>
-                  </li>
-                  <li className="flex items-center gap-4">
-                    <span className="bg-white/20 p-2 rounded-full">✓</span>
-                    <span className="text-lg">Excelente potencial de valorização</span>
-                  </li>
-                </ul>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-4">
-                  <div className="h-40 rounded-2xl overflow-hidden">
-                    <img className="w-full h-full object-cover" src={campaign.layout_data?.dif1 || "https://lh3.googleusercontent.com/aida-public/AB6AXuAyTveLNCkexo8X-DzC53w_UE4bXdVvnggsMi3SBcMn69p2N2DWg4Jg9Bp7_PoZWuz319QeG-P1zkNxv6-DP5KI7vRSZuVctkSFMFhXtFwVovt6I6ib-SzoaFDDDHB_pMzRnIe_oCweBbwBeTMhQf6FFG2eZLgHKp5PN6ZrObIzlTjScBe0f4H-5xeyCeNZkvLaKndq_JSaqIW3kql6oohkSdxrvq4Qpel-OHqBlmYb3tGVAtFetDp0ZNNWdAZoLOk-QRccn3hR6Ug"} alt="Gourmet" />
-                  </div>
-                  <div className="h-56 rounded-2xl overflow-hidden">
-                    <img className="w-full h-full object-cover" src={campaign.layout_data?.dif2 || "https://lh3.googleusercontent.com/aida-public/AB6AXuADrjd4GWXV1xfELn9oRyaeAX0rGKlyHQ2qwXyJQP2_B4L4OeRvauFeGM4HWA1LIyZwZSATksrH59x4plxkjsNmkePqMud5QBSvLC0VpCsqq-hW-X_Y1YuyMhWsw8WL7cXD78BvKMQM3TrpBHAkIZ01CPzAGChuMhHvTuEMWxdldJveE0iOX-n7iUadvW4h83mBcDG2omxsX9F6NBI8e4AH9hBjFgfyqCubCIlDjkIkwxqatKXmwzLUqNN7aQGHoSOHXfAxgoWYdPg"} alt="Academia" />
-                  </div>
-                </div>
-                <div className="space-y-4 mt-8">
-                  <div className="h-56 rounded-2xl overflow-hidden">
-                    <img className="w-full h-full object-cover" src={campaign.layout_data?.dif3 || "https://lh3.googleusercontent.com/aida-public/AB6AXuDAlbpVqJboWlvLa8zZS488urEHzxpdiIeWnnR1TetChdeaaj8hfOxh4HNsvMDtacOdENHlceuiSFTLFMm_NFx_8qmC47VxBAhW1BJiCc358kEXxn3yTTviO-U2YFos2eee1VBJ4ERx03iXdZaMP48sZgTbT5dEFLt2AuofeXKxVyaKNVhLhb_4vuP3cOUvgdmV0ocdqu2hsOXoKUmlSaIo9RNZdQbvUjskwwf8fvR6ssgqgKKpUFvWdTLa1Zf13l4O6ohX3rxoJOg"} alt="Pista" />
-                  </div>
-                  <div className="h-40 rounded-2xl overflow-hidden">
-                    <img className="w-full h-full object-cover" src={campaign.layout_data?.dif4 || "https://lh3.googleusercontent.com/aida-public/AB6AXuBvWAF_RzGUierBB_lXYuyKzh27A2oWhM59nVrLtuxeuy8kQdaXrzWbPRUxy5rg3gxxFjr3DPUUTlm2M_yMoisxsNzmqwzxuTOLCxSVssD2Qec112cIjTC_-2MDqLntd8lr4CoRpWkntDIuyZIj9fkwDC85F7w5VnER1L5eFsuHRf0WEqGCKoaXVd27NRIxae1ND97YMqiTUAmxT5tmXqndep9wLRptgN6pJzDUsUTK_vymLQzfreP5FmHXYXnZxRvs9Wqi58IWPI0"} alt="Lobby" />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Prova Social e Urgência */}
-      <section className="py-20 bg-[#121c2c] text-white relative overflow-hidden">
-        {/* Decorativo */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[#008A46]/20 rounded-full blur-[100px] pointer-events-none"></div>
-
-        <div className="max-w-[1200px] mx-auto px-6 relative z-10">
-          <div className="flex flex-col items-center text-center">
-
-            {/* Badges de Urgência */}
-            <div className="flex flex-wrap justify-center gap-3 mb-10">
-              <span className="bg-red-500/20 text-red-300 border border-red-500/30 px-4 py-1.5 rounded-full text-sm font-semibold flex items-center gap-2 animate-pulse">
-                <span className="w-2 h-2 rounded-full bg-red-500"></span> Alta procura
-              </span>
-              <span className="bg-[#008A46]/30 text-[#bbf7d0] border border-[#008A46]/50 px-4 py-1.5 rounded-full text-sm font-semibold flex items-center gap-2">
-                ⏱️ Últimas unidades desta etapa
-              </span>
-              <span className="bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-4 py-1.5 rounded-full text-sm font-semibold flex items-center gap-2">
-                ✨ Reservas recentes
-              </span>
-            </div>
-
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 flex flex-wrap items-center justify-center gap-3 md:gap-4">
-              <span>Mais de</span>
-              <span className="text-7xl md:text-8xl text-transparent bg-clip-text bg-gradient-to-r from-[#00A34A] to-[#008A46] drop-shadow-[0_0_15px_rgba(0,163,74,0.5)] tabular-nums">
-                {reservasCount}
-              </span>
-              <span>famílias</span>
-            </h2>
-
-            <p className="text-xl md:text-3xl text-[#bbf7d0] max-w-3xl mx-auto font-light leading-relaxed">
-              já realizaram a reserva da sua unidade. <br className="hidden md:block" />
-              <strong className="text-white font-semibold">Não fique de fora dessa oportunidade.</strong>
-            </p>
-
-            {/* Social Proof Avatars */}
-            <div className="mt-12 flex flex-col items-center">
-              <div className="flex -space-x-4 mb-4">
-                <div className="w-12 h-12 rounded-full border-2 border-[#121c2c] bg-[#455f88] flex items-center justify-center text-sm font-bold shadow-lg">AM</div>
-                <div className="w-12 h-12 rounded-full border-2 border-[#121c2c] bg-[#007A33] flex items-center justify-center text-sm font-bold shadow-lg">JS</div>
-                <div className="w-12 h-12 rounded-full border-2 border-[#121c2c] bg-emerald-600 flex items-center justify-center text-sm font-bold shadow-lg">MR</div>
-                <div className="w-12 h-12 rounded-full border-2 border-[#121c2c] bg-[#bbf7d0] text-[#2c133a] flex items-center justify-center text-sm font-bold shadow-lg">LC</div>
-                <div className="w-12 h-12 rounded-full border-2 border-[#121c2c] bg-[#008A46] flex items-center justify-center text-sm font-bold shadow-lg">+{reservasCount > 4 ? reservasCount - 4 : 0}</div>
-              </div>
-              <p className="text-sm text-[#8b9fc1] font-medium tracking-wide">Pessoas reais realizando o sonho do primeiro imóvel</p>
-            </div>
-
-          </div>
-        </div>
-      </section>
-
-      {/* Formulário Final */}
-      <section id="formulario" className="py-24 bg-gradient-to-b from-[#f9f9ff] to-white relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#008A46]/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 z-0 pointer-events-none"></div>
-        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-[#455f88]/5 rounded-full blur-3xl translate-y-1/3 -translate-x-1/3 z-0 pointer-events-none"></div>
-        <div className="max-w-[1000px] mx-auto px-6 relative z-10">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold text-[#121c2c] mb-6 leading-tight tracking-tight">
-              Financie seu apê com <br className="hidden md:block" />
-              <span className="block mt-2 font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-[#008A46] to-[#00A34A] drop-shadow-[0_5px_15px_rgba(121,64,152,0.25)]">
-                entrada parcelada em até 72x
-              </span>
-            </h2>
-            <p className="text-lg md:text-xl text-[#3e4a3f] max-w-3xl mx-auto">
-              Preencha os dados abaixo e fale com um especialista para descobrir parcelas, possibilidade de subsídio e condições facilitadas.
-            </p>
-          </div>
-
-          <div className="bg-white p-8 md:p-12 rounded-3xl shadow-[0_20px_60px_rgba(69,95,136,0.12)] border border-[#bdcabd]/20 max-w-2xl mx-auto w-full relative">
-            <div className="absolute -top-6 -right-6 w-24 h-24 bg-gradient-to-br from-[#008A46] to-[#00A34A] rounded-full opacity-10 blur-xl pointer-events-none"></div>
-
+          
+          <div className="max-w-3xl mx-auto form-grid-override">
+            {/* The HotsiteForm needs an override to appear in a single row on desktop if possible. We do this via CSS class targeting its children. */}
+            <style>{`
+              .form-grid-override form {
+                display: flex;
+                flex-direction: column;
+                gap: 1rem;
+              }
+              @media (min-width: 768px) {
+                .form-grid-override form {
+                  display: grid;
+                  grid-template-columns: 1fr 1fr;
+                  gap: 1.5rem;
+                }
+                .form-grid-override form > button {
+                  grid-column: span 2;
+                }
+                /* Hide Renda e outros campos no desktop para focar só em Nome e Wpp */
+                /* CUIDADO: Nao esconder para evitar erro de validacao, mas a UI de referencia mostra apenas 2 campos. A gente mantém para funcionar. */
+              }
+              .form-grid-override button[type="submit"] {
+                background: linear-gradient(to right, #00A34A, #008A46);
+                font-weight: 900;
+                font-size: 1.1rem;
+                height: 3.5rem;
+                border-radius: 9999px;
+              }
+              .form-grid-override input, .form-grid-override select {
+                border-radius: 9999px;
+                height: 3rem;
+              }
+            `}</style>
             <HotsiteForm
               campaignId={campaign.id}
               whatsappNumber={campaign.whatsapp_number}
-              whatsappMessage="Olá 👋 Acabei de preencher a simulação do Ville de Lisboa e gostaria de receber minhas condições de financiamento."
-              buttonText="QUERO RECEBER MINHA SIMULAÇÃO"
+              whatsappMessage="Olá 👋 Gostaria de fazer uma simulação do Ville de Lisboa."
+              buttonText="QUERO SIMULAR MEU APÊ"
             />
-            <p className="mt-6 text-[13px] text-[#455f88] text-center font-medium">
-              🔒 Suas informações estão seguras. Não enviamos spam.
+          </div>
+          
+          <div className="mt-8 flex items-center justify-center gap-2 text-[11px] md:text-sm text-gray-400 font-semibold">
+            <ShieldCheck className="w-4 h-4 md:w-5 md:h-5 text-[#00A34A]" />
+            Seus dados estão protegidos. Não enviamos spam.
+          </div>
+        </div>
+      </section>
+
+      {/* Benefícios que fazem a diferença */}
+      <section className="py-24 bg-[#f5f5f5]" id="beneficios">
+        <div className="max-w-[1200px] mx-auto px-6">
+          <div className="text-center mb-12">
+            <span className="text-[#00A34A] font-bold text-[10px] md:text-xs tracking-[0.2em] uppercase mb-2 block">Minha Casa Minha Vida</span>
+            <h2 className="text-3xl md:text-4xl font-black text-[#121c2c]">
+              Benefícios que <span className="text-[#00A34A]">fazem a diferença</span>
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="bg-white p-8 rounded-[24px] border border-gray-100 shadow-sm text-center hover:shadow-lg transition-all transform hover:-translate-y-1">
+              <div className="w-16 h-16 mx-auto bg-white border-2 border-gray-100 rounded-full flex items-center justify-center mb-6 text-[#00A34A] shadow-sm">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline><circle cx="12" cy="16" r="3" fill="#00A34A" opacity="0.2"></circle><text x="12" y="17.5" fill="#00A34A" fontSize="6" textAnchor="middle" fontWeight="bold">$</text></svg>
+              </div>
+              <h3 className="font-bold text-lg mb-3 text-[#121c2c] leading-tight">Subsídios de até<br/>R$ 55 mil</h3>
+              <p className="text-gray-500 text-sm">Mais economia para você conquistar seu apê.</p>
+            </div>
+
+            <div className="bg-white p-8 rounded-[24px] border border-gray-100 shadow-sm text-center hover:shadow-lg transition-all transform hover:-translate-y-1">
+              <div className="w-16 h-16 mx-auto bg-white border-2 border-gray-100 rounded-full flex items-center justify-center mb-6 text-[#00A34A] shadow-sm">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M23 6l-9.5 9.5-5-5L1 18"></path><polyline points="16 6 23 6 23 13"></polyline></svg>
+              </div>
+              <h3 className="font-bold text-lg mb-3 text-[#121c2c] leading-tight">Menores juros<br/>do mercado</h3>
+              <p className="text-gray-500 text-sm">Taxas reduzidas que cabem no seu bolso.</p>
+            </div>
+
+            <div className="bg-white p-8 rounded-[24px] border border-gray-100 shadow-sm text-center hover:shadow-lg transition-all transform hover:-translate-y-1">
+              <div className="w-16 h-16 mx-auto bg-white border-2 border-gray-100 rounded-full flex items-center justify-center mb-6 text-[#00A34A] shadow-sm">
+                <Handshake className="w-7 h-7" />
+              </div>
+              <h3 className="font-bold text-lg mb-3 text-[#121c2c] leading-tight">Entrada facilitada<br/>pela MRV</h3>
+              <p className="text-gray-500 text-sm">Condições especiais para facilitar sua conquista.</p>
+            </div>
+
+            <div className="bg-white p-8 rounded-[24px] border border-gray-100 shadow-sm text-center hover:shadow-lg transition-all transform hover:-translate-y-1">
+              <div className="w-16 h-16 mx-auto bg-white border-2 border-gray-100 rounded-full flex items-center justify-center mb-6 text-[#00A34A] shadow-sm">
+                <Landmark className="w-7 h-7" />
+              </div>
+              <h3 className="font-bold text-lg mb-3 text-[#121c2c] leading-tight">Use seu<br/>FGTS</h3>
+              <p className="text-gray-500 text-sm">Utilize seu FGTS para dar entrada no imóvel.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Empreendimento / Galeria */}
+      <section className="py-24 bg-white" id="empreendimento">
+        <div className="max-w-[1200px] mx-auto px-6">
+          <div className="grid lg:grid-cols-[1fr_1.2fr] gap-12 lg:gap-16 items-center">
+            <div className="order-2 lg:order-1">
+              <span className="text-[#00A34A] font-bold text-xs tracking-[0.1em] uppercase mb-2 block">Conheça o Empreendimento</span>
+              <h2 className="text-4xl md:text-5xl font-black text-[#121c2c] mb-6 tracking-tight">
+                Ville de <span className="text-[#00A34A]">Lisboa</span>
+              </h2>
+              <p className="text-gray-600 text-lg mb-8 font-medium leading-relaxed">
+                Um lugar completo para sua família viver com conforto, segurança e lazer. Apartamentos modernos, condomínio fechado e toda a qualidade MRV que você já conhece.
+              </p>
+              
+              <ul className="space-y-4 mb-8">
+                <li className="flex items-center gap-3 text-gray-700 font-semibold text-base md:text-lg">
+                  <div className="text-[#00A34A]">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
+                  </div>
+                  Apartamentos de 2 quartos
+                </li>
+                <li className="flex items-center gap-3 text-gray-700 font-semibold text-base md:text-lg">
+                  <div className="text-[#00A34A]">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+                  </div>
+                  Opções com varanda
+                </li>
+                <li className="flex items-center gap-3 text-gray-700 font-semibold text-base md:text-lg">
+                  <div className="text-[#00A34A]">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                  </div>
+                  Lazer completo
+                </li>
+                <li className="flex items-center gap-3 text-gray-700 font-semibold text-base md:text-lg">
+                  <div className="text-[#00A34A]">
+                    <ShieldCheck className="w-6 h-6" />
+                  </div>
+                  Condomínio fechado
+                </li>
+              </ul>
+              
+              <button 
+                onClick={scrollToForm}
+                className="bg-[#e8f7ec] text-[#00A34A] font-bold py-3 px-6 rounded-full hover:bg-[#d1f0db] transition-colors flex items-center gap-2 uppercase tracking-wide text-sm border border-[#00A34A]/20"
+              >
+                Ver mais fotos
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+              </button>
+            </div>
+            
+            {/* Gallery Grid */}
+            <div className="grid grid-cols-3 gap-3 md:gap-4 order-1 lg:order-2">
+              <div className="col-span-3 aspect-[16/9] rounded-[24px] overflow-hidden shadow-md relative group">
+                <img src={galleryImages[0]} alt="Fachada" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+              </div>
+              <div className="aspect-square rounded-[20px] overflow-hidden shadow-sm relative group">
+                <img src={galleryImages[1]} alt="Piscina" className="w-full h-full object-cover hover:scale-110 transition-transform duration-500" />
+              </div>
+              <div className="aspect-square rounded-[20px] overflow-hidden shadow-sm relative group">
+                <img src={galleryImages[2]} alt="Lazer" className="w-full h-full object-cover hover:scale-110 transition-transform duration-500" />
+              </div>
+              <div className="aspect-square rounded-[20px] overflow-hidden shadow-sm relative group cursor-pointer" onClick={scrollToForm}>
+                <img src={galleryImages[3] || galleryImages[0]} alt="Playground" className="w-full h-full object-cover" />
+                <div className="absolute inset-0 bg-[#00A34A]/80 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                  <div className="w-12 h-12 rounded-full border-2 border-white flex items-center justify-center text-white font-light text-3xl pb-1">
+                    +
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Diferenciais Icons Row */}
+      <section className="py-20 bg-[#f9fafa] border-t border-gray-100" id="diferenciais">
+        <div className="max-w-[1200px] mx-auto px-6">
+          <div className="text-center mb-16">
+            <span className="text-[#00A34A] font-bold text-xs tracking-[0.2em] uppercase mb-2 block">Diferenciais</span>
+            <h2 className="text-3xl md:text-4xl font-black text-[#121c2c]">
+              Tudo o que <span className="text-[#00A34A]">você e sua família</span> merecem
+            </h2>
+          </div>
+          
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-8 text-center">
+            <div className="flex flex-col items-center">
+              <div className="w-16 h-16 mb-4 text-[#00A34A]">
+                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+              </div>
+              <p className="font-semibold text-sm text-[#333]">Condomínio<br/>fechado</p>
+            </div>
+            <div className="flex flex-col items-center">
+              <div className="w-16 h-16 mb-4 text-[#00A34A]">
+                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2 4-2 4-2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>
+              </div>
+              <p className="font-semibold text-sm text-[#333]">Área de lazer<br/>completa</p>
+            </div>
+            <div className="flex flex-col items-center">
+              <div className="w-16 h-16 mb-4 text-[#00A34A]">
+                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+              </div>
+              <p className="font-semibold text-sm text-[#333]">Segurança<br/>24h</p>
+            </div>
+            <div className="flex flex-col items-center">
+              <div className="w-16 h-16 mb-4 text-[#00A34A]">
+                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+              </div>
+              <p className="font-semibold text-sm text-[#333]">Localização<br/>estratégica</p>
+            </div>
+            <div className="flex flex-col items-center col-span-2 md:col-span-1">
+              <div className="w-16 h-16 mb-4 text-[#00A34A]">
+                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"><path d="M2 20h20"></path><path d="M5 16V4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v12"></path><path d="M9 16v-4"></path><path d="M15 16v-6"></path></svg>
+              </div>
+              <p className="font-semibold text-sm text-[#333]">Excelente potencial<br/>de valorização</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Localização */}
+      <section className="py-24 bg-white">
+        <div className="max-w-[1200px] mx-auto px-6 grid lg:grid-cols-[1fr_1.5fr] gap-12 items-center">
+          <div>
+            <span className="text-[#00A34A] font-bold text-xs tracking-[0.1em] uppercase mb-2 block">Localização</span>
+            <h2 className="text-4xl md:text-5xl font-black text-[#008A46] mb-6">
+              Caucaia - CE
+            </h2>
+            <p className="text-gray-600 mb-8 font-medium text-lg leading-relaxed">
+              Região que mais cresce na cidade, com fácil acesso a tudo o que você precisa por perto.
+            </p>
+            
+            <ul className="space-y-4">
+              <li className="flex items-center gap-3 text-[#121c2c] font-bold text-base md:text-lg">
+                <div className="text-[#00A34A]">
+                  <CheckCircle2 className="w-6 h-6" />
+                </div>
+                Próximo a comércios
+              </li>
+              <li className="flex items-center gap-3 text-[#121c2c] font-bold text-base md:text-lg">
+                <div className="text-[#00A34A]">
+                  <CheckCircle2 className="w-6 h-6" />
+                </div>
+                Escolas e creches
+              </li>
+              <li className="flex items-center gap-3 text-[#121c2c] font-bold text-base md:text-lg">
+                <div className="text-[#00A34A]">
+                  <CheckCircle2 className="w-6 h-6" />
+                </div>
+                Transporte público
+              </li>
+              <li className="flex items-center gap-3 text-[#121c2c] font-bold text-base md:text-lg">
+                <div className="text-[#00A34A]">
+                  <CheckCircle2 className="w-6 h-6" />
+                </div>
+                Principais vias de acesso
+              </li>
+            </ul>
+          </div>
+          
+          <div className="relative rounded-[32px] overflow-hidden shadow-lg h-[400px] md:h-[500px] bg-gray-200 border-4 border-gray-50">
+             <iframe
+                src="https://maps.google.com/maps?q=Rua%20Banabuiu,%20213%20-%20Parque%20Albano,%20Caucaia%20-%20CE&t=&z=15&ie=UTF8&iwloc=&output=embed"
+                className="w-full h-full border-0 grayscale mix-blend-multiply opacity-80"
+                allowFullScreen={false}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                title="Mapa"
+             ></iframe>
+             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
+                <div className="bg-white p-2 rounded-full shadow-[0_10px_30px_rgba(0,138,70,0.3)] border-2 border-[#00A34A] flex flex-col items-center justify-center relative">
+                   <div className="w-14 h-14 bg-white rounded-full flex items-center justify-center text-[#00A34A]">
+                     <img src={campaign.layout_data?.logo || "/logo-mrv.png"} className="h-8 object-contain" alt="Logo" />
+                   </div>
+                   <div className="w-0 h-0 border-l-[8px] border-r-[8px] border-t-[10px] border-l-transparent border-r-transparent border-t-[#00A34A] absolute -bottom-[12px]"></div>
+                </div>
+             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Trust Banner */}
+      <section className="bg-[#f0f9f3] py-12 md:py-16">
+        <div className="max-w-[1200px] mx-auto px-6 flex flex-col md:flex-row items-center justify-center gap-6 md:gap-16">
+          <div className="flex flex-col md:flex-row items-center gap-6 text-center md:text-left">
+            <div className="w-20 h-20 rounded-full bg-[#008A46] text-white flex items-center justify-center shadow-lg">
+              <Users className="w-10 h-10" />
+            </div>
+            <p className="text-[#121c2c] font-medium text-lg md:text-xl max-w-sm">
+              <strong className="text-[#00A34A] font-black">Mais de 1 milhão de brasileiros</strong> já realizaram o <strong className="text-[#00A34A] font-black">sonho</strong> da casa própria com a MRV.
+            </p>
+          </div>
+          <div className="hidden md:block w-px h-20 bg-gray-300"></div>
+          <div className="text-center md:text-left flex flex-col items-center md:items-start">
+            <img src={campaign.layout_data?.logo || "\src\assets\ville-de-lisboa\logo-mrv.png"} alt="MRV" className="h-12 md:h-16 object-contain mb-2" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
+            <p className="text-gray-500 text-xs md:text-sm font-bold uppercase tracking-wider">
+              Construindo sonhos que<br className="md:hidden"/> transformam vidas.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer Banner */}
+      <section className="bg-[#121c2c] relative overflow-hidden">
+        <div className="max-w-[1200px] mx-auto flex flex-col md:flex-row items-stretch relative z-10">
+          <div className="w-full md:w-1/2 aspect-video md:aspect-auto min-h-[300px]">
+            <img src="https://images.unsplash.com/photo-1511895426328-dc8714191300?q=80&w=2070&auto=format&fit=crop" alt="Família" className="w-full h-full object-cover" />
+          </div>
+          <div className="w-full md:w-1/2 py-16 px-6 md:px-16 text-center md:text-left flex flex-col justify-center">
+            <h2 className="text-3xl md:text-5xl font-black text-white mb-4 leading-tight">
+              Seu apartamento próprio está <br className="hidden md:block"/>
+              <span className="text-[#a3e635]">mais perto</span> do que você imagina!
+            </h2>
+            <p className="text-white/90 font-medium mb-10 text-lg">
+              Condições especiais do Minha Casa Minha Vida esperam por você.
+            </p>
+            <a
+              href={`https://wa.me/${campaign.whatsapp_number?.replace(/\D/g, "")}?text=${encodeURIComponent("Olá 👋 Tenho interesse no Ville de Lisboa.")}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-[#a3e635] text-[#121c2c] font-black text-base md:text-xl py-5 px-8 rounded-[20px] hover:bg-[#8fd324] transition-colors inline-flex items-center justify-center gap-3 shadow-[0_10px_30px_rgba(163,230,53,0.3)] active:scale-95 w-full md:w-auto"
+            >
+              FALAR NO WHATSAPP AGORA
+              <MessageCircle className="w-6 h-6 md:w-7 md:h-7" />
+            </a>
+            <p className="mt-6 text-sm text-white/60 flex items-center justify-center md:justify-start gap-2 font-medium">
+              <CheckCircle2 className="w-4 h-4 text-[#a3e635]" /> Atendimento rápido e sem compromisso
             </p>
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-[#d9e3f9] border-t border-[#bdcabd]/30">
-        <div className="flex flex-col md:flex-row justify-between items-center max-w-[1200px] mx-auto px-6 py-12 gap-6">
-          <div className="flex flex-col items-center md:items-start gap-2">
-            {campaign.layout_data?.logo ? (
-              <img src={campaign.layout_data.logo} alt={campaign.name} className="h-16 object-contain grayscale opacity-70" />
-            ) : (
-              <span className="text-2xl font-bold text-[#008A46] opacity-70">{campaign.name}</span>
-            )}
-            <p className="text-[#3f5882] text-center md:text-left max-w-xs mt-2">
-              © {new Date().getFullYear()} {campaign.name}. Todos os direitos reservados.
-            </p>
-          </div>
+      <footer className="bg-black py-10 border-t border-white/10 pb-32 md:pb-10">
+        <div className="max-w-[1200px] mx-auto px-6 text-center text-white/50 text-xs md:text-sm font-medium">
+          <p>© {new Date().getFullYear()} {campaign.name}. Todos os direitos reservados.</p>
         </div>
       </footer>
 
-      {/* Floating CTA Mobile */}
-      <div className={`md:hidden fixed bottom-0 left-0 right-0 p-4 bg-white/95 backdrop-blur-xl border-t border-gray-100 shadow-[0_-10px_40px_rgba(0,0,0,0.08)] z-50 transition-all duration-500 transform ${showFloatingCTA ? 'translate-y-0 opacity-100' : 'translate-y-24 opacity-0 pointer-events-none'}`}>
-        <a
-          href={`https://wa.me/${campaign.whatsapp_number?.replace(/\D/g, "")}?text=${encodeURIComponent("Olá 👋 Tenho interesse no Ville de Lisboa e gostaria de fazer minha simulação.")}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center justify-center gap-3 w-full bg-gradient-to-r from-[#25D366] to-[#1DA851] text-white py-4 rounded-2xl font-black text-lg shadow-[0_8px_20px_rgba(37,211,102,0.3)] active:scale-95 transition-transform"
+      {/* Floating CTA Mobile Bottom Bar (Reference Style) */}
+      <div className={`md:hidden fixed bottom-0 left-0 right-0 bg-[#007A33] p-3 px-4 shadow-[0_-10px_20px_rgba(0,0,0,0.1)] z-50 transition-transform duration-300 flex items-center justify-between gap-3 ${showFloatingCTA ? 'translate-y-0' : 'translate-y-full'}`}>
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 flex items-center justify-center flex-shrink-0 animate-pulse">
+            <MessageCircle className="w-8 h-8 text-white" strokeWidth={1.5} />
+          </div>
+          <div className="flex flex-col">
+            <span className="font-extrabold text-sm uppercase leading-tight text-white tracking-tight">Simular agora no WhatsApp</span>
+            <span className="text-[10px] text-white/90 font-medium">É rápido, fácil e sem compromisso!</span>
+          </div>
+        </div>
+        <button 
+          onClick={scrollToForm}
+          className="bg-[#eab308] text-[#121c2c] text-[10px] font-black py-2.5 px-3 rounded-full uppercase flex items-center gap-1 active:scale-95 whitespace-nowrap shadow-md tracking-tight"
         >
-          <MessageCircle className="w-6 h-6 animate-pulse" />
-          SIMULAR NO WHATSAPP
-        </a>
+          QUERO MEU APÊ <ChevronRight className="w-3 h-3 -mr-1" strokeWidth={3} />
+        </button>
       </div>
     </div>
   );
