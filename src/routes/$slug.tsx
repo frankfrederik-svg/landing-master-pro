@@ -141,7 +141,13 @@ function HotsitePage() {
     </div>
   );
 
-  const hero = campaign.banner_url || heroBuilding;
+  useEffect(() => {
+    if (campaign) {
+      document.title = campaign.layout === "ville_de_lisboa" ? "Ville de Lisboa - Caucaia" : campaign.name;
+    }
+  }, [campaign]);
+
+  const hero = campaign?.banner_url || heroBuilding;
   const scrollToForm = () => document.getElementById("formulario")?.scrollIntoView({ behavior: "smooth" });
 
   if (campaign.layout === "ville_de_lisboa") {
