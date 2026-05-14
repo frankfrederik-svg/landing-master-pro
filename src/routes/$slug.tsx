@@ -127,6 +127,12 @@ function HotsitePage() {
     })();
   }, [slug]);
 
+  useEffect(() => {
+    if (campaign) {
+      document.title = campaign.layout === "ville_de_lisboa" ? "Ville de Lisboa - Caucaia" : campaign.name;
+    }
+  }, [campaign]);
+
   if (loading) return <div className="flex min-h-screen items-center justify-center text-muted-foreground">Carregando...</div>;
   if (notFoundFlag || !campaign) return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-soft px-4">
@@ -140,12 +146,6 @@ function HotsitePage() {
       </div>
     </div>
   );
-
-  useEffect(() => {
-    if (campaign) {
-      document.title = campaign.layout === "ville_de_lisboa" ? "Ville de Lisboa - Caucaia" : campaign.name;
-    }
-  }, [campaign]);
 
   const hero = campaign?.banner_url || heroBuilding;
   const scrollToForm = () => document.getElementById("formulario")?.scrollIntoView({ behavior: "smooth" });

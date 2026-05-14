@@ -529,7 +529,7 @@ function LeadsTab() {
                 <th className="p-3">Nome</th>
                 <th className="p-3">WhatsApp</th>
                 <th className="p-3">Renda / Faixa</th>
-                <th className="p-3">Valor Entrada</th>
+                <th className="p-3">FGTS / Entrada</th>
                 <th className="p-3">Data Nasc.</th>
                 <th className="p-3">Vínculo</th>
                 <th className="p-3">Junta / FGTS / Nome Limpo</th>
