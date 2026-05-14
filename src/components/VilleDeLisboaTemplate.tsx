@@ -269,13 +269,13 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
               .form-grid-override form {
                 display: flex;
                 flex-direction: column;
-                gap: 1rem;
+                gap: 0.75rem;
               }
               @media (min-width: 768px) {
                 .form-grid-override form {
                   display: grid;
                   grid-template-columns: 1fr 1fr;
-                  gap: 1.5rem;
+                  gap: 1rem;
                 }
                 .form-grid-override form > button,
                 .form-grid-override form > .form-full-row {

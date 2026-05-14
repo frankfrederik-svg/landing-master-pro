@@ -92,7 +92,7 @@ export function HotsiteForm({ campaignId, whatsappNumber, whatsappMessage, butto
   }
 
   return (
-    <form onSubmit={onSubmit} className="space-y-6">
+    <form onSubmit={onSubmit} className="flex flex-col gap-4 md:gap-5">
       <div className="space-y-2">
         <Label htmlFor="name" className="text-base">Nome completo</Label>
         <Input id="name" required value={name} onChange={(e) => setName(e.target.value)} placeholder="Seu nome" className="h-12 text-base" />
@@ -155,7 +155,7 @@ export function HotsiteForm({ campaignId, whatsappNumber, whatsappMessage, butto
         </div>
       )}
 
-      <div className="grid gap-6 md:grid-cols-2 mt-4 form-full-row md:col-span-2">
+      <div className="grid gap-4 md:gap-5 md:grid-cols-2 form-full-row md:col-span-2">
         <div className="space-y-2">
           <Label className="text-base">Tipo de renda</Label>
           <Select value={incomeType} onValueChange={setIncomeType}>
@@ -187,7 +187,7 @@ export function HotsiteForm({ campaignId, whatsappNumber, whatsappMessage, butto
         )}
       </div>
 
-      <Button type="submit" variant="cta" className="w-full min-h-[4rem] h-auto py-3 px-3 text-[13px] md:text-lg font-bold shadow-lg hover:shadow-xl transition-all mt-6" disabled={submitting}>
+      <Button type="submit" variant="cta" className="w-full min-h-[4rem] h-auto py-3 px-3 text-[13px] md:text-lg font-bold shadow-lg hover:shadow-xl transition-all" disabled={submitting}>
         {submitting ? <Loader2 className="mr-2 h-5 w-5 shrink-0 animate-spin" /> : <MessageCircle className="mr-2 h-5 w-5 shrink-0" />}
         <span className="whitespace-normal leading-tight">
           {submitting ? "Enviando..." : (buttonText || "Falar com especialista")}
