@@ -49,6 +49,7 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
 
   // Gallery
   const [galleryIndex, setGalleryIndex] = useState(0);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   // Extrai imagens
   const propertyImages = properties.flatMap(p => {
@@ -372,21 +373,22 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
             
             {/* Gallery Grid */}
             <div className="grid grid-cols-3 gap-3 md:gap-4 order-1 lg:order-2">
-              <div className="col-span-3 aspect-[16/9] rounded-[24px] overflow-hidden shadow-md relative group">
+              <div className="col-span-3 aspect-[16/9] rounded-[24px] overflow-hidden shadow-md relative group cursor-pointer" onClick={() => setSelectedImage(galleryImages[0])}>
                 <img src={galleryImages[0]} alt="Fachada" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                  <div className="bg-white/90 p-3 rounded-full text-[#00A34A]"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div>
+                </div>
               </div>
-              <div className="aspect-square rounded-[20px] overflow-hidden shadow-sm relative group">
-                <img src={galleryImages[1]} alt="Piscina" className="w-full h-full object-cover hover:scale-110 transition-transform duration-500" />
+              <div className="aspect-square rounded-[20px] overflow-hidden shadow-sm relative group cursor-pointer" onClick={() => setSelectedImage(galleryImages[1])}>
+                <img src={galleryImages[1]} alt="Piscina" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
               </div>
-              <div className="aspect-square rounded-[20px] overflow-hidden shadow-sm relative group">
-                <img src={galleryImages[2]} alt="Lazer" className="w-full h-full object-cover hover:scale-110 transition-transform duration-500" />
+              <div className="aspect-square rounded-[20px] overflow-hidden shadow-sm relative group cursor-pointer" onClick={() => setSelectedImage(galleryImages[2])}>
+                <img src={galleryImages[2]} alt="Lazer" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
               </div>
-              <div className="aspect-square rounded-[20px] overflow-hidden shadow-sm relative group cursor-pointer" onClick={scrollToForm}>
+              <div className="aspect-square rounded-[20px] overflow-hidden shadow-sm relative group cursor-pointer" onClick={() => setSelectedImage(galleryImages[3] || galleryImages[0])}>
                 <img src={galleryImages[3] || galleryImages[0]} alt="Playground" className="w-full h-full object-cover" />
-                <div className="absolute inset-0 bg-[#00A34A]/80 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                  <div className="w-12 h-12 rounded-full border-2 border-white flex items-center justify-center text-white font-light text-3xl pb-1">
-                    +
-                  </div>
+                <div className="absolute inset-0 bg-[#00A34A]/80 flex items-center justify-center transition-opacity">
+                  <div className="w-12 h-12 rounded-full border-2 border-white flex items-center justify-center text-white font-light text-3xl pb-1">+</div>
                 </div>
               </div>
             </div>
@@ -404,37 +406,51 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
             </h2>
           </div>
           
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-8 text-center">
-            <div className="flex flex-col items-center">
-              <div className="w-16 h-16 mb-4 text-[#00A34A]">
-                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+          {/* Grid Layout inspired by Reference (6 items with vertical separators on desktop) */}
+          <div className="grid grid-cols-2 md:grid-cols-6 gap-y-12 gap-x-4 text-center">
+            
+            <div className="flex flex-col items-center md:border-r border-gray-200 px-2 relative">
+              <div className="w-16 h-16 mb-4 text-[#00A34A] flex items-center justify-center">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><rect x="9" y="14" width="6" height="8"></rect></svg>
               </div>
-              <p className="font-semibold text-sm text-[#333]">Condomínio<br/>fechado</p>
+              <p className="font-semibold text-[13px] text-[#333] leading-tight">Condomínio<br/>fechado</p>
             </div>
-            <div className="flex flex-col items-center">
-              <div className="w-16 h-16 mb-4 text-[#00A34A]">
-                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2 4-2 4-2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>
+
+            <div className="flex flex-col items-center md:border-r border-gray-200 px-2 relative">
+              <div className="w-16 h-16 mb-4 text-[#00A34A] flex items-center justify-center">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="4"/><circle cx="12" cy="4" r="2"/><circle cx="12" cy="20" r="2"/><circle cx="4" cy="12" r="2"/><circle cx="20" cy="12" r="2"/><path d="M12 6v2M12 16v2M6 12h2M16 12h2"/></svg>
               </div>
-              <p className="font-semibold text-sm text-[#333]">Área de lazer<br/>completa</p>
+              <p className="font-semibold text-[13px] text-[#333] leading-tight">Área de lazer<br/>completa</p>
             </div>
-            <div className="flex flex-col items-center">
-              <div className="w-16 h-16 mb-4 text-[#00A34A]">
-                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+
+            <div className="flex flex-col items-center md:border-r border-gray-200 px-2 relative">
+              <div className="w-16 h-16 mb-4 text-[#00A34A] flex items-center justify-center">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="M12 8v4"></path><path d="M12 16h.01"></path></svg>
               </div>
-              <p className="font-semibold text-sm text-[#333]">Segurança<br/>24h</p>
+              <p className="font-semibold text-[13px] text-[#333] leading-tight">Segurança<br/>24h</p>
             </div>
-            <div className="flex flex-col items-center">
-              <div className="w-16 h-16 mb-4 text-[#00A34A]">
-                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+
+            <div className="flex flex-col items-center md:border-r border-gray-200 px-2 relative">
+              <div className="w-16 h-16 mb-4 text-[#00A34A] flex items-center justify-center">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
               </div>
-              <p className="font-semibold text-sm text-[#333]">Localização<br/>estratégica</p>
+              <p className="font-semibold text-[13px] text-[#333] leading-tight">Localização<br/>estratégica</p>
             </div>
-            <div className="flex flex-col items-center col-span-2 md:col-span-1">
-              <div className="w-16 h-16 mb-4 text-[#00A34A]">
-                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"><path d="M2 20h20"></path><path d="M5 16V4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v12"></path><path d="M9 16v-4"></path><path d="M15 16v-6"></path></svg>
+
+            <div className="flex flex-col items-center md:border-r border-gray-200 px-2 relative">
+              <div className="w-16 h-16 mb-4 text-[#00A34A] flex items-center justify-center">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16H4z"/><path d="M14 2v20"/><path d="M10 12h8"/><path d="M10 8h8"/><path d="M10 16h8"/></svg>
               </div>
-              <p className="font-semibold text-sm text-[#333]">Excelente potencial<br/>de valorização</p>
+              <p className="font-semibold text-[13px] text-[#333] leading-tight">Fácil acesso a<br/>comércios, escolas<br/>e serviços</p>
             </div>
+
+            <div className="flex flex-col items-center px-2 relative">
+              <div className="w-16 h-16 mb-4 text-[#00A34A] flex items-center justify-center">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline><polyline points="16 7 22 7 22 13"></polyline></svg>
+              </div>
+              <p className="font-semibold text-[13px] text-[#333] leading-tight">Excelente potencial<br/>de valorização</p>
+            </div>
+
           </div>
         </div>
       </section>
@@ -576,6 +592,16 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
           QUERO MEU APÊ <ChevronRight className="w-3 h-3 -mr-1" strokeWidth={3} />
         </button>
       </div>
+
+      {/* Lightbox Modal */}
+      {selectedImage && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 p-4" onClick={() => setSelectedImage(null)}>
+          <button className="absolute top-6 right-6 text-white hover:text-gray-300" onClick={() => setSelectedImage(null)}>
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+          </button>
+          <img src={selectedImage} alt="Ampliada" className="max-w-full max-h-[90vh] object-contain rounded-lg" onClick={(e) => e.stopPropagation()} />
+        </div>
+      )}
     </div>
   );
 }
