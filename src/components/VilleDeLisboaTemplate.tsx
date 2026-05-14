@@ -232,8 +232,9 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
             </div>
             
             <div className="bg-black/50 backdrop-blur-md border border-white/10 rounded-2xl p-4 md:p-5 flex flex-col items-center text-center hover:bg-black/70 transition-all shadow-lg">
-              <div className="mb-3">
-                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#a3e635" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M8 12h8"></path><path d="M12 8v8"></path><rect x="3" y="4" width="18" height="16" rx="2" ry="2"></rect><path d="M2 10h20"></path></svg>
+              <div className="mb-3 h-[40px] flex flex-col items-center justify-center text-[#a3e635]">
+                <span className="text-[10px] font-bold uppercase tracking-widest leading-none mb-0.5">Até</span>
+                <span className="text-[28px] font-black leading-none">72x</span>
               </div>
               <span className="text-white text-[11px] md:text-sm font-semibold uppercase tracking-wider mb-1">Entrada facilitada</span>
               <span className="text-[#a3e635] text-base md:text-lg font-black">pela MRV</span>
