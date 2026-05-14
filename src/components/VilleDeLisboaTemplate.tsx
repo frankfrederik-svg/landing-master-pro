@@ -590,7 +590,7 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
 
           <div className="relative rounded-[32px] overflow-hidden shadow-lg h-[400px] md:h-[500px] bg-gray-200 border-4 border-gray-50">
             <iframe
-              src="https://maps.google.com/maps?q=rua%20Banabuiu,%20213%20-%20Parque%20Albano,%20Caucaia%20-%20CE,%2061648-410,%20Brasil&t=&z=15&ie=UTF8&iwloc=&output=embed"
+              src="https://maps.google.com/maps?q=Av.%20Dom%20Almeida%20Lustosa,%20335-169%20-%20Parque%20Albano%20(Jurema),%20Caucaia%20-%20CE,%2061645-000,%20Brasil&t=&z=15&ie=UTF8&iwloc=&output=embed"
               className="w-full h-full border-0 grayscale mix-blend-multiply opacity-80"
               allowFullScreen={false}
               loading="lazy"
@@ -694,8 +694,8 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
           </button>
 
           {/* Rotate Button */}
-          <button 
-            className="md:hidden absolute top-4 left-4 text-white/70 hover:text-white transition-colors z-[120] bg-black/40 backdrop-blur-md p-2.5 rounded-full flex items-center gap-2 border border-white/10" 
+          <button
+            className="md:hidden absolute top-4 left-4 text-white/70 hover:text-white transition-colors z-[120] bg-black/40 backdrop-blur-md p-2.5 rounded-full flex items-center gap-2 border border-white/10"
             onClick={(e) => { e.stopPropagation(); setImageRotation(prev => (prev + 90) % 360); }}
           >
             <RotateCcw className="w-5 h-5" />
@@ -710,7 +710,7 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
 
           <div
             className="absolute top-1/2 left-1/2 flex items-center justify-center select-none transition-transform duration-300 ease-out"
-            style={{ 
+            style={{
               transform: `translate(-50%, -50%) rotate(${imageRotation}deg)`,
               width: imageRotation % 180 !== 0 ? '100dvh' : '100vw',
               height: imageRotation % 180 !== 0 ? '100vw' : '100dvh',
