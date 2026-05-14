@@ -711,11 +711,11 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
           )}
 
           <div
-            className="flex items-center justify-center relative select-none transition-transform duration-300 ease-out"
+            className="absolute top-1/2 left-1/2 flex items-center justify-center select-none transition-transform duration-300 ease-out"
             style={{ 
-              transform: `rotate(${imageRotation}deg)`,
-              width: imageRotation % 180 !== 0 ? '100dvh' : '100dvw',
-              height: imageRotation % 180 !== 0 ? '100dvw' : '100dvh',
+              transform: `translate(-50%, -50%) rotate(${imageRotation}deg)`,
+              width: imageRotation % 180 !== 0 ? '100dvh' : '100vw',
+              height: imageRotation % 180 !== 0 ? '100vw' : '100dvh',
             }}
             onTouchStart={handleTouchStart}
             onTouchEnd={handleTouchEnd}
