@@ -590,7 +590,7 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
 
           <div className="relative rounded-[32px] overflow-hidden shadow-lg h-[400px] md:h-[500px] bg-gray-200 border-4 border-gray-50">
             <iframe
-              src="https://maps.google.com/maps?q=Rua%20Banabuiu,%20213%20-%20Parque%20Albano,%20Caucaia%20-%20CE&t=&z=15&ie=UTF8&iwloc=&output=embed"
+              src="https://maps.google.com/maps?q=rua%20Banabuiu,%20213%20-%20Parque%20Albano,%20Caucaia%20-%20CE,%2061648-410,%20Brasil&t=&z=15&ie=UTF8&iwloc=&output=embed"
               className="w-full h-full border-0 grayscale mix-blend-multiply opacity-80"
               allowFullScreen={false}
               loading="lazy"
