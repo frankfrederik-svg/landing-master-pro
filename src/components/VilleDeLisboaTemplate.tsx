@@ -141,14 +141,14 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
         <div className="flex justify-between items-center max-w-[1200px] mx-auto px-4 md:px-6 gap-3">
           {/* Logo */}
           <div className="flex items-center gap-2">
-             {campaign.layout_data?.logo ? (
-                <img src={campaign.layout_data.logo} alt="MRV Logo" className="h-8 md:h-10 object-contain" />
-             ) : (
-                <span className="font-bold text-[#008A46] text-xl">MRV</span>
-             )}
+            {campaign.layout_data?.logo ? (
+              <img src={campaign.layout_data.logo} alt="MRV Logo" className="h-8 md:h-10 object-contain" />
+            ) : (
+              <span className="font-bold text-[#008A46] text-xl">MRV</span>
+            )}
           </div>
           {/* CTA */}
-          <a 
+          <a
             href={`https://wa.me/${campaign.whatsapp_number?.replace(/\D/g, "")}?text=${encodeURIComponent("Olá 👋 Tenho interesse no Ville de Lisboa.")}`}
             target="_blank"
             rel="noopener noreferrer"
@@ -166,7 +166,7 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
         {/* Background Image with Overlay */}
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/50 to-[#f5f5f5] z-10 pointer-events-none"></div>
-          
+
           {/* Mobile Video/Banner */}
           <div className="absolute inset-0 md:hidden z-0">
             {isVideo(heroMobile) ? (
@@ -209,7 +209,7 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
             <span className="text-[#a3e635]">que cabem no seu bolso!</span>
           </h1>
           <p className="text-white/90 text-lg md:text-xl font-medium max-w-2xl mb-10 drop-shadow-md mx-auto md:mx-0">
-            Realize o sonho da casa própria com o <br className="md:hidden"/>
+            Realize o sonho da casa própria com o <br className="md:hidden" />
             <span className="font-bold">Minha Casa Minha Vida</span> e vantagens exclusivas.
           </p>
 
@@ -222,7 +222,7 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
               <span className="text-white text-[11px] md:text-sm font-semibold uppercase tracking-wider mb-1">Subsídios de até</span>
               <span className="text-[#a3e635] text-base md:text-lg font-black">R$ 55 mil</span>
             </div>
-            
+
             <div className="bg-black/50 backdrop-blur-md border border-white/10 rounded-2xl p-4 md:p-5 flex flex-col items-center text-center hover:bg-black/70 transition-all shadow-lg">
               <div className="mb-3">
                 <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#a3e635" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M23 6l-9.5 9.5-5-5L1 18"></path><polyline points="16 6 23 6 23 13"></polyline><circle cx="8" cy="14" r="2" fill="#a3e635" opacity="0.4"></circle><circle cx="14" cy="8" r="2" fill="#a3e635" opacity="0.4"></circle><line x1="7" y1="9" x2="15" y2="15" stroke="#a3e635"></line></svg>
@@ -230,7 +230,7 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
               <span className="text-white text-[11px] md:text-sm font-semibold uppercase tracking-wider mb-1">Menores juros</span>
               <span className="text-[#a3e635] text-base md:text-lg font-black">do mercado</span>
             </div>
-            
+
             <div className="bg-black/50 backdrop-blur-md border border-white/10 rounded-2xl p-4 md:p-5 flex flex-col items-center text-center hover:bg-black/70 transition-all shadow-lg">
               <div className="mb-3 h-[40px] flex flex-col items-center justify-center text-[#a3e635]">
                 <span className="text-[10px] font-bold uppercase tracking-widest leading-none mb-0.5">Até</span>
@@ -239,7 +239,7 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
               <span className="text-white text-[11px] md:text-sm font-semibold uppercase tracking-wider mb-1">Entrada facilitada</span>
               <span className="text-[#a3e635] text-base md:text-lg font-black">pela MRV</span>
             </div>
-            
+
             <div className="bg-black/50 backdrop-blur-md border border-white/10 rounded-2xl p-4 md:p-5 flex flex-col items-center text-center hover:bg-black/70 transition-all shadow-lg">
               <div className="mb-3">
                 <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#a3e635" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
@@ -262,7 +262,7 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
               Preencha seus dados e fale com um especialista.
             </p>
           </div>
-          
+
           <div className="max-w-3xl mx-auto form-grid-override">
             {/* The HotsiteForm needs an override to appear in a single row on desktop if possible. We do this via CSS class targeting its children. */}
             <style>{`
@@ -277,11 +277,10 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
                   grid-template-columns: 1fr 1fr;
                   gap: 1.5rem;
                 }
-                .form-grid-override form > button {
+                .form-grid-override form > button,
+                .form-grid-override form > .form-full-row {
                   grid-column: span 2;
                 }
-                /* Hide Renda e outros campos no desktop para focar só em Nome e Wpp */
-                /* CUIDADO: Nao esconder para evitar erro de validacao, mas a UI de referencia mostra apenas 2 campos. A gente mantém para funcionar. */
               }
               .form-grid-override button[type="submit"] {
                 background: linear-gradient(to right, #00A34A, #008A46);
@@ -302,7 +301,7 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
               buttonText="QUERO SIMULAR MEU APÊ"
             />
           </div>
-          
+
           <div className="mt-8 flex items-center justify-center gap-2 text-[11px] md:text-sm text-gray-400 font-semibold">
             <ShieldCheck className="w-4 h-4 md:w-5 md:h-5 text-[#00A34A]" />
             Seus dados estão protegidos. Não enviamos spam.
@@ -325,7 +324,7 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
               <div className="w-16 h-16 mx-auto bg-white border-2 border-gray-100 rounded-full flex items-center justify-center mb-6 text-[#00A34A] shadow-sm">
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline><circle cx="12" cy="16" r="3" fill="#00A34A" opacity="0.2"></circle><text x="12" y="17.5" fill="#00A34A" fontSize="6" textAnchor="middle" fontWeight="bold">$</text></svg>
               </div>
-              <h3 className="font-bold text-lg mb-3 text-[#121c2c] leading-tight">Subsídios de até<br/>R$ 55 mil</h3>
+              <h3 className="font-bold text-lg mb-3 text-[#121c2c] leading-tight">Subsídios de até<br />R$ 55 mil</h3>
               <p className="text-gray-500 text-sm">Mais economia para você conquistar seu apê.</p>
             </div>
 
@@ -333,7 +332,7 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
               <div className="w-16 h-16 mx-auto bg-white border-2 border-gray-100 rounded-full flex items-center justify-center mb-6 text-[#00A34A] shadow-sm">
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M23 6l-9.5 9.5-5-5L1 18"></path><polyline points="16 6 23 6 23 13"></polyline></svg>
               </div>
-              <h3 className="font-bold text-lg mb-3 text-[#121c2c] leading-tight">Menores juros<br/>do mercado</h3>
+              <h3 className="font-bold text-lg mb-3 text-[#121c2c] leading-tight">Menores juros<br />do mercado</h3>
               <p className="text-gray-500 text-sm">Taxas reduzidas que cabem no seu bolso.</p>
             </div>
 
@@ -341,7 +340,7 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
               <div className="w-16 h-16 mx-auto bg-white border-2 border-gray-100 rounded-full flex items-center justify-center mb-6 text-[#00A34A] shadow-sm">
                 <Handshake className="w-7 h-7" />
               </div>
-              <h3 className="font-bold text-lg mb-3 text-[#121c2c] leading-tight">Entrada facilitada<br/>pela MRV</h3>
+              <h3 className="font-bold text-lg mb-3 text-[#121c2c] leading-tight">Entrada facilitada<br />pela MRV</h3>
               <p className="text-gray-500 text-sm">Condições especiais para facilitar sua conquista.</p>
             </div>
 
@@ -349,7 +348,7 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
               <div className="w-16 h-16 mx-auto bg-white border-2 border-gray-100 rounded-full flex items-center justify-center mb-6 text-[#00A34A] shadow-sm">
                 <Landmark className="w-7 h-7" />
               </div>
-              <h3 className="font-bold text-lg mb-3 text-[#121c2c] leading-tight">Use seu<br/>FGTS</h3>
+              <h3 className="font-bold text-lg mb-3 text-[#121c2c] leading-tight">Use seu<br />FGTS</h3>
               <p className="text-gray-500 text-sm">Utilize seu FGTS para dar entrada no imóvel.</p>
             </div>
           </div>
@@ -368,7 +367,7 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
               <p className="text-gray-600 text-lg mb-8 font-medium leading-relaxed">
                 Um lugar completo para sua família viver com conforto, segurança e lazer. Apartamentos modernos, condomínio fechado e toda a qualidade MRV que você já conhece.
               </p>
-              
+
               <ul className="space-y-4 mb-8">
                 <li className="flex items-center gap-3 text-gray-700 font-semibold text-base md:text-lg">
                   <div className="text-[#00A34A]">
@@ -395,8 +394,8 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
                   Condomínio fechado
                 </li>
               </ul>
-              
-              <button 
+
+              <button
                 onClick={() => setSelectedImageIndex(0)}
                 className="bg-[#e8f7ec] text-[#00A34A] font-bold py-3 px-6 rounded-full hover:bg-[#d1f0db] transition-colors flex items-center gap-2 uppercase tracking-wide text-sm border border-[#00A34A]/20"
               >
@@ -404,13 +403,13 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
               </button>
             </div>
-            
+
             {/* Gallery Grid */}
             <div className="grid grid-cols-3 gap-3 md:gap-4 order-1 lg:order-2">
               <div className="col-span-3 aspect-[16/9] rounded-[24px] overflow-hidden shadow-md relative group cursor-pointer" onClick={() => setSelectedImageIndex(0)}>
                 <img src={galleryImages[0]} alt="Fachada" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
                 <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                  <div className="bg-white/90 p-3 rounded-full text-[#00A34A]"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div>
+                  <div className="bg-white/90 p-3 rounded-full text-[#00A34A]"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" /></svg></div>
                 </div>
               </div>
               {galleryImages[1] && (
@@ -445,50 +444,50 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
               Tudo o que <span className="text-[#00A34A]">você e sua família</span> merecem
             </h2>
           </div>
-          
+
           {/* Grid Layout inspired by Reference (6 items with vertical separators on desktop) */}
           <div className="grid grid-cols-2 md:grid-cols-6 gap-y-12 gap-x-4 text-center">
-            
+
             <div className="flex flex-col items-center md:border-r border-gray-200 px-2 relative">
               <div className="w-16 h-16 mb-4 text-[#00A34A] flex items-center justify-center">
                 <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><rect x="9" y="14" width="6" height="8"></rect></svg>
               </div>
-              <p className="font-semibold text-[13px] text-[#333] leading-tight">Condomínio<br/>fechado</p>
+              <p className="font-semibold text-[13px] text-[#333] leading-tight">Condomínio<br />fechado</p>
             </div>
 
             <div className="flex flex-col items-center md:border-r border-gray-200 px-2 relative">
               <div className="w-16 h-16 mb-4 text-[#00A34A] flex items-center justify-center">
-                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="4"/><circle cx="12" cy="4" r="2"/><circle cx="12" cy="20" r="2"/><circle cx="4" cy="12" r="2"/><circle cx="20" cy="12" r="2"/><path d="M12 6v2M12 16v2M6 12h2M16 12h2"/></svg>
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="4" /><circle cx="12" cy="4" r="2" /><circle cx="12" cy="20" r="2" /><circle cx="4" cy="12" r="2" /><circle cx="20" cy="12" r="2" /><path d="M12 6v2M12 16v2M6 12h2M16 12h2" /></svg>
               </div>
-              <p className="font-semibold text-[13px] text-[#333] leading-tight">Área de lazer<br/>completa</p>
+              <p className="font-semibold text-[13px] text-[#333] leading-tight">Área de lazer<br />completa</p>
             </div>
 
             <div className="flex flex-col items-center md:border-r border-gray-200 px-2 relative">
               <div className="w-16 h-16 mb-4 text-[#00A34A] flex items-center justify-center">
                 <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="M12 8v4"></path><path d="M12 16h.01"></path></svg>
               </div>
-              <p className="font-semibold text-[13px] text-[#333] leading-tight">Segurança<br/>24h</p>
+              <p className="font-semibold text-[13px] text-[#333] leading-tight">Segurança<br />24h</p>
             </div>
 
             <div className="flex flex-col items-center md:border-r border-gray-200 px-2 relative">
               <div className="w-16 h-16 mb-4 text-[#00A34A] flex items-center justify-center">
                 <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
               </div>
-              <p className="font-semibold text-[13px] text-[#333] leading-tight">Localização<br/>estratégica</p>
+              <p className="font-semibold text-[13px] text-[#333] leading-tight">Localização<br />estratégica</p>
             </div>
 
             <div className="flex flex-col items-center md:border-r border-gray-200 px-2 relative">
               <div className="w-16 h-16 mb-4 text-[#00A34A] flex items-center justify-center">
-                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16H4z"/><path d="M14 2v20"/><path d="M10 12h8"/><path d="M10 8h8"/><path d="M10 16h8"/></svg>
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16H4z" /><path d="M14 2v20" /><path d="M10 12h8" /><path d="M10 8h8" /><path d="M10 16h8" /></svg>
               </div>
-              <p className="font-semibold text-[13px] text-[#333] leading-tight">Fácil acesso a<br/>comércios, escolas<br/>e serviços</p>
+              <p className="font-semibold text-[13px] text-[#333] leading-tight">Fácil acesso a<br />comércios, escolas<br />e serviços</p>
             </div>
 
             <div className="flex flex-col items-center px-2 relative">
               <div className="w-16 h-16 mb-4 text-[#00A34A] flex items-center justify-center">
                 <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline><polyline points="16 7 22 7 22 13"></polyline></svg>
               </div>
-              <p className="font-semibold text-[13px] text-[#333] leading-tight">Excelente potencial<br/>de valorização</p>
+              <p className="font-semibold text-[13px] text-[#333] leading-tight">Excelente potencial<br />de valorização</p>
             </div>
 
           </div>
@@ -506,7 +505,7 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
             <p className="text-gray-600 mb-8 font-medium text-lg leading-relaxed">
               Região que mais cresce na cidade, com fácil acesso a tudo o que você precisa por perto.
             </p>
-            
+
             <ul className="space-y-4">
               <li className="flex items-center gap-3 text-[#121c2c] font-bold text-base md:text-lg">
                 <div className="text-[#00A34A]">
@@ -534,24 +533,24 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
               </li>
             </ul>
           </div>
-          
+
           <div className="relative rounded-[32px] overflow-hidden shadow-lg h-[400px] md:h-[500px] bg-gray-200 border-4 border-gray-50">
-             <iframe
-                src="https://maps.google.com/maps?q=Rua%20Banabuiu,%20213%20-%20Parque%20Albano,%20Caucaia%20-%20CE&t=&z=15&ie=UTF8&iwloc=&output=embed"
-                className="w-full h-full border-0 grayscale mix-blend-multiply opacity-80"
-                allowFullScreen={false}
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                title="Mapa"
-             ></iframe>
-             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
-                <div className="bg-white p-2 rounded-full shadow-[0_10px_30px_rgba(0,138,70,0.3)] border-2 border-[#00A34A] flex flex-col items-center justify-center relative">
-                   <div className="w-14 h-14 bg-white rounded-full flex items-center justify-center text-[#00A34A]">
-                     <img src={campaign.layout_data?.logo || "/logo-mrv.png"} className="h-8 object-contain" alt="Logo" />
-                   </div>
-                   <div className="w-0 h-0 border-l-[8px] border-r-[8px] border-t-[10px] border-l-transparent border-r-transparent border-t-[#00A34A] absolute -bottom-[12px]"></div>
+            <iframe
+              src="https://maps.google.com/maps?q=Rua%20Banabuiu,%20213%20-%20Parque%20Albano,%20Caucaia%20-%20CE&t=&z=15&ie=UTF8&iwloc=&output=embed"
+              className="w-full h-full border-0 grayscale mix-blend-multiply opacity-80"
+              allowFullScreen={false}
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              title="Mapa"
+            ></iframe>
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none">
+              <div className="bg-white p-2 rounded-full shadow-[0_10px_30px_rgba(0,138,70,0.3)] border-2 border-[#00A34A] flex flex-col items-center justify-center relative">
+                <div className="w-14 h-14 bg-white rounded-full flex items-center justify-center text-[#00A34A]">
+                  <img src={campaign.layout_data?.logo || "/logo-mrv.png"} className="h-8 object-contain" alt="Logo" />
                 </div>
-             </div>
+                <div className="w-0 h-0 border-l-[8px] border-r-[8px] border-t-[10px] border-l-transparent border-r-transparent border-t-[#00A34A] absolute -bottom-[12px]"></div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -571,7 +570,7 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
           <div className="text-center md:text-left flex flex-col items-center md:items-start">
             <img src={campaign.layout_data?.logo || "\src\assets\ville-de-lisboa\logo-mrv.png"} alt="MRV" className="h-12 md:h-16 object-contain mb-2" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
             <p className="text-gray-500 text-xs md:text-sm font-bold uppercase tracking-wider">
-              Construindo sonhos que<br className="md:hidden"/> transformam vidas.
+              Construindo sonhos que<br className="md:hidden" /> transformam vidas.
             </p>
           </div>
         </div>
@@ -581,12 +580,11 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
       <section className="bg-[#121c2c] relative overflow-hidden">
         <div className="max-w-[1200px] mx-auto flex flex-col md:flex-row items-stretch relative z-10">
           <div className="w-full md:w-1/2 aspect-[21/9] md:aspect-auto">
-            <img src="https://images.unsplash.com/photo-1511895426328-dc8714191300?q=80&w=2070&auto=format&fit=crop" alt="Família" className="w-full h-full object-cover" />
+            <img src="/src/assets/ville-de-lisboa/foto-familia.jpg" alt="Família" className="w-full h-full object-cover" />
           </div>
           <div className="w-full md:w-1/2 py-8 px-6 md:py-10 md:px-12 text-center md:text-left flex flex-col justify-center">
             <h2 className="text-2xl md:text-3xl lg:text-4xl font-black text-white mb-2 md:mb-3 leading-tight">
-              Seu apartamento próprio está <br className="hidden md:block"/>
-              <span className="text-[#a3e635]">mais perto</span> do que você imagina!
+              Seu apartamento próprio está <span className="text-[#a3e635]">mais perto</span> <br className="hidden md:block" />do que você imagina!
             </h2>
             <p className="text-white/90 font-medium mb-5 md:mb-6 text-sm md:text-base">
               Condições especiais do Minha Casa Minha Vida esperam por você.
@@ -627,7 +625,7 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
             <span className="text-[10px] text-white/90 font-medium">É rápido, fácil e sem compromisso!</span>
           </div>
         </div>
-        <button 
+        <button
           onClick={scrollToForm}
           className="bg-[#eab308] text-[#121c2c] text-[10px] font-black py-2.5 px-3 rounded-full uppercase flex items-center gap-1 active:scale-95 whitespace-nowrap shadow-md tracking-tight"
         >
@@ -641,24 +639,24 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
           <button className="absolute top-4 right-4 md:top-6 md:right-6 text-white/70 hover:text-white transition-colors z-50 bg-black/20 p-2 rounded-full" onClick={() => setSelectedImageIndex(null)}>
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
           </button>
-          
+
           {galleryImages.length > 1 && (
             <button className="absolute left-2 md:left-6 top-1/2 -translate-y-1/2 text-white/50 hover:text-white transition-colors z-50 bg-black/20 p-3 rounded-full backdrop-blur-md" onClick={prevImage}>
               <ChevronLeft className="w-8 h-8 md:w-10 md:h-10" />
             </button>
           )}
 
-          <div 
+          <div
             className="w-full h-full flex items-center justify-center relative overflow-hidden select-none"
             onTouchStart={handleTouchStart}
             onTouchEnd={handleTouchEnd}
             onClick={(e) => e.stopPropagation()}
           >
-            <img 
+            <img
               key={selectedImageIndex} // force re-render for animation if wanted
-              src={galleryImages[selectedImageIndex]} 
-              alt={`Galeria ${selectedImageIndex + 1}`} 
-              className="max-w-full max-h-[100vh] md:max-h-full object-contain md:rounded-xl shadow-2xl animate-in fade-in zoom-in-95 duration-200 pointer-events-none" 
+              src={galleryImages[selectedImageIndex]}
+              alt={`Galeria ${selectedImageIndex + 1}`}
+              className="max-w-full max-h-[100vh] md:max-h-full object-contain md:rounded-xl shadow-2xl animate-in fade-in zoom-in-95 duration-200 pointer-events-none"
             />
             <div className="absolute bottom-6 left-1/2 -translate-x-1/2 bg-black/60 backdrop-blur-md text-white text-sm px-4 py-1.5 rounded-full font-medium">
               {selectedImageIndex + 1} / {galleryImages.length}

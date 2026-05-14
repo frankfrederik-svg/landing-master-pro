@@ -44,6 +44,7 @@ export function HotsiteForm({ campaignId, whatsappNumber, whatsappMessage, butto
   const [income, setIncome] = useState<IncomeRange | "">("");
   const [incomeType, setIncomeType] = useState("");
   const [hasFgts, setHasFgts] = useState<"sim" | "nao">("nao");
+  const [fgtsValue, setFgtsValue] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
   const faixa = useMemo(() => (income ? classifyFaixa(income) : null), [income]);
@@ -55,6 +56,7 @@ export function HotsiteForm({ campaignId, whatsappNumber, whatsappMessage, butto
       return;
     }
     setSubmitting(true);
+    const parsedFgts = parseMoney(fgtsValue);
     const res = await submitLead({
       data: {
         campaign_id: campaignId,
@@ -63,8 +65,8 @@ export function HotsiteForm({ campaignId, whatsappNumber, whatsappMessage, butto
         whatsapp: `${countryCode} ${whatsapp.trim()}`,
         income_range: INCOME_OPTIONS.find((o) => o.value === income)?.label ?? income,
         mcmv_faixa: faixa?.faixa ?? null,
-        uses_entry_value: false,
-        entry_value: null,
+        uses_entry_value: hasFgts === "sim" && parsedFgts !== null,
+        entry_value: hasFgts === "sim" ? parsedFgts : null,
         joins_income: false,
         birth_date: null,
         income_type: incomeType || null,
@@ -142,7 +144,7 @@ export function HotsiteForm({ campaignId, whatsappNumber, whatsappMessage, butto
       </div>
 
       {faixa && (
-        <div className="animate-in fade-in slide-in-from-top-2 rounded-2xl border-2 border-success/40 bg-success/10 p-4">
+        <div className="animate-in fade-in slide-in-from-top-2 rounded-2xl border-2 border-success/40 bg-success/10 p-4 form-full-row md:col-span-2">
           <div className="flex items-start gap-3">
             <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-success" />
             <div>
@@ -153,7 +155,7 @@ export function HotsiteForm({ campaignId, whatsappNumber, whatsappMessage, butto
         </div>
       )}
 
-      <div className="grid gap-6 md:grid-cols-2 mt-4">
+      <div className="grid gap-6 md:grid-cols-2 mt-4 form-full-row md:col-span-2">
         <div className="space-y-2">
           <Label className="text-base">Tipo de renda</Label>
           <Select value={incomeType} onValueChange={setIncomeType}>
@@ -165,11 +167,24 @@ export function HotsiteForm({ campaignId, whatsappNumber, whatsappMessage, butto
         </div>
         <div className="space-y-2">
           <Label className="text-base">Possui FGTS?</Label>
-          <RadioGroup value={hasFgts} onValueChange={(v) => setHasFgts(v as "sim" | "nao")} className="flex gap-6 pt-2">
+          <RadioGroup value={hasFgts} onValueChange={(v) => { setHasFgts(v as "sim" | "nao"); if (v === "nao") setFgtsValue(""); }} className="flex gap-6 pt-2">
             <label className="flex items-center gap-2 cursor-pointer text-base"><RadioGroupItem value="sim" className="h-5 w-5" /> Sim</label>
             <label className="flex items-center gap-2 cursor-pointer text-base"><RadioGroupItem value="nao" className="h-5 w-5" /> Não</label>
           </RadioGroup>
         </div>
+        
+        {hasFgts === "sim" && (
+          <div className="space-y-2 md:col-span-2 animate-in fade-in slide-in-from-top-2">
+            <Label className="text-base">Qual o saldo aproximado do seu FGTS?</Label>
+            <Input 
+              value={fgtsValue} 
+              onChange={(e) => setFgtsValue(maskMoney(e.target.value))} 
+              placeholder="R$ 0,00" 
+              className="h-12 text-base" 
+              inputMode="numeric"
+            />
+          </div>
+        )}
       </div>
 
       <Button type="submit" variant="cta" className="w-full min-h-[4rem] h-auto py-3 px-3 text-[13px] md:text-lg font-bold shadow-lg hover:shadow-xl transition-all mt-6" disabled={submitting}>
