@@ -535,30 +535,42 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
               Região que mais cresce na cidade, com fácil acesso a tudo o que você precisa por perto.
             </p>
 
-            <ul className="space-y-4">
-              <li className="flex items-center gap-3 text-[#121c2c] font-bold text-base md:text-lg">
-                <div className="text-[#00A34A]">
+            <ul className="space-y-6">
+              <li className="flex gap-4 items-start">
+                <div className="text-[#00A34A] mt-0.5">
                   <CheckCircle2 className="w-6 h-6" />
                 </div>
-                Próximo a comércios
+                <div>
+                  <div className="text-[#121c2c] font-bold text-base md:text-lg">Próximo a comércios</div>
+                  <div className="text-gray-500 text-sm mt-1 font-medium">A poucos minutos do futuro Caucaia Shopping</div>
+                </div>
               </li>
-              <li className="flex items-center gap-3 text-[#121c2c] font-bold text-base md:text-lg">
-                <div className="text-[#00A34A]">
+              <li className="flex gap-4 items-start">
+                <div className="text-[#00A34A] mt-0.5">
                   <CheckCircle2 className="w-6 h-6" />
                 </div>
-                Escolas e creches
+                <div>
+                  <div className="text-[#121c2c] font-bold text-base md:text-lg">Escolas e creches</div>
+                  <div className="text-gray-500 text-sm mt-1 font-medium">Próximo à Fundação Bradesco e ao Sesc Caucaia</div>
+                </div>
               </li>
-              <li className="flex items-center gap-3 text-[#121c2c] font-bold text-base md:text-lg">
-                <div className="text-[#00A34A]">
+              <li className="flex gap-4 items-start">
+                <div className="text-[#00A34A] mt-0.5">
                   <CheckCircle2 className="w-6 h-6" />
                 </div>
-                Transporte público
+                <div>
+                  <div className="text-[#121c2c] font-bold text-base md:text-lg">Transporte público</div>
+                  <div className="text-gray-500 text-sm mt-1 font-medium">Ao lado da Empresa Vitória, com mobilidade facilitada para o dia a dia</div>
+                </div>
               </li>
-              <li className="flex items-center gap-3 text-[#121c2c] font-bold text-base md:text-lg">
-                <div className="text-[#00A34A]">
+              <li className="flex gap-4 items-start">
+                <div className="text-[#00A34A] mt-0.5">
                   <CheckCircle2 className="w-6 h-6" />
                 </div>
-                Principais vias de acesso
+                <div>
+                  <div className="text-[#121c2c] font-bold text-base md:text-lg">Fácil acesso para Fortaleza e Caucaia</div>
+                  <div className="text-gray-500 text-sm mt-1 font-medium">Localização estratégica com acesso pela Av. Mister Hull</div>
+                </div>
               </li>
             </ul>
           </div>
