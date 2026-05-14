@@ -580,15 +580,15 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
       {/* Footer Banner */}
       <section className="bg-[#121c2c] relative overflow-hidden">
         <div className="max-w-[1200px] mx-auto flex flex-col md:flex-row items-stretch relative z-10">
-          <div className="w-full md:w-1/2 aspect-[21/9] md:aspect-auto min-h-[200px] md:max-h-[320px]">
+          <div className="w-full md:w-1/2 aspect-[21/9] md:aspect-auto">
             <img src="https://images.unsplash.com/photo-1511895426328-dc8714191300?q=80&w=2070&auto=format&fit=crop" alt="Família" className="w-full h-full object-cover" />
           </div>
-          <div className="w-full md:w-1/2 py-8 px-6 md:px-12 text-center md:text-left flex flex-col justify-center md:max-h-[320px]">
-            <h2 className="text-2xl md:text-4xl font-black text-white mb-3 leading-tight">
+          <div className="w-full md:w-1/2 py-8 px-6 md:py-10 md:px-12 text-center md:text-left flex flex-col justify-center">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-black text-white mb-2 md:mb-3 leading-tight">
               Seu apartamento próprio está <br className="hidden md:block"/>
               <span className="text-[#a3e635]">mais perto</span> do que você imagina!
             </h2>
-            <p className="text-white/90 font-medium mb-6 text-base md:text-lg">
+            <p className="text-white/90 font-medium mb-5 md:mb-6 text-sm md:text-base">
               Condições especiais do Minha Casa Minha Vida esperam por você.
             </p>
             <div className="flex flex-col items-center md:items-start">
@@ -596,12 +596,12 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
                 href={`https://wa.me/${campaign.whatsapp_number?.replace(/\D/g, "")}?text=${encodeURIComponent("Olá 👋 Tenho interesse no Ville de Lisboa.")}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-[#a3e635] text-[#121c2c] font-black text-sm md:text-lg py-3 px-6 rounded-[16px] hover:bg-[#8fd324] transition-colors inline-flex items-center justify-center gap-3 shadow-[0_10px_30px_rgba(163,230,53,0.3)] active:scale-95 w-full md:w-auto"
+                className="bg-[#a3e635] text-[#121c2c] font-black text-sm md:text-base py-3 px-6 rounded-[16px] hover:bg-[#8fd324] transition-colors inline-flex items-center justify-center gap-2 shadow-[0_10px_30px_rgba(163,230,53,0.3)] active:scale-95 w-full md:w-auto"
               >
                 FALAR NO WHATSAPP AGORA
                 <MessageCircle className="w-5 h-5" strokeWidth={2.5} />
               </a>
-              <p className="mt-4 text-xs md:text-sm text-white/60 flex items-center gap-2 font-medium">
+              <p className="mt-3 text-xs text-white/60 flex items-center gap-1.5 font-medium">
                 <CheckCircle2 className="w-3.5 h-3.5 text-[#a3e635]" /> Atendimento rápido e sem compromisso
               </p>
             </div>
