@@ -49,7 +49,7 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
 
   // Gallery
   const [galleryIndex, setGalleryIndex] = useState(0);
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
 
   // Extrai imagens
   const propertyImages = properties.flatMap(p => {
@@ -62,11 +62,44 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
     }
   }).slice(0, 5).map(u => resolveImage(u));
 
-  const galleryImages = propertyImages.length > 0 ? propertyImages : [
+  const campaignGallery = campaign.layout_data?.gallery && Array.isArray(campaign.layout_data.gallery) && campaign.layout_data.gallery.length > 0
+    ? campaign.layout_data.gallery
+    : null;
+
+  const galleryImages = campaignGallery || (propertyImages.length > 0 ? propertyImages : [
     heroDesktop,
     "https://lh3.googleusercontent.com/aida-public/AB6AXuAflQ94r17rQ6B8qPdBUzXMGtBjrrObuCedd1aB2riFFLJqq6P4fL0oL6zQLZ5_1rr_w1RGOMGXp9KABRtG26n5Pm7LcSch-wl1rtw06Hl1VvE9L2K3w40fIOQ8MPM7GPxlnxv37jCWA1LsjOjUr79TceKoyJFjo_hFJ5fikTwK19lvx6hpJA_bNssP7UrAbDer6uB4IKOMVX88IX09GQ-w0h_iwm7GiesvUVhhlH3tsj8xPk_MPE_PHmIU-fxs8IBvhSfz-W5EBwo",
     "https://lh3.googleusercontent.com/aida-public/AB6AXuAyTveLNCkexo8X-DzC53w_UE4bXdVvnggsMi3SBcMn69p2N2DWg4Jg9Bp7_PoZWuz319QeG-P1zkNxv6-DP5KI7vRSZuVctkSFMFhXtFwVovt6I6ib-SzoaFDDDHB_pMzRnIe_oCweBbwBeTMhQf6FFG2eZLgHKp5PN6ZrObIzlTjScBe0f4H-5xeyCeNZkvLaKndq_JSaqIW3kql6oohkSdxrvq4Qpel-OHqBlmYb3tGVAtFetDp0ZNNWdAZoLOk-QRccn3hR6Ug"
-  ];
+  ]);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (selectedImageIndex === null) return;
+      if (e.key === "ArrowRight") setSelectedImageIndex(i => (i! + 1) % galleryImages.length);
+      if (e.key === "ArrowLeft") setSelectedImageIndex(i => (i! - 1 + galleryImages.length) % galleryImages.length);
+      if (e.key === "Escape") setSelectedImageIndex(null);
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [selectedImageIndex, galleryImages.length]);
+
+  // Lightbox navigation handlers
+  const touchStartX = useRef<number | null>(null);
+  const nextImage = (e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+    if (selectedImageIndex !== null) setSelectedImageIndex((selectedImageIndex + 1) % galleryImages.length);
+  };
+  const prevImage = (e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+    if (selectedImageIndex !== null) setSelectedImageIndex((selectedImageIndex - 1 + galleryImages.length) % galleryImages.length);
+  };
+  const handleTouchStart = (e: React.TouchEvent) => { touchStartX.current = e.touches[0].clientX; };
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX.current === null) return;
+    const diff = touchStartX.current - e.changedTouches[0].clientX;
+    if (diff > 50) nextImage(); else if (diff < -50) prevImage();
+    touchStartX.current = null;
+  };
 
   // Gallery swipe
   const [touchStart, setTouchStart] = useState(0);
@@ -363,7 +396,7 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
               </ul>
               
               <button 
-                onClick={scrollToForm}
+                onClick={() => setSelectedImageIndex(0)}
                 className="bg-[#e8f7ec] text-[#00A34A] font-bold py-3 px-6 rounded-full hover:bg-[#d1f0db] transition-colors flex items-center gap-2 uppercase tracking-wide text-sm border border-[#00A34A]/20"
               >
                 Ver mais fotos
@@ -373,24 +406,30 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
             
             {/* Gallery Grid */}
             <div className="grid grid-cols-3 gap-3 md:gap-4 order-1 lg:order-2">
-              <div className="col-span-3 aspect-[16/9] rounded-[24px] overflow-hidden shadow-md relative group cursor-pointer" onClick={() => setSelectedImage(galleryImages[0])}>
+              <div className="col-span-3 aspect-[16/9] rounded-[24px] overflow-hidden shadow-md relative group cursor-pointer" onClick={() => setSelectedImageIndex(0)}>
                 <img src={galleryImages[0]} alt="Fachada" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
                 <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                   <div className="bg-white/90 p-3 rounded-full text-[#00A34A]"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></div>
                 </div>
               </div>
-              <div className="aspect-square rounded-[20px] overflow-hidden shadow-sm relative group cursor-pointer" onClick={() => setSelectedImage(galleryImages[1])}>
-                <img src={galleryImages[1]} alt="Piscina" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
-              </div>
-              <div className="aspect-square rounded-[20px] overflow-hidden shadow-sm relative group cursor-pointer" onClick={() => setSelectedImage(galleryImages[2])}>
-                <img src={galleryImages[2]} alt="Lazer" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
-              </div>
-              <div className="aspect-square rounded-[20px] overflow-hidden shadow-sm relative group cursor-pointer" onClick={() => setSelectedImage(galleryImages[3] || galleryImages[0])}>
-                <img src={galleryImages[3] || galleryImages[0]} alt="Playground" className="w-full h-full object-cover" />
-                <div className="absolute inset-0 bg-[#00A34A]/80 flex items-center justify-center transition-opacity">
-                  <div className="w-12 h-12 rounded-full border-2 border-white flex items-center justify-center text-white font-light text-3xl pb-1">+</div>
+              {galleryImages[1] && (
+                <div className="aspect-square rounded-[20px] overflow-hidden shadow-sm relative group cursor-pointer" onClick={() => setSelectedImageIndex(1)}>
+                  <img src={galleryImages[1]} alt="Piscina" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
                 </div>
-              </div>
+              )}
+              {galleryImages[2] && (
+                <div className="aspect-square rounded-[20px] overflow-hidden shadow-sm relative group cursor-pointer" onClick={() => setSelectedImageIndex(2)}>
+                  <img src={galleryImages[2]} alt="Lazer" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                </div>
+              )}
+              {galleryImages[3] && (
+                <div className="aspect-square rounded-[20px] overflow-hidden shadow-sm relative group cursor-pointer" onClick={() => setSelectedImageIndex(3)}>
+                  <img src={galleryImages[3]} alt="Playground" className="w-full h-full object-cover" />
+                  <div className="absolute inset-0 bg-[#00A34A]/80 flex items-center justify-center transition-opacity">
+                    <div className="w-12 h-12 rounded-full border-2 border-white flex items-center justify-center text-white font-light text-3xl pb-1">+</div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -594,12 +633,40 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
       </div>
 
       {/* Lightbox Modal */}
-      {selectedImage && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 p-4" onClick={() => setSelectedImage(null)}>
-          <button className="absolute top-6 right-6 text-white hover:text-gray-300" onClick={() => setSelectedImage(null)}>
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      {selectedImageIndex !== null && galleryImages[selectedImageIndex] && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/95 backdrop-blur-sm p-0 md:p-8" onClick={() => setSelectedImageIndex(null)}>
+          <button className="absolute top-4 right-4 md:top-6 md:right-6 text-white/70 hover:text-white transition-colors z-50 bg-black/20 p-2 rounded-full" onClick={() => setSelectedImageIndex(null)}>
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
           </button>
-          <img src={selectedImage} alt="Ampliada" className="max-w-full max-h-[90vh] object-contain rounded-lg" onClick={(e) => e.stopPropagation()} />
+          
+          {galleryImages.length > 1 && (
+            <button className="absolute left-2 md:left-6 top-1/2 -translate-y-1/2 text-white/50 hover:text-white transition-colors z-50 bg-black/20 p-3 rounded-full backdrop-blur-md" onClick={prevImage}>
+              <ChevronLeft className="w-8 h-8 md:w-10 md:h-10" />
+            </button>
+          )}
+
+          <div 
+            className="w-full h-full flex items-center justify-center relative overflow-hidden select-none"
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <img 
+              key={selectedImageIndex} // force re-render for animation if wanted
+              src={galleryImages[selectedImageIndex]} 
+              alt={`Galeria ${selectedImageIndex + 1}`} 
+              className="max-w-full max-h-[100vh] md:max-h-full object-contain md:rounded-xl shadow-2xl animate-in fade-in zoom-in-95 duration-200 pointer-events-none" 
+            />
+            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 bg-black/60 backdrop-blur-md text-white text-sm px-4 py-1.5 rounded-full font-medium">
+              {selectedImageIndex + 1} / {galleryImages.length}
+            </div>
+          </div>
+
+          {galleryImages.length > 1 && (
+            <button className="absolute right-2 md:right-6 top-1/2 -translate-y-1/2 text-white/50 hover:text-white transition-colors z-50 bg-black/20 p-3 rounded-full backdrop-blur-md" onClick={nextImage}>
+              <ChevronRight className="w-8 h-8 md:w-10 md:h-10" />
+            </button>
+          )}
         </div>
       )}
     </div>

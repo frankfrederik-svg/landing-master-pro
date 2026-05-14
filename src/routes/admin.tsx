@@ -16,6 +16,7 @@ import { Building2, Copy, Download, ExternalLink, KeyRound, LogOut, MessageCircl
 import { toast } from "sonner";
 import { formatCurrencyBRL } from "@/lib/faixa";
 import { ImageUpload } from "@/components/ImageUpload";
+import { MultiImageUpload } from "@/components/MultiImageUpload";
 
 export const Route = createFileRoute("/admin")({
   component: AdminPage,
@@ -221,6 +222,10 @@ function CampaignsTab() {
                     <div><Label>Academia</Label><ImageUpload value={editing.layout_data?.dif2 || null} onChange={(url) => setEditing({ ...editing, layout_data: { ...(editing.layout_data || {}), dif2: url } })} /></div>
                     <div><Label>Pista</Label><ImageUpload value={editing.layout_data?.dif3 || null} onChange={(url) => setEditing({ ...editing, layout_data: { ...(editing.layout_data || {}), dif3: url } })} /></div>
                     <div><Label>Lobby</Label><ImageUpload value={editing.layout_data?.dif4 || null} onChange={(url) => setEditing({ ...editing, layout_data: { ...(editing.layout_data || {}), dif4: url } })} /></div>
+                  </div>
+                  <h4 className="font-semibold text-sm mt-4">Galeria de Imagens</h4>
+                  <div>
+                    <MultiImageUpload value={editing.layout_data?.gallery || []} onChange={(urls) => setEditing({ ...editing, layout_data: { ...(editing.layout_data || {}), gallery: urls } })} label="Adicionar Fotos na Galeria" />
                   </div>
                 </div>
               )}
