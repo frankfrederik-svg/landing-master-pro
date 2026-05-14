@@ -162,7 +162,7 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
       </nav>
 
       {/* Hero Section */}
-      <section className="relative pt-24 pb-32 md:pt-32 md:pb-40 min-h-[90vh] md:min-h-0 flex flex-col justify-center bg-[#121212]">
+      <section className="relative pt-20 pb-28 md:pt-32 md:pb-40 min-h-[75vh] md:min-h-0 flex flex-col justify-center bg-[#121212] animate-in fade-in duration-1000">
         {/* Background Image with Overlay */}
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/50 to-[#f5f5f5] z-10 pointer-events-none"></div>
@@ -190,7 +190,7 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
           </div>
         </div>
 
-        <div className="relative z-20 max-w-[1200px] mx-auto px-4 md:px-6 w-full text-center md:text-left mt-10 md:mt-0">
+        <div className="relative z-20 max-w-[1200px] mx-auto px-4 md:px-6 w-full text-center md:text-left mt-10 md:mt-0 animate-in slide-in-from-bottom-8 duration-700">
           {/* Badges */}
           <div className="flex justify-center md:justify-start gap-2 mb-6">
             <span className="bg-[#eab308] text-white px-3 py-1 rounded-full text-[10px] md:text-xs font-bold flex items-center gap-1 uppercase tracking-wide">
@@ -215,96 +215,121 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
 
           {/* Benefits Cards Hero */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 max-w-4xl mx-auto md:mx-0">
-            <div className="bg-black/50 backdrop-blur-md border border-white/10 rounded-2xl p-4 md:p-5 flex flex-col items-center text-center hover:bg-black/70 transition-all shadow-lg">
-              <div className="mb-3">
+            <div className="bg-black/50 backdrop-blur-md border border-white/10 rounded-2xl p-4 md:p-5 flex flex-col items-center text-center hover:bg-black/70 hover:-translate-y-1 transition-all duration-300 shadow-lg group">
+              <div className="mb-3 transform group-hover:scale-110 transition-transform">
                 <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#a3e635" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline><circle cx="12" cy="16" r="3" fill="#a3e635" opacity="0.3"></circle><text x="12" y="17.5" fill="#a3e635" fontSize="6" textAnchor="middle" fontWeight="bold">$</text></svg>
               </div>
               <span className="text-white text-[11px] md:text-sm font-semibold uppercase tracking-wider mb-1">Subsídios de até</span>
-              <span className="text-[#a3e635] text-base md:text-lg font-black">R$ 55 mil</span>
+              <span className="text-[#a3e635] text-base md:text-lg font-black group-hover:text-[#b4f050] transition-colors">R$ 55 mil</span>
             </div>
 
-            <div className="bg-black/50 backdrop-blur-md border border-white/10 rounded-2xl p-4 md:p-5 flex flex-col items-center text-center hover:bg-black/70 transition-all shadow-lg">
-              <div className="mb-3">
+            <div className="bg-black/50 backdrop-blur-md border border-white/10 rounded-2xl p-4 md:p-5 flex flex-col items-center text-center hover:bg-black/70 hover:-translate-y-1 transition-all duration-300 shadow-lg group">
+              <div className="mb-3 transform group-hover:scale-110 transition-transform">
                 <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#a3e635" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M23 6l-9.5 9.5-5-5L1 18"></path><polyline points="16 6 23 6 23 13"></polyline><circle cx="8" cy="14" r="2" fill="#a3e635" opacity="0.4"></circle><circle cx="14" cy="8" r="2" fill="#a3e635" opacity="0.4"></circle><line x1="7" y1="9" x2="15" y2="15" stroke="#a3e635"></line></svg>
               </div>
               <span className="text-white text-[11px] md:text-sm font-semibold uppercase tracking-wider mb-1">Menores juros</span>
-              <span className="text-[#a3e635] text-base md:text-lg font-black">do mercado</span>
+              <span className="text-[#a3e635] text-base md:text-lg font-black group-hover:text-[#b4f050] transition-colors">do mercado</span>
             </div>
 
-            <div className="bg-black/50 backdrop-blur-md border border-white/10 rounded-2xl p-4 md:p-5 flex flex-col items-center text-center hover:bg-black/70 transition-all shadow-lg">
-              <div className="mb-3 h-[40px] flex flex-col items-center justify-center text-[#a3e635]">
+            <div className="bg-black/50 backdrop-blur-md border border-white/10 rounded-2xl p-4 md:p-5 flex flex-col items-center text-center hover:bg-black/70 hover:-translate-y-1 transition-all duration-300 shadow-lg group">
+              <div className="mb-3 h-[40px] flex flex-col items-center justify-center text-[#a3e635] transform group-hover:scale-110 transition-transform">
                 <span className="text-[10px] font-bold uppercase tracking-widest leading-none mb-0.5">Até</span>
                 <span className="text-[28px] font-black leading-none">72x</span>
               </div>
               <span className="text-white text-[11px] md:text-sm font-semibold uppercase tracking-wider mb-1">Entrada facilitada</span>
-              <span className="text-[#a3e635] text-base md:text-lg font-black">pela MRV</span>
+              <span className="text-[#a3e635] text-base md:text-lg font-black group-hover:text-[#b4f050] transition-colors">pela MRV</span>
             </div>
 
-            <div className="bg-black/50 backdrop-blur-md border border-white/10 rounded-2xl p-4 md:p-5 flex flex-col items-center text-center hover:bg-black/70 transition-all shadow-lg">
-              <div className="mb-3">
+            <div className="bg-black/50 backdrop-blur-md border border-white/10 rounded-2xl p-4 md:p-5 flex flex-col items-center text-center hover:bg-black/70 hover:-translate-y-1 transition-all duration-300 shadow-lg group">
+              <div className="mb-3 transform group-hover:scale-110 transition-transform">
                 <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#a3e635" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
               </div>
               <span className="text-white text-[11px] md:text-sm font-semibold uppercase tracking-wider mb-1">Use seu</span>
-              <span className="text-[#a3e635] text-base md:text-lg font-black">FGTS</span>
+              <span className="text-[#a3e635] text-base md:text-lg font-black group-hover:text-[#b4f050] transition-colors">FGTS</span>
             </div>
           </div>
         </div>
       </section>
 
       {/* Floating Form Section */}
-      <section id="formulario" className="relative z-30 -mt-24 md:-mt-20 max-w-[900px] mx-auto px-4">
-        <div className="bg-white rounded-[32px] shadow-[0_20px_60px_rgba(0,0,0,0.12)] p-6 md:p-12 border border-gray-100">
-          <div className="text-center mb-8">
-            <h2 className="text-2xl md:text-4xl font-black text-[#121c2c] mb-2 tracking-tight">
-              Faça sua <span className="text-[#00A34A]">simulação gratuita</span> agora!
-            </h2>
-            <p className="text-gray-500 font-medium text-sm md:text-lg">
-              Preencha seus dados e fale com um especialista.
-            </p>
-          </div>
+      <section id="formulario" className="relative z-30 -mt-20 md:-mt-24 max-w-[900px] mx-auto px-4">
+        <div className="bg-white rounded-[32px] shadow-[0_30px_80px_rgba(0,0,0,0.15)] md:shadow-[0_40px_100px_rgba(0,0,0,0.2)] p-6 md:p-12 border border-gray-100 relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-b from-[#00A34A]/[0.03] to-transparent pointer-events-none"></div>
+          <div className="relative z-10">
+            <div className="text-center mb-8">
+              <h2 className="text-2xl md:text-4xl font-black text-[#121c2c] mb-2 tracking-tight">
+                Faça sua <span className="text-[#00A34A]">simulação gratuita</span> agora!
+              </h2>
+              <p className="text-gray-500 font-medium text-sm md:text-lg">
+                Preencha seus dados e fale com um especialista.
+              </p>
+            </div>
 
-          <div className="max-w-3xl mx-auto form-grid-override">
-            {/* The HotsiteForm needs an override to appear in a single row on desktop if possible. We do this via CSS class targeting its children. */}
-            <style>{`
-              .form-grid-override form {
-                display: flex;
-                flex-direction: column;
-                gap: 0.75rem;
-              }
-              @media (min-width: 768px) {
+            <div className="max-w-3xl mx-auto form-grid-override">
+              {/* The HotsiteForm needs an override to appear in a single row on desktop if possible. We do this via CSS class targeting its children. */}
+              <style>{`
                 .form-grid-override form {
-                  display: grid;
-                  grid-template-columns: 1fr 1fr;
-                  gap: 1rem;
+                  display: flex;
+                  flex-direction: column;
+                  gap: 0.75rem;
                 }
-                .form-grid-override form > button,
-                .form-grid-override form > .form-full-row {
-                  grid-column: span 2;
+                @media (min-width: 768px) {
+                  .form-grid-override form {
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    gap: 1rem;
+                  }
+                  .form-grid-override form > button,
+                  .form-grid-override form > .form-full-row {
+                    grid-column: span 2;
+                  }
                 }
-              }
-              .form-grid-override button[type="submit"] {
-                background: linear-gradient(to right, #00A34A, #008A46);
-                font-weight: 900;
-                font-size: 1.1rem;
-                height: 3.5rem;
-                border-radius: 9999px;
-              }
-              .form-grid-override input, .form-grid-override select {
-                border-radius: 9999px;
-                height: 3rem;
-              }
-            `}</style>
-            <HotsiteForm
-              campaignId={campaign.id}
-              whatsappNumber={campaign.whatsapp_number}
-              whatsappMessage="Olá 👋 Gostaria de fazer uma simulação do Ville de Lisboa."
-              buttonText="QUERO SIMULAR MEU APÊ"
-            />
-          </div>
+                .form-grid-override button[type="submit"] {
+                  background: linear-gradient(to right, #00A34A, #008A46);
+                  font-weight: 900;
+                  font-size: 1.1rem;
+                  height: 4rem;
+                  border-radius: 9999px;
+                  box-shadow: 0 10px 25px -5px rgba(0, 163, 74, 0.4);
+                  transition: all 0.3s ease;
+                  animation: pulse-soft 3s infinite;
+                }
+                .form-grid-override button[type="submit"]:hover {
+                  transform: translateY(-2px);
+                  box-shadow: 0 15px 30px -5px rgba(0, 163, 74, 0.5);
+                  background: linear-gradient(to right, #00b853, #00994d);
+                  animation: none;
+                }
+                @keyframes pulse-soft {
+                  0% { box-shadow: 0 0 0 0 rgba(0, 163, 74, 0.4); }
+                  70% { box-shadow: 0 0 0 10px rgba(0, 163, 74, 0); }
+                  100% { box-shadow: 0 0 0 0 rgba(0, 163, 74, 0); }
+                }
+                .form-grid-override input, .form-grid-override select {
+                  border-radius: 9999px;
+                  height: 3.5rem;
+                  border-color: #e5e7eb;
+                  background-color: #fcfcfc;
+                  transition: all 0.2s;
+                }
+                .form-grid-override input:focus, .form-grid-override select:focus {
+                  border-color: #00A34A;
+                  box-shadow: 0 0 0 3px rgba(0, 163, 74, 0.1);
+                  background-color: #fff;
+                }
+              `}</style>
+              <HotsiteForm
+                campaignId={campaign.id}
+                whatsappNumber={campaign.whatsapp_number}
+                whatsappMessage="Olá 👋 Gostaria de fazer uma simulação do Ville de Lisboa."
+                buttonText="QUERO MEU APÊ"
+              />
+            </div>
 
-          <div className="mt-8 flex items-center justify-center gap-2 text-[11px] md:text-sm text-gray-400 font-semibold">
-            <ShieldCheck className="w-4 h-4 md:w-5 md:h-5 text-[#00A34A]" />
-            Seus dados estão protegidos. Não enviamos spam.
+            <div className="mt-8 flex items-center justify-center gap-2 text-[11px] md:text-sm text-gray-400 font-semibold">
+              <ShieldCheck className="w-4 h-4 md:w-5 md:h-5 text-[#00A34A]" />
+              Seus dados estão protegidos. Não enviamos spam.
+            </div>
           </div>
         </div>
       </section>
@@ -312,7 +337,7 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
       {/* Benefícios que fazem a diferença */}
       <section className="py-24 bg-[#f5f5f5]" id="beneficios">
         <div className="max-w-[1200px] mx-auto px-6">
-          <div className="text-center mb-12">
+          <div className="text-center mb-16 animate-in slide-in-from-bottom-8 duration-700">
             <span className="text-[#00A34A] font-bold text-[10px] md:text-xs tracking-[0.2em] uppercase mb-2 block">Minha Casa Minha Vida</span>
             <h2 className="text-3xl md:text-4xl font-black text-[#121c2c]">
               Benefícios que <span className="text-[#00A34A]">fazem a diferença</span>
@@ -320,35 +345,39 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="bg-white p-8 rounded-[24px] border border-gray-100 shadow-sm text-center hover:shadow-lg transition-all transform hover:-translate-y-1">
-              <div className="w-16 h-16 mx-auto bg-white border-2 border-gray-100 rounded-full flex items-center justify-center mb-6 text-[#00A34A] shadow-sm">
+            <div className="bg-white p-8 rounded-[24px] border border-gray-100 shadow-sm text-center hover:shadow-[0_20px_40px_rgba(0,163,74,0.08)] transition-all duration-300 transform hover:-translate-y-2 group">
+              <div className="w-16 h-16 mx-auto bg-white border-2 border-gray-100 rounded-full flex items-center justify-center mb-6 text-[#00A34A] shadow-sm group-hover:scale-110 group-hover:border-[#00A34A]/20 transition-all duration-300">
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline><circle cx="12" cy="16" r="3" fill="#00A34A" opacity="0.2"></circle><text x="12" y="17.5" fill="#00A34A" fontSize="6" textAnchor="middle" fontWeight="bold">$</text></svg>
               </div>
-              <h3 className="font-bold text-lg mb-3 text-[#121c2c] leading-tight">Subsídios de até<br />R$ 55 mil</h3>
+              <h3 className="text-gray-600 font-medium text-base mb-1">Subsídios de até</h3>
+              <p className="text-[#00A34A] font-black text-3xl tracking-tight leading-none mb-3">R$ 55 mil</p>
               <p className="text-gray-500 text-sm">Mais economia para você conquistar seu apê.</p>
             </div>
 
-            <div className="bg-white p-8 rounded-[24px] border border-gray-100 shadow-sm text-center hover:shadow-lg transition-all transform hover:-translate-y-1">
-              <div className="w-16 h-16 mx-auto bg-white border-2 border-gray-100 rounded-full flex items-center justify-center mb-6 text-[#00A34A] shadow-sm">
+            <div className="bg-white p-8 rounded-[24px] border border-gray-100 shadow-sm text-center hover:shadow-[0_20px_40px_rgba(0,163,74,0.08)] transition-all duration-300 transform hover:-translate-y-2 group">
+              <div className="w-16 h-16 mx-auto bg-white border-2 border-gray-100 rounded-full flex items-center justify-center mb-6 text-[#00A34A] shadow-sm group-hover:scale-110 group-hover:border-[#00A34A]/20 transition-all duration-300">
                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M23 6l-9.5 9.5-5-5L1 18"></path><polyline points="16 6 23 6 23 13"></polyline></svg>
               </div>
-              <h3 className="font-bold text-lg mb-3 text-[#121c2c] leading-tight">Menores juros<br />do mercado</h3>
+              <p className="text-[#00A34A] font-black text-2xl tracking-tight leading-none mb-1">Menores juros</p>
+              <h3 className="text-gray-600 font-medium text-base mb-3">do mercado</h3>
               <p className="text-gray-500 text-sm">Taxas reduzidas que cabem no seu bolso.</p>
             </div>
 
-            <div className="bg-white p-8 rounded-[24px] border border-gray-100 shadow-sm text-center hover:shadow-lg transition-all transform hover:-translate-y-1">
-              <div className="w-16 h-16 mx-auto bg-white border-2 border-gray-100 rounded-full flex items-center justify-center mb-6 text-[#00A34A] shadow-sm">
+            <div className="bg-white p-8 rounded-[24px] border border-gray-100 shadow-sm text-center hover:shadow-[0_20px_40px_rgba(0,163,74,0.08)] transition-all duration-300 transform hover:-translate-y-2 group">
+              <div className="w-16 h-16 mx-auto bg-white border-2 border-gray-100 rounded-full flex items-center justify-center mb-6 text-[#00A34A] shadow-sm group-hover:scale-110 group-hover:border-[#00A34A]/20 transition-all duration-300">
                 <Handshake className="w-7 h-7" />
               </div>
-              <h3 className="font-bold text-lg mb-3 text-[#121c2c] leading-tight">Entrada facilitada<br />pela MRV</h3>
+              <p className="text-[#00A34A] font-black text-2xl tracking-tight leading-none mb-1">Entrada facilitada</p>
+              <h3 className="text-gray-600 font-medium text-base mb-3">pela MRV</h3>
               <p className="text-gray-500 text-sm">Condições especiais para facilitar sua conquista.</p>
             </div>
 
-            <div className="bg-white p-8 rounded-[24px] border border-gray-100 shadow-sm text-center hover:shadow-lg transition-all transform hover:-translate-y-1">
-              <div className="w-16 h-16 mx-auto bg-white border-2 border-gray-100 rounded-full flex items-center justify-center mb-6 text-[#00A34A] shadow-sm">
+            <div className="bg-white p-8 rounded-[24px] border border-gray-100 shadow-sm text-center hover:shadow-[0_20px_40px_rgba(0,163,74,0.08)] transition-all duration-300 transform hover:-translate-y-2 group">
+              <div className="w-16 h-16 mx-auto bg-white border-2 border-gray-100 rounded-full flex items-center justify-center mb-6 text-[#00A34A] shadow-sm group-hover:scale-110 group-hover:border-[#00A34A]/20 transition-all duration-300">
                 <Landmark className="w-7 h-7" />
               </div>
-              <h3 className="font-bold text-lg mb-3 text-[#121c2c] leading-tight">Use seu<br />FGTS</h3>
+              <h3 className="text-gray-600 font-medium text-base mb-1">Use seu</h3>
+              <p className="text-[#00A34A] font-black text-3xl tracking-tight leading-none mb-3">FGTS</p>
               <p className="text-gray-500 text-sm">Utilize seu FGTS para dar entrada no imóvel.</p>
             </div>
           </div>
@@ -615,21 +644,22 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
       </footer>
 
       {/* Floating CTA Mobile Bottom Bar (Reference Style) */}
-      <div className={`md:hidden fixed bottom-0 left-0 right-0 bg-[#007A33] p-3 px-4 shadow-[0_-10px_20px_rgba(0,0,0,0.1)] z-50 transition-transform duration-300 flex items-center justify-between gap-3 ${showFloatingCTA ? 'translate-y-0' : 'translate-y-full'}`}>
+      <div className={`md:hidden fixed bottom-0 left-0 right-0 bg-gradient-to-r from-[#00A34A] to-[#008A46] p-3 px-4 shadow-[0_-15px_30px_rgba(0,163,74,0.25)] z-50 transition-transform duration-500 flex items-center justify-between gap-3 border-t border-white/10 ${showFloatingCTA ? 'translate-y-0' : 'translate-y-full'}`}>
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 flex items-center justify-center flex-shrink-0 animate-pulse">
-            <MessageCircle className="w-8 h-8 text-white" strokeWidth={1.5} />
+          <div className="w-10 h-10 flex items-center justify-center flex-shrink-0 animate-bounce">
+            <MessageCircle className="w-8 h-8 text-white drop-shadow-md" strokeWidth={1.5} />
           </div>
           <div className="flex flex-col">
-            <span className="font-extrabold text-sm uppercase leading-tight text-white tracking-tight">Simular agora no WhatsApp</span>
-            <span className="text-[10px] text-white/90 font-medium">É rápido, fácil e sem compromisso!</span>
+            <span className="font-extrabold text-sm uppercase leading-tight text-white tracking-tight">Simular no WhatsApp</span>
+            <span className="text-[10px] text-white/90 font-medium">Rápido e sem compromisso!</span>
           </div>
         </div>
         <button
           onClick={scrollToForm}
-          className="bg-[#eab308] text-[#121c2c] text-[10px] font-black py-2.5 px-3 rounded-full uppercase flex items-center gap-1 active:scale-95 whitespace-nowrap shadow-md tracking-tight"
+          className="bg-[#eab308] text-[#121c2c] text-[11px] font-black py-3 px-4 rounded-full uppercase flex items-center gap-1 active:scale-95 whitespace-nowrap shadow-[0_5px_15px_rgba(234,179,8,0.4)] tracking-tight relative overflow-hidden group"
         >
-          QUERO MEU APÊ <ChevronRight className="w-3 h-3 -mr-1" strokeWidth={3} />
+          <span className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 ease-in-out" />
+          QUERO MEU APÊ <ChevronRight className="w-4 h-4 -mr-1" strokeWidth={3} />
         </button>
       </div>
 
