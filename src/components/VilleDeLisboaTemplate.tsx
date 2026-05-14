@@ -449,24 +449,24 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
             {/* Gallery Grid */}
             <div className="grid grid-cols-3 gap-3 md:gap-4 order-1 lg:order-2">
               <div className="col-span-3 aspect-[16/9] rounded-[24px] overflow-hidden shadow-md relative group cursor-pointer" onClick={() => setSelectedImageIndex(0)}>
-                <img src={galleryImages[0]} alt="Fachada" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                <img src={galleryImages[0]} alt="Fachada" loading="lazy" decoding="async" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
                 <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                   <div className="bg-white/90 p-3 rounded-full text-[#00A34A]"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" /></svg></div>
                 </div>
               </div>
               {galleryImages[1] && (
                 <div className="aspect-square rounded-[20px] overflow-hidden shadow-sm relative group cursor-pointer" onClick={() => setSelectedImageIndex(1)}>
-                  <img src={galleryImages[1]} alt="Piscina" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                  <img src={galleryImages[1]} alt="Piscina" loading="lazy" decoding="async" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
                 </div>
               )}
               {galleryImages[2] && (
                 <div className="aspect-square rounded-[20px] overflow-hidden shadow-sm relative group cursor-pointer" onClick={() => setSelectedImageIndex(2)}>
-                  <img src={galleryImages[2]} alt="Lazer" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                  <img src={galleryImages[2]} alt="Lazer" loading="lazy" decoding="async" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
                 </div>
               )}
               {galleryImages[3] && (
                 <div className="aspect-square rounded-[20px] overflow-hidden shadow-sm relative group cursor-pointer" onClick={() => setSelectedImageIndex(3)}>
-                  <img src={galleryImages[3]} alt="Playground" className="w-full h-full object-cover" />
+                  <img src={galleryImages[3]} alt="Playground" loading="lazy" decoding="async" className="w-full h-full object-cover" />
                   <div className="absolute inset-0 bg-[#00A34A]/80 flex items-center justify-center transition-opacity">
                     <div className="w-12 h-12 rounded-full border-2 border-white flex items-center justify-center text-white font-light text-3xl pb-1">+</div>
                   </div>
@@ -617,12 +617,12 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
               <Users className="w-10 h-10" />
             </div>
             <p className="text-[#121c2c] font-medium text-lg md:text-xl max-w-sm">
-              <strong className="text-[#00A34A] font-black">Mais de 1 milhão de brasileiros</strong> já realizaram o <strong className="text-[#00A34A] font-black">sonho</strong> da casa própria com a MRV.
+              <strong className="text-[#00A34A] font-black">Mais de 1 milhão de brasileiros</strong> já realizaram o <strong className="text-[#00A34A] font-black">sonho</strong> do imóvel próprio com a MRV.
             </p>
           </div>
           <div className="hidden md:block w-px h-20 bg-gray-300"></div>
           <div className="text-center md:text-left flex flex-col items-center md:items-start">
-            <img src={campaign.layout_data?.logo || "\src\assets\ville-de-lisboa\logo-mrv.png"} alt="MRV" className="h-12 md:h-16 object-contain mb-2" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
+            <img src={campaign.layout_data?.logo || "\src\assets\ville-de-lisboa\logo-mrv.png"} alt="MRV" loading="lazy" decoding="async" className="h-12 md:h-16 object-contain mb-2" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
             <p className="text-gray-500 text-xs md:text-sm font-bold uppercase tracking-wider">
               Construindo sonhos que<br className="md:hidden" /> transformam vidas.
             </p>
@@ -634,25 +634,23 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
       <section className="bg-[#121c2c] relative overflow-hidden">
         <div className="max-w-[1200px] mx-auto flex flex-col md:flex-row items-stretch relative z-10">
           <div className="w-full md:w-1/2 aspect-[21/9] md:aspect-auto">
-            <img src="/src/assets/ville-de-lisboa/foto-familia.jpg" alt="Família" className="w-full h-full object-cover" />
+            <img src="/src/assets/ville-de-lisboa/foto-familia.jpg" alt="Família" loading="lazy" decoding="async" className="w-full h-full object-cover" />
           </div>
           <div className="w-full md:w-1/2 py-8 px-6 md:py-10 md:px-12 text-center md:text-left flex flex-col justify-center">
             <h2 className="text-2xl md:text-3xl lg:text-4xl font-black text-white mb-2 md:mb-3 leading-tight">
-              Seu apartamento próprio está <span className="text-[#a3e635]">mais perto</span> <br className="hidden md:block" />do que você imagina!
+              Seu apartamento próprio pode estar <span className="text-[#a3e635]">mais perto</span> <br className="hidden md:block" />do que você imagina.
             </h2>
             <p className="text-white/90 font-medium mb-5 md:mb-6 text-sm md:text-base">
               Condições especiais do Minha Casa Minha Vida esperam por você.
             </p>
             <div className="flex flex-col items-center md:items-start">
-              <a
-                href={`https://wa.me/${campaign.whatsapp_number?.replace(/\D/g, "")}?text=${encodeURIComponent("Olá 👋 Tenho interesse no Ville de Lisboa.")}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-[#a3e635] text-[#121c2c] font-black text-sm md:text-base py-3 px-6 rounded-[16px] hover:bg-[#8fd324] transition-colors inline-flex items-center justify-center gap-2 shadow-[0_10px_30px_rgba(163,230,53,0.3)] active:scale-95 w-full md:w-auto"
+              <button
+                onClick={scrollToForm}
+                className="bg-gradient-to-r from-[#00A34A] to-[#008A46] text-white font-black text-base md:text-lg py-4 px-8 rounded-full hover:from-[#00b853] hover:to-[#00994d] transition-all duration-300 inline-flex items-center justify-center gap-2 shadow-[0_10px_30px_rgba(0,163,74,0.4)] hover:shadow-[0_15px_40px_rgba(0,163,74,0.5)] active:scale-95 w-full md:w-auto hover:-translate-y-1 group"
               >
-                FALAR NO WHATSAPP AGORA
-                <MessageCircle className="w-5 h-5" strokeWidth={2.5} />
-              </a>
+                QUERO SIMULAR AGORA
+                <ChevronRight className="w-6 h-6 -mr-1 transform group-hover:translate-x-1 transition-transform" strokeWidth={3} />
+              </button>
               <p className="mt-3 text-xs text-white/60 flex items-center gap-1.5 font-medium">
                 <CheckCircle2 className="w-3.5 h-3.5 text-[#a3e635]" /> Atendimento rápido e sem compromisso
               </p>
