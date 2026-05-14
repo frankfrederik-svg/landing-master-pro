@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { HotsiteForm } from "./HotsiteForm";
 import { resolveImage } from "@/lib/faixa";
 import { Wallet, Handshake, Landmark, TrendingDown, MessageCircle, ChevronLeft, ChevronRight, CheckCircle2, ShieldCheck, MapPin, Building, Users } from "lucide-react";
