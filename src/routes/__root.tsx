@@ -27,6 +27,20 @@ export const Route = createRootRoute({
       { name: "description", content: "Plataforma de hotsites para campanhas imobiliárias com classificação automática de faixa MCMV." },
     ],
     links: [{ rel: "stylesheet", href: appCss }],
+    scripts: [
+      {
+        src: "https://www.googletagmanager.com/gtag/js?id=AW-988166206",
+        async: true,
+      },
+      {
+        children: `
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'AW-988166206');
+        `,
+      },
+    ],
   }),
   shellComponent: RootShell,
   component: RootComponent,

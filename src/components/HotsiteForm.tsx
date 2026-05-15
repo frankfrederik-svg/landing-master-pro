@@ -80,6 +80,11 @@ export function HotsiteForm({ campaignId, whatsappNumber, whatsappMessage, butto
       toast.error(res.error || "Erro ao enviar.");
       return;
     }
+
+    if (typeof window !== "undefined" && (window as any).gtag) {
+      (window as any).gtag('event', 'conversion', {'send_to': 'AW-988166206/05o_CPn4la0cEL7wmNcD'});
+    }
+
     toast.success("Recebemos seus dados! Em breve nosso especialista entra em contato.");
 
     if (whatsappNumber) {

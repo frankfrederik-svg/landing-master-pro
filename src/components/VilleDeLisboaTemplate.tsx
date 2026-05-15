@@ -165,6 +165,11 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
             href={`https://wa.me/${campaign.whatsapp_number?.replace(/\D/g, "")}?text=${encodeURIComponent("Olá 👋 Tenho interesse no Ville de Lisboa.")}`}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={() => {
+              if (typeof window !== "undefined" && (window as any).gtag) {
+                (window as any).gtag('event', 'conversion', {'send_to': 'AW-988166206/tSVuCPz4la0cEL7wmNcD'});
+              }
+            }}
             className="bg-[#25D366] text-white rounded-full font-bold hover:bg-[#20b858] transition-all duration-300 px-5 py-2.5 text-xs md:text-sm flex items-center gap-2 shadow-sm"
           >
             <MessageCircle className="w-4 h-4 md:w-5 md:h-5" />
