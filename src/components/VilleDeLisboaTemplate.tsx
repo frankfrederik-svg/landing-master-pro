@@ -627,7 +627,7 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
           </div>
           <div className="hidden md:block w-px h-20 bg-gray-300"></div>
           <div className="text-center md:text-left flex flex-col items-center md:items-start">
-            <img src={campaign.layout_data?.logo || "\src\assets\ville-de-lisboa\logo-mrv.png"} alt="MRV" loading="lazy" decoding="async" className="h-12 md:h-16 object-contain mb-2" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
+            <img src={campaign.layout_data?.logo || "/src/assets/ville-de-lisboa/logo-mrv.png"} alt="MRV" loading="lazy" decoding="async" className="h-12 md:h-16 object-contain mb-2" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
             <p className="text-gray-500 text-xs md:text-sm font-bold uppercase tracking-wider">
               Construindo sonhos que<br className="md:hidden" /> transformam vidas.
             </p>
