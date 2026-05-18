@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { HotsiteForm } from "@/components/HotsiteForm";
 import { LeadPopup } from "@/components/LeadPopup";
 import { VilleDeLisboaTemplate } from "@/components/VilleDeLisboaTemplate";
-import heroBuilding from "@/assets/hero-building.jpg";
+import heroBuilding from "@/assets/hero-building.webp";
 import { formatCurrencyBRL, resolveImage } from "@/lib/faixa";
 import { Building2, CheckCircle2, MapPin, Percent, Sparkles, TrendingDown, Wallet } from "lucide-react";
 
@@ -133,7 +133,20 @@ function HotsitePage() {
     }
   }, [campaign]);
 
-  if (loading) return <div className="flex min-h-screen items-center justify-center text-muted-foreground">Carregando...</div>;
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#121212] flex flex-col items-center justify-center relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/50 to-[#121212] z-0 pointer-events-none"></div>
+        <div className="relative z-10 flex flex-col items-center">
+          <div className="w-16 h-16 md:w-20 md:h-20 bg-white/5 rounded-full flex items-center justify-center mb-6 shadow-[0_0_40px_rgba(37,211,102,0.15)] border border-white/10">
+            <div className="w-8 h-8 md:w-10 md:h-10 border-4 border-[#25D366] border-t-transparent rounded-full animate-spin"></div>
+          </div>
+          <h2 className="text-white text-xl md:text-2xl font-bold mb-2 tracking-tight animate-pulse">Preparando seu novo apê...</h2>
+          <p className="text-white/50 text-sm font-medium">Buscando as melhores condições MRV</p>
+        </div>
+      </div>
+    );
+  }
   if (notFoundFlag || !campaign) return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-soft px-4">
       <div className="max-w-md text-center">

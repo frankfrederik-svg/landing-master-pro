@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { HotsiteForm } from "./HotsiteForm";
 import { resolveImage } from "@/lib/faixa";
 import { Wallet, Handshake, Landmark, TrendingDown, MessageCircle, ChevronLeft, ChevronRight, CheckCircle2, ShieldCheck, MapPin, Building, Users, RotateCcw } from "lucide-react";
-import heroFallbackImg from "@/assets/hero-ville-de-lisboa.jpg";
+import heroFallbackImg from "@/assets/hero-ville-de-lisboa.webp";
 
 type Campaign = {
   id: string; slug: string; name: string;
@@ -188,7 +188,7 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
           {/* Mobile Video/Banner */}
           <div className="absolute inset-0 md:hidden z-0">
             {isVideo(heroMobile) ? (
-              <video key={heroMobile} className="w-full h-full object-cover opacity-60" autoPlay loop muted playsInline poster={campaign.layout_data?.poster_mobile || heroFallbackImg}>
+              <video key={heroMobile} className="w-full h-full object-cover opacity-60" loop muted playsInline poster={campaign.layout_data?.poster_mobile || heroFallbackImg}>
                 <source src={heroMobile} type="video/mp4" />
               </video>
             ) : (
