@@ -134,18 +134,22 @@ function HotsitePage() {
   }, [campaign]);
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-[#121212] flex flex-col items-center justify-center relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/50 to-[#121212] z-0 pointer-events-none"></div>
-        <div className="relative z-10 flex flex-col items-center">
-          <div className="w-16 h-16 md:w-20 md:h-20 bg-white/5 rounded-full flex items-center justify-center mb-6 shadow-[0_0_40px_rgba(37,211,102,0.15)] border border-white/10">
-            <div className="w-8 h-8 md:w-10 md:h-10 border-4 border-[#25D366] border-t-transparent rounded-full animate-spin"></div>
-          </div>
-          <h2 className="text-white text-xl md:text-2xl font-bold mb-2 tracking-tight animate-pulse">Preparando seu novo apê...</h2>
-          <p className="text-white/50 text-sm font-medium">Buscando as melhores condições MRV</p>
-        </div>
-      </div>
-    );
+    if (slug === "ville-de-lisboa") {
+      // Instant render for extreme performance
+      const fallbackCampaign: Campaign = {
+        id: "loading", slug: "ville-de-lisboa", name: "Ville de Lisboa",
+        hero_title: "Seu apartamento próprio com condições que cabem no seu bolso!",
+        hero_subtitle: "Realize o sonho da casa própria com o Minha Casa Minha Vida e vantagens exclusivas.",
+        cta_text: "Quero simular agora", banner_url: null,
+        whatsapp_number: "5585999999999", whatsapp_message: "Olá 👋",
+        popup_enabled: false, popup_delay_mobile: 15, popup_delay_desktop: 15, popup_frequency_hours: 24,
+        popup_title: "", popup_subtitle: "", popup_button_text: "", popup_whatsapp_message: "",
+        layout: "ville_de_lisboa",
+        layout_data: { logo: "/src/assets/ville-de-lisboa/logo-mrv.png", poster_mobile: heroBuilding, poster_desktop: heroBuilding }
+      };
+      return <VilleDeLisboaTemplate campaign={fallbackCampaign} properties={[]} />;
+    }
+    return <div className="min-h-screen bg-[#121212]" />;
   }
   if (notFoundFlag || !campaign) return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-soft px-4">

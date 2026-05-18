@@ -29,6 +29,14 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
   const heroDesktop = campaign.banner_url || "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=2075&auto=format&fit=crop";
   const heroMobile = campaign.layout_data?.banner_mobile || heroDesktop;
 
+  // Progressive rendering for extreme performance
+  const [showBelowFold, setShowBelowFold] = useState(false);
+  useEffect(() => {
+    // Wait for the browser to paint the first fold, then render the rest
+    const timer = setTimeout(() => setShowBelowFold(true), 50);
+    return () => clearTimeout(timer);
+  }, []);
+
   // Scrolling states
   const [showFloatingCTA, setShowFloatingCTA] = useState(false);
   const [showRotateHint, setShowRotateHint] = useState(false);
@@ -180,20 +188,14 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
       </nav>
 
       {/* Hero Section */}
-      <section className="relative pt-20 pb-28 md:pt-32 md:pb-40 min-h-[75vh] md:min-h-0 flex flex-col justify-center bg-[#121212] animate-in fade-in duration-1000">
+      <section className="relative pt-20 pb-28 md:pt-32 md:pb-40 min-h-[75vh] md:min-h-0 flex flex-col justify-center bg-[#121212]">
         {/* Background Image with Overlay */}
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/50 to-[#f5f5f5] z-10 pointer-events-none"></div>
 
-          {/* Mobile Video/Banner */}
+          {/* Mobile Banner (Static Image only for Performance) */}
           <div className="absolute inset-0 md:hidden z-0">
-            {isVideo(heroMobile) ? (
-              <video key={heroMobile} className="w-full h-full object-cover opacity-[0.85]" loop muted playsInline poster={campaign.layout_data?.poster_mobile || heroFallbackImg}>
-                <source src={heroMobile} type="video/mp4" />
-              </video>
-            ) : (
-              <img key={heroMobile} className="w-full h-full object-cover opacity-[0.85]" src={heroMobile} alt="Hero Background Mobile" />
-            )}
+             <img key={heroMobile} className="w-full h-full object-cover opacity-[0.85]" src={isVideo(heroMobile) ? (campaign.layout_data?.poster_mobile || heroFallbackImg) : heroMobile} alt="Hero Background Mobile" />
           </div>
 
           {/* Desktop Video/Banner */}
@@ -208,7 +210,7 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
           </div>
         </div>
 
-        <div className="relative z-20 max-w-[1200px] mx-auto px-4 md:px-6 w-full text-center md:text-left mt-10 md:mt-0 animate-in slide-in-from-bottom-8 duration-700">
+        <div className="relative z-20 max-w-[1200px] mx-auto px-4 md:px-6 w-full text-center md:text-left mt-10 md:mt-0">
           {/* Badges */}
           <div className="flex justify-center md:justify-start gap-2 mb-6">
             <span className="bg-[#eab308] text-white px-3 py-1 rounded-full text-[10px] md:text-xs font-bold flex items-center gap-1 uppercase tracking-wide">
@@ -353,6 +355,8 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
       </section>
 
       {/* Benefícios que fazem a diferença */}
+      {showBelowFold && (
+        <>
       <section className="py-24 bg-[#f5f5f5]" id="beneficios">
         <div className="max-w-[1200px] mx-auto px-6">
           <div className="text-center mb-16 animate-in slide-in-from-bottom-8 duration-700">
@@ -748,6 +752,8 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
             </button>
           )}
         </div>
+      )}
+      </>
       )}
     </div>
   );
