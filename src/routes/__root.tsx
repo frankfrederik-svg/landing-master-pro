@@ -2,6 +2,7 @@ import { Outlet, Link, createRootRoute, HeadContent, Scripts } from "@tanstack/r
 import appCss from "../styles.css?url";
 import { AuthProvider } from "@/lib/auth-context";
 import { Toaster } from "@/components/ui/sonner";
+import heroBuilding from "@/assets/hero-ville-de-lisboa.webp";
 
 function NotFoundComponent() {
   return (
@@ -26,28 +27,11 @@ export const Route = createRootRoute({
       { title: "Meu Apê Agora — Realize o sonho do imóvel próprio" },
       { name: "description", content: "Plataforma de hotsites para campanhas imobiliárias com classificação automática de faixa MCMV." },
     ],
-    links: [{ rel: "stylesheet", href: appCss }],
-    scripts: [
-      {
-        src: "https://www.googletagmanager.com/gtag/js?id=AW-988166206",
-        async: true,
-      },
-      {
-        children: `
-          window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
-          gtag('config', 'AW-988166206');
-        `,
-      },
-      {
-        children: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-TCHGV49H');`,
-      },
+    links: [
+      { rel: "stylesheet", href: appCss },
+      { rel: "preload", as: "image", href: heroBuilding, fetchPriority: "high" }
     ],
+    scripts: [],
   }),
   shellComponent: RootShell,
   component: RootComponent,
@@ -74,7 +58,41 @@ function RootShell({ children }: { children: React.ReactNode }) {
   );
 }
 
+import { useEffect } from "react";
+
 function RootComponent() {
+  useEffect(() => {
+    // Only run on client
+    if (typeof window !== "undefined" && !(window as any).gtmLoaded) {
+      const loadGTM = () => {
+        if ((window as any).gtmLoaded) return;
+        (window as any).gtmLoaded = true;
+        
+        // Google Ads
+        const script1 = document.createElement("script");
+        script1.src = "https://www.googletagmanager.com/gtag/js?id=AW-988166206";
+        script1.async = true;
+        document.head.appendChild(script1);
+
+        const script2 = document.createElement("script");
+        script2.innerHTML = `window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'AW-988166206');`;
+        document.head.appendChild(script2);
+
+        // GTM
+        const script3 = document.createElement("script");
+        script3.innerHTML = `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start': new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0], j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src= 'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f); })(window,document,'script','dataLayer','GTM-TCHGV49H');`;
+        document.head.appendChild(script3);
+      };
+
+      // Load after 3 seconds or on first interaction, whichever comes first
+      const timer = setTimeout(loadGTM, 3500);
+      const onInteract = () => { loadGTM(); clearTimeout(timer); };
+      ['scroll', 'mousemove', 'touchstart', 'click'].forEach(e => 
+        window.addEventListener(e, onInteract, { once: true, passive: true })
+      );
+    }
+  }, []);
+
   return (
     <AuthProvider>
       <Outlet />

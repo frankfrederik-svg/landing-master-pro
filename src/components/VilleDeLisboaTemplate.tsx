@@ -32,10 +32,22 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
   // Progressive rendering for extreme performance
   const [showBelowFold, setShowBelowFold] = useState(false);
   useEffect(() => {
-    // Wait for the browser to paint the first fold, then render the rest
-    const timer = setTimeout(() => setShowBelowFold(true), 50);
-    return () => clearTimeout(timer);
-  }, []);
+    // Wait for interaction or 2000ms to render below-the-fold, preserving 100% of CPU for LCP
+    let timer: NodeJS.Timeout;
+    const trigger = () => {
+      if (!showBelowFold) {
+        setShowBelowFold(true);
+        clearTimeout(timer);
+        ['scroll', 'mousemove', 'touchstart'].forEach(e => window.removeEventListener(e, trigger));
+      }
+    };
+    timer = setTimeout(trigger, 2000);
+    ['scroll', 'mousemove', 'touchstart'].forEach(e => window.addEventListener(e, trigger, { passive: true }));
+    return () => {
+      clearTimeout(timer);
+      ['scroll', 'mousemove', 'touchstart'].forEach(e => window.removeEventListener(e, trigger));
+    };
+  }, [showBelowFold]);
 
   // Scrolling states
   const [showFloatingCTA, setShowFloatingCTA] = useState(false);

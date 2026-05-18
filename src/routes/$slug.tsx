@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { HotsiteForm } from "@/components/HotsiteForm";
 import { LeadPopup } from "@/components/LeadPopup";
 import { VilleDeLisboaTemplate } from "@/components/VilleDeLisboaTemplate";
-import heroBuilding from "@/assets/hero-building.webp";
+import heroBuilding from "@/assets/hero-ville-de-lisboa.webp";
 import { formatCurrencyBRL, resolveImage } from "@/lib/faixa";
 import { Building2, CheckCircle2, MapPin, Percent, Sparkles, TrendingDown, Wallet } from "lucide-react";
 
@@ -140,12 +140,12 @@ function HotsitePage() {
         id: "loading", slug: "ville-de-lisboa", name: "Ville de Lisboa",
         hero_title: "Seu apartamento próprio com condições que cabem no seu bolso!",
         hero_subtitle: "Realize o sonho da casa própria com o Minha Casa Minha Vida e vantagens exclusivas.",
-        cta_text: "Quero simular agora", banner_url: null,
+        cta_text: "Quero simular agora", banner_url: heroBuilding,
         whatsapp_number: "5585999999999", whatsapp_message: "Olá 👋",
         popup_enabled: false, popup_delay_mobile: 15, popup_delay_desktop: 15, popup_frequency_hours: 24,
         popup_title: "", popup_subtitle: "", popup_button_text: "", popup_whatsapp_message: "",
         layout: "ville_de_lisboa",
-        layout_data: { logo: "/src/assets/ville-de-lisboa/logo-mrv.png", poster_mobile: heroBuilding, poster_desktop: heroBuilding }
+        layout_data: { logo: "/src/assets/ville-de-lisboa/logo-mrv.png", poster_mobile: heroBuilding, poster_desktop: heroBuilding, banner_mobile: heroBuilding }
       };
       return <VilleDeLisboaTemplate campaign={fallbackCampaign} properties={[]} />;
     }

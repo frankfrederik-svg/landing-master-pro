@@ -11,5 +11,26 @@ export default defineConfig({
     server: {
       allowedHosts: true,
     },
+    build: {
+      target: 'esnext',
+      minify: 'terser',
+      terserOptions: {
+        compress: {
+          drop_console: true,
+          drop_debugger: true,
+          pure_funcs: ['console.log', 'console.info', 'console.debug']
+        }
+      },
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            'vendor-react': ['react', 'react-dom'],
+            'vendor-router': ['@tanstack/react-router'],
+            'vendor-ui': ['lucide-react', 'sonner'],
+            'vendor-supabase': ['@supabase/supabase-js']
+          }
+        }
+      }
+    }
   },
 });
