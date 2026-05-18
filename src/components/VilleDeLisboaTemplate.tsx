@@ -188,22 +188,22 @@ export function VilleDeLisboaTemplate({ campaign, properties }: { campaign: Camp
           {/* Mobile Video/Banner */}
           <div className="absolute inset-0 md:hidden z-0">
             {isVideo(heroMobile) ? (
-              <video key={heroMobile} className="w-full h-full object-cover opacity-60" loop muted playsInline poster={campaign.layout_data?.poster_mobile || heroFallbackImg}>
+              <video key={heroMobile} className="w-full h-full object-cover opacity-[0.85]" loop muted playsInline poster={campaign.layout_data?.poster_mobile || heroFallbackImg}>
                 <source src={heroMobile} type="video/mp4" />
               </video>
             ) : (
-              <img key={heroMobile} className="w-full h-full object-cover opacity-60" src={heroMobile} alt="Hero Background Mobile" />
+              <img key={heroMobile} className="w-full h-full object-cover opacity-[0.85]" src={heroMobile} alt="Hero Background Mobile" />
             )}
           </div>
 
           {/* Desktop Video/Banner */}
           <div className="absolute inset-0 hidden md:block z-0">
             {isVideo(heroDesktop) ? (
-              <video key={heroDesktop} className="w-full h-full object-cover opacity-60" autoPlay loop muted playsInline poster={campaign.layout_data?.poster_desktop || heroFallbackImg}>
+              <video key={heroDesktop} className="w-full h-full object-cover opacity-[0.85]" autoPlay loop muted playsInline poster={campaign.layout_data?.poster_desktop || heroFallbackImg}>
                 <source src={heroDesktop} type="video/mp4" />
               </video>
             ) : (
-              <img key={heroDesktop} className="w-full h-full object-cover opacity-60" src={heroDesktop} alt="Hero Background Desktop" />
+              <img key={heroDesktop} className="w-full h-full object-cover opacity-[0.85]" src={heroDesktop} alt="Hero Background Desktop" />
             )}
           </div>
         </div>
